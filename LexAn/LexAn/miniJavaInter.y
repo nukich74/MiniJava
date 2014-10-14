@@ -1,7 +1,7 @@
 %{
 #include <stdio.h> /* for printf() */
 #include <stdlib.h>
-#include "pascal.h"
+#include "miniJava.h"
 #include <iostream>
 
 // должны быть объявлены

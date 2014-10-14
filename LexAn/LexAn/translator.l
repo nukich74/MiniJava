@@ -1,110 +1,79 @@
 %{
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
+#include <stdlib.h> /* for atoi() */
+#include <string.h> /* for strcpy() and exit() */
+#include <stdio.h> /* for printf() */
+#include <iostream>
+#include "miniJava.h"  /*СЃРµР№С‡Р°СЃ РїРёС€РµРј Р»РµРєСЃРёС‡РµСЃРєРёР№ Р°РЅР°Р»РёР·Р°С‚РѕСЂ*/
+#include "miniJavaInter.hpp"
 %}
 
-/* Выше можем подключать любые С-ишные файлы (чтобы пользоваться функцией atoi() например) */
+
+
+
+IDENT [A-Za-z][A-Za-z0-9]*
+NUMERAL ([1-9][0-9]*)|0
+
 
 %option noyywrap
 
-ID       [a-z][a-z0-9]*
+%%
+
+"program"       { return PROGRAM;}
+
+"end."          {}   
+
+
+","		{ return ','; }
+"integer"	{ return INTEGER; }
+";"             { return ';'; }
+":"		{ return ':'; }
+"return"   	{ return RETURN; }
+
+"readln"	{ return READLN; }
+"writeln"       { return WRITELN; }
+"write"         { return WRITE; }
+
+
+"begin"         { return BEGIN; }
+"end"           { return END; }
+"var"		{ return VAR; }
+"<>"            { return NR; }
+
+
+"while"         { return WHILE; }
+"do"            { return DO; }  
+"for"  		{ return FOR; }
+"to"		{ return TO; }  
+
+
+"print" 	{ return PRINT; }
+"if"		{ return IF; }
+"then"		{ return THEN; }
+"else"		{ return ELSE; }
+"endif"		{ return ENDIF; }
+{NUMERAL}	{ yylval.int_val = atoi(yytext); return NUMERAL; }
+{IDENT}		{ strcpy(yylval.ident_name, yytext); return IDENT; }
+"="		{ return EQ; }
+"<"		{ return '<'; }
+">"		{ return '>'; }
+"**"		{ return POW; }
+"+"		{ return '+'; }
+"-"		{ return '-'; }
+"*"		{ return '*'; }
+"/"		{ return '/'; }
+"("		{ return '('; }
+")"		{ return ')'; }
+
+
+\n|;		{ return '\n'; }
+
+
+   
+" "            	
+.		{ printf("Lexical error: symbol '%c'!\n", yytext[0]); exit(1); }
 
 %%
 
-["<"][ ]*["b"][ ]*[">"]                                  { printf ( "\\textbf{" ); }
-
-["<"][ ]*["/"][ ]*["b"][ ]*[">"]                          { printf ( "}" ); }
-
-
-["<"][ ]*"em"[ ]*[">"]                                  { printf ( "\\emph{" ); }
-
-["<"][ ]*["/"][ ]*"em"[ ]*[">"]                          { printf ( "}" ); }
-
-
-["<"][ ]*"ol"[ ]*[">"]                                  { printf ( "\\begin{enumerate}" ); }
-
-["<"][ ]*["/"][ ]*"ol"[ ]*[">"]                          { printf ( "\\end{enumerate}" ); }
-
-
-["<"][ ]*"ul"[ ]*[">"]                                  { printf ( "\\begin{itemize}" ); }
-
-["<"][ ]*["/"][ ]*"ul"[ ]*[">"]                          { printf ( "\\end{itemize}" ); }
-
-
-
-["<"][ ]*"li"[ ]*[">"]                                  { printf ( "\\item " ); }
-
-["<"][ ]*["/"][ ]*"li"[ ]*[">"]                          /*пропускаем просто*/ /* eat up this teg */ 
-
-
-["<"][ ]*["i"][ ]*[">"]                                  { printf ( "\\textit{" ); }
-
-["<"][ ]*["/"][ ]*["i"][ ]*[">"]                        { printf ( "}" ); }
-
-
-
-
-
-["<"][ ]*"title"[ ]*[">"]                                  { printf ( "\\title{" ); }
-
-["<"][ ]*["/"][ ]*"title"[ ]*[">"]                         { printf ( "}" ); }
-
-
-
-["<"][ ]*"time"[ ]*[">"]                                  { printf ( "\\date{" ); }
-
-["<"][ ]*["/"][ ]*"time"[ ]*[">"]                         { printf ( "}" ); }
-
-
-["<"][ ]*"div"[ ]*"="[]*{ID}[">"]                                  { printf ( "\\date{" ); }
-
-["<"][ ]*["/"][ ]*"div"[ ]*[">"]                         { printf ( "}" ); }
-
-
-
-["<"][ ]*["u"][ ]*[">"]                                  { printf ( "\\underline{" ); }
-
-["<"][ ]*["/"][ ]*["u"][ ]*[">"]                          { printf ( "}" ); }
-
-
-["<"][ ]*"center"[ ]*[">"]                                  { printf ( "\\begin{center}" ); }
-
-["<"][ ]*["/"][ ]*"center"[ ]*[">"]                         { printf ( "\\end{center}" ); }
-
-
-
-["<"][ ]*"strong"[ ]*[">"]                                  { printf ( "\\textbf{" ); }
-
-["<"][ ]*["/"][ ]*"strong"[ ]*[">"]                          { printf ( "}" ); }
-
-
-
-
-["<"][ ]*"font"[ ]+"color"[ ]*"="["\""]{ID}["\""][ ]*[">"]                   { 
-																				if ( strstr(yytext,"red") !=NULL)
-																						printf("\\color{red}");
-																				else
-																				{
-																					if (strstr(yytext,"green") != NULL) 
-																						printf("\\color{green}");
-																					else
-																					    printf("\\color{black}");
-																						
-																				
-																				}
-																				
-																			}
-										                                                                         
-["<"][ ]*["/"][ ]*"font"[ ]*[">"]                                 
-
-
-
-.                                                         { printf (yytext); }
-
-
-
-%%
 
 int main(void)
 {
