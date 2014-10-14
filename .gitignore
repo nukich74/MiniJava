@@ -7,7 +7,6 @@
 #.\LexAn\LexAn\Debug\
 #.\LexAn\LexAn\Release\
 #LexAn/LexAn/Debug/vc120.idb
-#*.exe
 #*.ilk
 #*.pdb
 #*.obj
