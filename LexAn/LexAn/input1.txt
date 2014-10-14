@@ -1,0 +1,35 @@
+<b>bold font</b>
+<em>italic font</em>
+<ol> 
+	<li>first element of ordered list</li> 
+	<li>second element of ordered list</li>  
+	not list
+</ol>
+<ol>
+	Ordered list
+</ol>
+
+<ul>
+	<li> first element of marked list </li>
+	<li> second element of marked list </li>
+
+</ul>
+
+<ol> 
+	<li>first</li>
+</ol>
+
+<i>too italic font</i>
+
+
+<title> Text title </title>
+<time> Date and time </time>
+
+<u>underline text</u>
+
+<center>Center text</center>
+
+<strong> some text </strong>
+
+<font color="red"> Red text </font>
+<font color="green"> Green text </font>
