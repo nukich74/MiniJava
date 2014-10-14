@@ -1980,10 +1980,3 @@ void yyfree (void * ptr )
 
 
 
-int main(void)
-{
-
-	yylex();
-	return 0;
-}
-

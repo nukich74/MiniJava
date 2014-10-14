@@ -74,10 +74,3 @@ NUMERAL ([1-9][0-9]*)|0
 
 %%
 
-
-int main(void)
-{
-
-	yylex();
-	return 0;
-}

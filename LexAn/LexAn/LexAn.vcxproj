@@ -74,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="miniJavaInter.cpp" />
+    <ClCompile Include="misc.cpp" />
+    <ClCompile Include="run.cpp" />
+    <ClCompile Include="tab.cpp" />
     <ClCompile Include="translator.cpp" />
   </ItemGroup>
   <ItemGroup>
