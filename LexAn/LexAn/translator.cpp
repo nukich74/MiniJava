@@ -519,8 +519,7 @@ char *yytext;
 #include <stdio.h> /* for printf() */
 #include <iostream>
 #include "miniJava.h"  /*сейчас пишем лексический анализатор*/
-#include "miniJavaInter.hpp"
-#line 524 "translator.cpp"
+#line 523 "translator.cpp"
 
 #define INITIAL 0
 
@@ -699,10 +698,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 19 "translator.l"
+#line 18 "translator.l"
 
 
-#line 706 "translator.cpp"
+#line 705 "translator.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -787,201 +786,201 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "translator.l"
+#line 20 "translator.l"
 { return PROGRAM;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "translator.l"
+#line 22 "translator.l"
 {}   
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 26 "translator.l"
+#line 25 "translator.l"
 { return ','; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 27 "translator.l"
+#line 26 "translator.l"
 { return INTEGER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 28 "translator.l"
+#line 27 "translator.l"
 { return ';'; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 29 "translator.l"
+#line 28 "translator.l"
 { return ':'; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 30 "translator.l"
+#line 29 "translator.l"
 { return RETURN; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 32 "translator.l"
+#line 31 "translator.l"
 { return READLN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 33 "translator.l"
+#line 32 "translator.l"
 { return WRITELN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 34 "translator.l"
+#line 33 "translator.l"
 { return WRITE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 37 "translator.l"
+#line 36 "translator.l"
 { return BEGIN; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 38 "translator.l"
+#line 37 "translator.l"
 { return END; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 39 "translator.l"
+#line 38 "translator.l"
 { return VAR; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 40 "translator.l"
+#line 39 "translator.l"
 { return NR; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 43 "translator.l"
+#line 42 "translator.l"
 { return WHILE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 44 "translator.l"
+#line 43 "translator.l"
 { return DO; }  
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 45 "translator.l"
+#line 44 "translator.l"
 { return FOR; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 46 "translator.l"
+#line 45 "translator.l"
 { return TO; }  
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 49 "translator.l"
+#line 48 "translator.l"
 { return PRINT; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 50 "translator.l"
+#line 49 "translator.l"
 { return IF; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 51 "translator.l"
+#line 50 "translator.l"
 { return THEN; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 52 "translator.l"
+#line 51 "translator.l"
 { return ELSE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 53 "translator.l"
+#line 52 "translator.l"
 { return ENDIF; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 54 "translator.l"
+#line 53 "translator.l"
 { yylval.int_val = atoi(yytext); return NUMERAL; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 55 "translator.l"
+#line 54 "translator.l"
 { strcpy(yylval.ident_name, yytext); return IDENT; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 56 "translator.l"
+#line 55 "translator.l"
 { return EQ; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 57 "translator.l"
+#line 56 "translator.l"
 { return '<'; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 58 "translator.l"
+#line 57 "translator.l"
 { return '>'; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 59 "translator.l"
+#line 58 "translator.l"
 { return POW; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 60 "translator.l"
+#line 59 "translator.l"
 { return '+'; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 61 "translator.l"
+#line 60 "translator.l"
 { return '-'; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 62 "translator.l"
+#line 61 "translator.l"
 { return '*'; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 63 "translator.l"
+#line 62 "translator.l"
 { return '/'; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 64 "translator.l"
+#line 63 "translator.l"
 { return '('; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 65 "translator.l"
+#line 64 "translator.l"
 { return ')'; }
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 68 "translator.l"
+#line 67 "translator.l"
 { return '\n'; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 72 "translator.l"
+#line 71 "translator.l"
 
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 73 "translator.l"
+#line 72 "translator.l"
 { printf("Lexical error: symbol '%c'!\n", yytext[0]); exit(1); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 75 "translator.l"
+#line 74 "translator.l"
 ECHO;
 	YY_BREAK
-#line 985 "translator.cpp"
+#line 984 "translator.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1975,7 +1974,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 74 "translator.l"
+#line 73 "translator.l"
 
 
 
