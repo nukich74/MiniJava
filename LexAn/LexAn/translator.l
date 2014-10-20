@@ -4,7 +4,6 @@
 #include <stdio.h> /* for printf() */
 #include <iostream>
 #include "miniJava.h"  /*сейчас пишем лексический анализатор*/
-#include "miniJavaInter.hpp"
 %}
 
 
