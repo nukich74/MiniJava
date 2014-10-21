@@ -13,34 +13,26 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="extra">
+      <UniqueIdentifier>{e6042069-d8e7-4fec-9091-1d7f0980af58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="translator.l" />
-    <CustomBuild Include="miniJavaInter.y" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="translator.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="miniJavaInter.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="misc.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="run.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="tab.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="miniJavaInter.hpp">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="miniJava.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
+    <Text Include="fact.txt">
+      <Filter>Файлы исходного кода</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="bison.y">
+      <Filter>extra</Filter>
+    </CustomBuild>
+    <CustomBuild Include="flex.l">
+      <Filter>extra</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

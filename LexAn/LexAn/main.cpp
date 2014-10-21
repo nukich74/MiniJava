@@ -5,19 +5,6 @@
 
 void yyparse();
 
-int pow_int(int x, int n)
-{
-	if (n < 0) 
-	{
-		cerr << "Runtime error: negative power.\n";
-		exit(1);
-	}
-	if (n == 0) 
-		return 1;
-	else 
-		return x*pow_int(x,n-1);
-}
-
 extern FILE* yyin;
 
 int main(int argc, char **argv)
@@ -38,10 +25,8 @@ int main(int argc, char **argv)
 	}
 	yyin = handle; // тут разбор делает flex
 	yyparse(); // тут bison нам делает дерево вывода по разбора сделаному flex (1)
-
 	// запускаем нашу программу от корня дерева (у него есть метод run())
 	// дерео мы получим от bison - а в пункте (1)
-	Program->run(); 
 }
 
 void yyerror(string s)
