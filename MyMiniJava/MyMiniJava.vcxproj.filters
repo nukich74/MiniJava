@@ -13,29 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="extra">
-      <UniqueIdentifier>{e6042069-d8e7-4fec-9091-1d7f0980af58}</UniqueIdentifier>
+    <Filter Include="AutoGenFiles">
+      <UniqueIdentifier>{6ab2c8e7-e552-4152-94d6-b2e186534ca3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <Bison Include="Source\bison.y">
+      <Filter>Файлы исходного кода</Filter>
+    </Bison>
+  </ItemGroup>
+  <ItemGroup>
+    <Flex Include="Source\flex.l">
+      <Filter>Файлы исходного кода</Filter>
+    </Flex>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\main.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="flex.cpp">
+    <ClCompile Include="Source\bison.tab.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\flex.flex.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fact.txt">
+    <ClInclude Include="Source\bison.tab.h">
       <Filter>Файлы исходного кода</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="bison.y">
-      <Filter>extra</Filter>
-    </CustomBuild>
-    <CustomBuild Include="flex.l">
-      <Filter>extra</Filter>
-    </CustomBuild>
+    </ClInclude>
   </ItemGroup>
 </Project>

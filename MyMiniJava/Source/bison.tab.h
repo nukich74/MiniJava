@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_MINIJAVAINTER_HPP_INCLUDED
-# define YY_YY_MINIJAVAINTER_HPP_INCLUDED
+#ifndef YY_YY_BISON_TAB_H_INCLUDED
+# define YY_YY_BISON_TAB_H_INCLUDED
 /* Enabling traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -46,31 +46,36 @@ extern int yydebug;
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     POW = 258,
-     UMINUS = 259,
-     NUMERAL = 260,
-     IDENT = 261,
-     PRINT = 262,
-     IF = 263,
-     THEN = 264,
-     ELSE = 265,
-     ENDIF = 266,
-     EQ = 267,
-     NR = 268,
-     WHILE = 269,
-     DO = 270,
-     BEGIN = 271,
-     END = 272,
-     FOR = 273,
-     TO = 274,
-     VAR = 275,
-     READLN = 276,
-     WRITELN = 277,
-     WRITE = 278,
-     RETURN = 279,
-     INTEGER = 280,
-     PROBEL = 281,
-     PROGRAM = 282
+     OperatorEq = 258,
+     OperatorAnd = 259,
+     OperatorMore = 260,
+     OperatorLess = 261,
+     VarDeclarations = 262,
+     StatememtList = 263,
+     Id = 264,
+     IntNum = 265,
+     FloatNum = 266,
+     If = 267,
+     Else = 268,
+     While = 269,
+     Main = 270,
+     Class = 271,
+     Public = 272,
+     Static = 273,
+     Return = 274,
+     Extends = 275,
+     Int = 276,
+     Bool = 277,
+     Void = 278,
+     String = 279,
+     Print = 280,
+     True = 281,
+     False = 282,
+     This = 283,
+     New = 284,
+     Length = 285,
+     SystemOutPrintln = 286,
+     _EOF = 287
    };
 #endif
 
@@ -79,24 +84,14 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 14 "miniJavaInter.y"
+#line 12 "bison.y"
 
-	Expr *expr;
-
-	Expr *var;
-
-	LogExpr *log_expr;
-	Stmt *stmt;
-	ListStmt *list_stmt;
-
-	ListExpr *list_expr;
-
-	int int_val;
-	char ident_name[256];
+	int ival;
+	float fval;
 
 
 /* Line 2058 of yacc.c  */
-#line 100 "miniJavaInter.hpp"
+#line 95 "bison.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -119,4 +114,4 @@ int yyparse ();
 #endif
 #endif /* ! YYPARSE_PARAM */
 
-#endif /* !YY_YY_MINIJAVAINTER_HPP_INCLUDED  */
+#endif /* !YY_YY_BISON_TAB_H_INCLUDED  */

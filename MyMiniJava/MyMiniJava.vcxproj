@@ -10,9 +10,23 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <Bison Include="Source\bison.y" />
+  </ItemGroup>
+  <ItemGroup>
+    <Flex Include="Source\flex.l" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\bison.tab.cpp" />
+    <ClCompile Include="Source\flex.flex.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\bison.tab.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1309A9CA-E8A8-41AB-8D12-4A344CA0AD24}</ProjectGuid>
-    <RootNamespace>LexAn</RootNamespace>
+    <ProjectGuid>{11E6DD32-849C-47A0-B7EA-042B796F2117}</ProjectGuid>
+    <RootNamespace>MyMiniJava</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -30,6 +44,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="custom_build_rules\win_flex_bison_custom_build.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -44,6 +59,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,30 +80,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <CustomBuild Include="flex.l">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_flex --wincompat -o%(Filename).cpp %(Identity)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win_flex --wincompat -o%(Filename).cpp %(Identity)</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).cpp</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="flex.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="fact.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="bison.y">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_bison -d -v -o%(Filename).cpp %(Identity)</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp;%(Filename).hpp</Outputs>
-    </CustomBuild>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="custom_build_rules\win_flex_bison_custom_build.targets" />
   </ImportGroup>
 </Project>

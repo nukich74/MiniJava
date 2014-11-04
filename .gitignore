@@ -2,10 +2,8 @@
 #*.suo
 #*.user
 #*.ncb
-#.\LexAn\Debug\
-#.\LexAn\Release\
-#.\LexAn\LexAn\Debug\
-#.\LexAn\LexAn\Release\
+#.\MyMiniJava\Debug\
+#.\MyMiniJava\Release\
 #LexAn/LexAn/Debug/vc120.idb
 #*.ilk
 #*.pdb
@@ -136,32 +134,7 @@ DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
-# Click-Once directory
-publish/
 
-# Publish Web Output
-*.[Pp]ublish.xml
-*.azurePubxml
-# TODO: Comment the next line if you want to checkin your web deploy settings 
-# but database connection strings (with potential passwords) will be unencrypted
-*.pubxml
-*.publishproj
-
-# NuGet Packages
-*.nupkg
-# The packages folder can be ignored because of Package Restore
-**/packages/*
-# except build/, which is used as an MSBuild target.
-!**/packages/build/
-# If using the old MSBuild-Integrated Package Restore, uncomment this:
-#!**/packages/repositories.config
-
-# Windows Azure Build Output
-csx/
-*.build.csdef
-
-# Windows Store app package directory
-AppPackages/
 
 # Others
 sql/
@@ -198,6 +171,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
-*.sdf
-*.sdf
 *.sdf
