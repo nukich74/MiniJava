@@ -1,14 +1,26 @@
+%option yylineno
 %option noyywrap
 %{
-#include <stdlib.h>
-#include <stdio.h>	
-#include <string.h>
-#include <math.h>
-#include "bison.tab.h"
+#include <cstdlib>
+#include <cstdio>	
+#include <cstring>
+#include <cmath>
+#include <string>
 #include <iostream>
+#include "bison.tab.h"
 
 #define YY_DECL extern "C" int yylex()
 #define yyterminate() return YY_NULL
+
+/*extern "C" int yywrap() {
+	return 1;
+}*/
+
+
+void printToken( const std::string& token ) {
+	std::cout << token;
+}
+
 %}
 
 NUMBER ([1-9][0-9]*)|(0)
@@ -16,68 +28,71 @@ Comment (/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)*
 
 %%
 
-"class" { std::cout << yytext << std::endl; return Class; }
+"class" { printToken( yytext ); return Class; }
 
-"public" { std::cout << yytext << std::endl;  return Public; }
+"public" { printToken( yytext );  return Public; }
 
-"static" { std::cout << yytext << std::endl;  return Static; }
+"static" { printToken( yytext );  return Static; }
 
-"void" { std::cout << yytext << std::endl;  return Void; }
+"void" { printToken( yytext );  return Void; }
 
-"main" {  std::cout << yytext << std::endl; return Main; }
+"main" {  printToken( yytext ); return Main; }
 
-"String" { std::cout << yytext << std::endl;  return String; }
+"String" { printToken( yytext );  return String; }
 
-"extends" { std::cout << yytext << std::endl;  return Extends; }
+"extends" { printToken( yytext );  return Extends; }
 
-"return" { std::cout << yytext << std::endl;  return Return; }
+"return" { printToken( yytext );  return Return; }
 
-"int" { std::cout << yytext << std::endl;  return Int; }
+"int" { printToken( yytext );  return Int; }
 
-"boolean" {  std::cout << yytext << std::endl; return Bool; }
+"boolean" {  printToken( yytext ); return Bool; }
 
-"if" { std::cout << yytext << std::endl;  return If; }
+"if" { printToken( yytext );  return If; }
 
-"else" { std::cout << yytext << std::endl;  return Else; }
+"else" { printToken( yytext );  return Else; }
 
-"while" { std::cout << yytext << std::endl;  return While; }
+"while" { printToken( yytext );  return While; }
 
-"System.out.println" { std::cout << yytext << std::endl;  return  Print; }
+"System.out.println" { printToken( yytext );  return  Print; }
 
-"length" { std::cout << yytext << std::endl; 	return Length;	}
+"length" { printToken( yytext ); 	return Length;	}
 
-"true" { std::cout << yytext << std::endl; 	return True; }
+"true" { printToken( yytext ); 	return True; }
 
-"false" { std::cout << yytext << std::endl; 	return False; }
+"false" { printToken( yytext ); 	return False; }
 
-"this" { std::cout << yytext << std::endl; 	return This; }
+"this" { printToken( yytext ); 	return This; }
 
-"new" {	 std::cout << yytext << std::endl; return New; }
+"new" {	 printToken( yytext ); return New; }
+
+"//"[^"\n"]+ { }
+
+Comment { printToken( yytext );  }
+
+[a-zA-Z_][a-zA-Z0-9_]* { std::cout << yytext; return Id; }
 
 "<" { return OperatorLess; }
 ">" { return OperatorMore; }
 "&&" { return OperatorAnd; }
-"=" { std::cout << "=" << std::endl; return OperatorEq; }
+"=" { std::cout << "="; return OperatorEq; }
 
 [\+\-\*/] return yytext[0];
 
-Comment { std::cout << yytext << std::endl;  }
-
-[\[\]\)\(\{\}\;\.] {  std::cout << yytext[0] << std::endl; return yytext[0]; }
-
-[a-zA-Z_][a-zA-Z0-9_]* { std::cout << "Found id: " << yytext << std::endl; return Id; }
+[\[\]\)\(\{\}\;\.,] {  std::cout << yytext[0]; return yytext[0]; }
 
 
-({NUMBER}) {  std::cout << yytext << std::endl; yylval.ival = atoi( yytext ); return IntNum; }
+({NUMBER}) {  printToken( yytext ); yylval.ival = atoi( yytext ); return IntNum; }
 
-"\n" 	{ std::cout << "blank" << std::endl; }
+" "	{ std::cout << " "; }
+"\n" 	{ std::cout << "\n" << yylineno << ": "; }
+"\t"	{ std::cout << "\t"; }
 
-"\t"	{ std::cout << "blank" << std::endl; }
 
-" "	{ std::cout << "blank" << std::endl; }
 
 <<EOF>>	{
 	std::cout << "EOF" << std::endl;
+	yyterminate();
 }
 
 . 	{ std::cout  << "Unknown: <" << yytext << ">" << std::endl;  }

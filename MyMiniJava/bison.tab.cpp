@@ -63,7 +63,7 @@
 
 /* Copy the first part of user declarations.  */
 /* Line 371 of yacc.c  */
-#line 1 "bison.y"
+#line 1 "Source\\bison.y"
        
 #include <cstdio>
 #include <iostream>
@@ -149,7 +149,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 12 "bison.y"
+#line 12 "Source\\bison.y"
 
 	int ival;
 	float fval;
@@ -1506,43 +1506,43 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 50 "bison.y"
+#line 50 "Source\\bison.y"
     { }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 54 "bison.y"
+#line 54 "Source\\bison.y"
     {}
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 58 "bison.y"
+#line 58 "Source\\bison.y"
     { }
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 63 "bison.y"
+#line 63 "Source\\bison.y"
     {  }
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 67 "bison.y"
+#line 67 "Source\\bison.y"
     { }
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 68 "bison.y"
+#line 68 "Source\\bison.y"
     { }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 72 "bison.y"
+#line 72 "Source\\bison.y"
     { }
     break;
 
@@ -1780,5 +1780,5 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 149 "bison.y"
+#line 149 "Source\\bison.y"
 

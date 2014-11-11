@@ -15,11 +15,7 @@ void yyerror(const char *s);
 }
 
 %error-verbose
-
-
-%left '+' '-'
-%left '*' '/'
-%left OperatorLess OperatorMore OperatorAnd OperatorEq
+%verbose
 
 %token VarDeclarations
 %token StatememtList
@@ -40,8 +36,14 @@ void yyerror(const char *s);
 %token New
 %token Length
 %token SystemOutPrintln
-%token _EOF
 %start Program
+
+
+%left OperatorLess OperatorMore OperatorAnd OperatorEq
+%left '+' '-'
+%left '*' '/'
+%left UMINUS '!'
+%left '.' '[' ']'
 
 %%
 Program 
@@ -53,12 +55,12 @@ MainClass
 	;
 	
 VarDeclaration 
-	: Type Id ';' { std::cout << "declared Var" << std::endl; };
+	: Type Id ';' { };
 	;
 
 VarDeclarationList 
 	:	VarDeclarationList VarDeclaration
-	| /*eps*/ { std::cout << "end of var decl" << std::endl; }
+	| /*eps*/ {  }
 	;
 
 ClassDeclaration 
@@ -92,6 +94,7 @@ FormalRestList
 
 Type
 	:	Int
+	|	Int '[' ']'
     |	Bool
     |	Id
 	;
@@ -111,15 +114,16 @@ Statement
 	;
 
 Expr
-	:	Expr '+' Expr
-	|	Expr '-' Expr
-	|	Expr '*' Expr
+	:	Expr '*' Expr
+	|   Expr '+' Expr
 	|	Expr '/' Expr
-	|	Expr OperatorLess Expr
-	|	Expr OperatorAnd Expr
+	|	Expr '-' Expr
+	|	'-' Expr %prec UMINUS
 	|	Expr '[' Expr ']'
 	|	Expr '.' Length
 	|	Expr '.' Id '(' ExprList ')'
+	|	Expr OperatorLess Expr
+	|	Expr OperatorAnd Expr
 	|	IntNum
 	|	FloatNum
 	|	True
@@ -128,6 +132,7 @@ Expr
 	|	This
 	|	New Int '[' Expr ']'
 	|	New Id '(' ')'
+	|	'!' Expr
 	|	'(' Expr ')'
 	;
 

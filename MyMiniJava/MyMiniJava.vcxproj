@@ -20,7 +20,6 @@
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="syntaxTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\bison.tab.h" />
