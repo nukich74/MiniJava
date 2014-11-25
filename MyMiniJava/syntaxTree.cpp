@@ -1,248 +1,563 @@
-#include<iostream>
-#include<vector>
-#include<string>
+﻿#pragma once
+#include "iVisitor.h"
+#include <iostream>
+#include <vector>
+#include <string>
 
-using namespace std;
+
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-__interface Visitor {
+class IExpr {
 public:
-  void visit(Program n);
-  void visit(MainClass n);
-  void visit(Identifier n);
-};
-
-
-__interface TypeVisitor {
-  Type* visit(Program n);
-  Type* visit(MainClass n); 
-  Type* visit(Identifier n);
+	virtual ~IExpr() = 0 {};
+	virtual void Accept( IVisitor *v )const = 0 {};
 };
 
 
 
-
-__interface Type {
-  virtual void accept(Visitor* v) = 0;
-  virtual Type* accept(TypeVisitor* v) = 0;
-};
-
-
-__interface Exp {
+class IStmt {
 public:
-	virtual void accept(Visitor* v) = 0;
-	virtual Type* accept(TypeVisitor* v) = 0;
+	virtual ~IStmt() = 0 {};
+	virtual void Accept( IVisitor *v ) const = 0 {};
 };
 
- __interface Statement {
- public:
-	virtual void accept(Visitor* v) = 0;
-	virtual Type* accept(TypeVisitor* v) = 0;
-};
-
-
- __interface ClassDecl {
+class IClassDecl {
 public:
-	virtual void accept(Visitor* v) = 0;
-    virtual Type* accept(TypeVisitor* v);
+	virtual ~IClassDecl() = 0 {};
+	virtual void Accept( IVisitor *v )const = 0 {};
 };
 
 
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 
 
-class Identifier {
+class CProgram {
 public:
-	  string s;
+	CProgram( const CMainClass *_mainClass, const CClassDeclList *_classDeclList) : 
+		mainClass( _mainClass ), classDeclList( _classDeclList ) {}
+	~CProgram() {}
+	
+	const CMainClass* GetMainClass() const { return mainClass; }
+	const CClassDeclList* GetClassDeclList() const { return classDeclList; }
 
-	  Identifier(string as) { 
-			s=as;
-	  }
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
-	  void accept(Visitor* v) {
-		  v->visit(*this);
-	  }
-
-	  Type* accept(TypeVisitor* v) {
-		return v->visit(*this);
-	  }
-
-	  string toString(){
-		return s;
-	  }
+private:
+	const CMainClass *mainClass;
+	const CClassDeclList *classDeclList;
 };
 
 
-
-
-
-
-class ClassDeclList {
+// class id { 
+//	 public static void main ( String [] id ) { 
+//		 statement }
+// }
+class CMainClass {
 public:
-   vector<ClassDecl*> list;
-
-   ClassDeclList() {
-	   list = std::vector<ClassDecl*>();
-   }
-
-   void addElement(ClassDecl* n) {
-	   list.push_back(n);
-   }
-
-   
-   ClassDecl* elementAt(int i)  { 
-      return (ClassDecl*)list[i]; 
-   }
-   
-
-   int size() { 
-      return list.size(); 
-   }
+	CMainClass( const std::string _className, const std::string _argsName, const IStmt *_stmt ) :
+		className( _className ), argsName( _argsName ), stmt( _stmt ) {}
+	~CMainClass() {}
+	
+	// имя главного класс
+	const std::string GetNameFirst() const { return className; }
+	// имя массива параметров у main() - функции
+	const std::string GetArgsName() const { return argsName; }
+	// выражение (TODO: не массив ли выражений?)
+	const IStmt* GetStmt() const { return stmt; }
+	
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string className;
+	const std::string argsName;
+	const IStmt *stmt;
 };
 
 
-
-class ExpList {
+// class id { 
+//	 VarDeclList 
+//	 MethodDeclList 
+// }
+class CClassDecl : public IClassDecl {
 public:
-   vector<Exp*> list;
+	CClassDecl( const std::string _className, const CVarDeclList* _variables, const CMethodDeclList* _methods ) :
+		className( _className ), variables( _variables ), methods( _methods ) {}
+	~CClassDecl() {}
 
-   ExpList() {
-      list = std::vector<Exp*>();
-   }
+	// имя класса
+	const std::string GetName() const { return className; }
+	// список переменных класса
+	const CVarDeclList* GetVarDeclList() const { return variables; }
+	// список методов класса
+	const CMethodDeclList* GetMethodDeclList() const { return methods; }
 
-   void addElement(Exp* n) {
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
-	   list.push_back(n);
-   }
-
-
-   
-   Exp* elementAt(int i)  { 
-      return (Exp*)list[i]; 
-   }
-   
-
-   int size() { 
-      return list.size(); 
-   }
-};
-
-
-
-class MainClass {
-public:
-	Identifier* i1;
-	Identifier* i2;
-	Statement* s;
-
-	MainClass(Identifier* ai1, Identifier* ai2, Statement* as) {
-		i1=ai1;
-		i2=ai2; 
-		s=as;
-	}
-
-	void accept(Visitor* v) {
-		v->visit(*this);
-	}
-
-	Type* accept(TypeVisitor* v) {
-		return v->visit(*this);
-  }
-};
-
-
-
-class Program {
-  
-	MainClass m;
-	ClassDeclList cl;
-
-	Program( MainClass am, ClassDeclList acl ) {
-		m=am; cl=acl; 
-		}
-
-	void accept(Visitor* v) {
-		v->visit(*this);
-	}
-
-	Type* accept(TypeVisitor* v) {
-		return v->visit(*this);
-	}
-};
-
-
-class Formal {
-public:
-	Type* t;
-	Identifier i;
- 
-	Formal(Type* at, Identifier ai) {
-		t=at;
-		i=ai;
-	}
-
-	void accept(Visitor* v) {
-		v->visit(*this);
-	}
-
-	Type* accept(TypeVisitor* v) {
-		return v->visit(*this);
-	}
-};
-
-
-class FormalList {
 private:
 
-	std::vector<Formal> list;
-public:
-	FormalList(){
-
-	}
-
-   void addElement(Formal n) {
-	   list.push_back(n);
-   }
-
-   Formal elementAt(int i)  { 
-      return (Formal)list[i]; 
-   }
-
-   
-	int size() { 
-      return list.size(); 
-   }
+	const std::string className;
+	const CVarDeclList *variables;
+	const CMethodDeclList *methods;
 };
 
 
-class MethodDecl {
+//class id extends id { VarDecl* MethodDecl* }
+class CExtendClassDecl : public IClassDecl {
 public:
-	Type* t;
-	Identifier i;
-	FormalList fl;
-	VarDeclList vl;
-	StatementList sl;
-	public Exp e;
+	CExtendClassDecl( const std::string _className, const std::string _baseClassName, const CVarDeclList *_variables, const CMethodDeclList *_methods ) :
+		className( _className ), baseClassName( _baseClassName ), variables( _variables ), methods( _methods ) {}
+	~CExtendClassDecl() {}
 
-	MethodDecl(Type* at, Identifier ai, FormalList afl, VarDeclList avl, 
-				StatementList asl, Exp ae) {
-		t=at; 
-		i=ai; 
-		fl=afl; 
-		vl=avl; 
-		sl=asl; 
-		e=ae;
-	}
- 
-	void accept(Visitor* v) {
-		v->visit(*this);
-	}
+	const std::string GetClassName() const { return className; }
+	const std::string GetBaseClassName() const { return baseClassName; }
+	const CVarDeclList* GetVarDeclList() const { return variables; }
+	const CMethodDeclList* GetMethodDeclList() const { return methods; }
 
-	Type* accept(TypeVisitor* v) {
-		return v->visit(*this);
-	}
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+
+private:
+	const std::string className;
+	const std::string baseClassName;
+	const CVarDeclList *variables;
+	const CMethodDeclList *methods;
 };
 
 
+//Type name;
+class CVarDecl {
+public:
+	CVarDecl( const std::string _type, const std::string _name ) : type( _type ), name( _name ) {}
+	~CVarDecl() {}
+
+	// тип переменной
+	const std::string GetType() const { return type; }
+	// имя переменной
+	const std::string GetName() const { return name; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string type;
+	const std::string name;
+};
 
 
+// public Type name ( FormalList ) { 
+//		VarDeclList
+//		Statement 
+//      return Expr ;
+// }
+class CMethodDecl {
+public:
+	CMethodDecl( const std::string _type, const std::string _name, const CFormalList *_formals, 
+		const CVarDeclList *_variables, const CStmtList *_statements, const IExpr *_returnExpr ) :
+	type( _type ), name( _name ), formals( _formals ), variables( _variables ), statements( _statements ), returnExpr( _returnExpr ) {}
+	~CMethodDecl() {}
+
+	// тип возвращаемого значения
+	const std::string GetType() const { return type; }
+	// имя метода
+	const std::string GetName() const { return name; }
+	// список переменных
+	const CFormalList* GetFormalList() const { return formals; }
+	// переменные, объявленные в методе
+	const CVarDeclList* GetVarDeclList() const { return variables; }
+	const CStmtList* GetStmList() const { return statements; }
+	const IExpr* GetExp() const { return returnExpr; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string type;
+	const std::string name;
+	const CFormalList *formals;
+	const CVarDeclList *variables;
+	const CStmtList *statements;
+	const IExpr *returnExpr;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+//{ Statement }
+class CGroupStmt : public IStmt {
+public:
+	CGroupStmt( const CStmtList *_statements ) : statements( _statements ) {}
+	~CGroupStmt() {}
+
+	const CStmtList* GetStmtList() const { return statements; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const CStmtList *statements;
+};
+
+
+// if ( Expr ) 
+//	 Statement 
+// else 
+//	 Statement
+class CIfStmt : public IStmt {
+public:
+	CIfStmt( const IExpr *_condition, const IStmt *_trueStatement, const IStmt *_falseStatement ) : 
+		condition( _condition ), trueStatement( _trueStatement ), falseStatement( _falseStatement ) {};
+	~CIfStmt() {}
+
+	const IExpr* GetExp() const { return condition; }
+	const IStmt* GetStmFirst() const { return trueStatement; }
+	const IStmt* GetStmSecond() const { return falseStatement; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *condition;
+	const IStmt *trueStatement;
+	const IStmt *falseStatement;
+};
+
+// while ( Exp ) 
+//   Statement
+class CWhileStmt : public IStmt {
+public:
+	CWhileStmt( const IExpr *_condition, const IStmt*_statement ) : condition( _condition ), statement( _statement ) {};
+	CWhileStmt() {}
+	const IExpr* GetExpr() const { return condition; }
+	const IStmt* GetStmt() const { return statement; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *condition;
+	const IStmt *statement;
+};
+
+
+//System.out.println( Expr ) ;
+class CSOPStmt : public IStmt {
+public:
+	CSOPStmt( const IExpr *_printedExpr ) : printedExpr( _printedExpr ) {};
+	CSOPStmt() {}
+
+	const IExpr* GetExpr() const { return printedExpr; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *printedExpr;
+};
+
+
+//name = Expr ;
+class CAssignStmt : public IStmt {
+public:
+	CAssignStmt( const std::string _name, const IExpr *_value ) : name( _name ), value( _value ) {};
+	~CAssignStmt() {}
+
+	const std::string GetName() const { return name; }
+	const IExpr* GetExpr() const { return value; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string name;
+	const IExpr* value;
+};
+
+
+//name [ Expr ]= Expr
+class CAssignExprStmt : public IStmt {
+public:
+	CAssignExprStmt( const std::string _name, const IExpr *_id, const IExpr *_value ) : name( _name ), id( _id ), value( _value ) {};
+	~CAssignExprStmt() {}
+
+	const std::string GetName() const { return name; }
+	const IExpr* GetExprId() const { return id; }
+	const IExpr* GetExprValue() const { return value; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string name;
+	const IExpr *id;
+	const IExpr *value;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+enum CBinOp {
+	Plus,
+	Minus,
+	Mult,
+	Div,
+	And,
+	Less
+};
+
+
+//Expr op Expr
+class COpExpr :public IExpr {
+public:
+	COpExpr( const IExpr *_lExpr, CBinOp _op, const IExpr *_rExpr ) : lExpr( _lExpr ), op( _op ), rExpr( _rExpr ) {}
+	~COpExpr() {}
+
+	const IExpr* GetExprFirst() const { return lExpr; }
+	CBinOp GetOp() const { return op; }
+	const IExpr* GetExprSecond() const { return rExpr; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *lExpr;
+	CBinOp op;
+	const IExpr *rExpr;
+};
+
+
+//Expr [ Expr ]
+class CExExpr :public IExpr {
+public:
+	CExExpr( const IExpr *_idExpr, const IExpr *_expr ) : idExpr( _idExpr ), expr( _expr ) {};
+	~CExExpr() {}
+
+	const IExpr* GetExpId() const { return idExpr; }
+	const IExpr* GetExp() const { return expr; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *idExpr;
+	const IExpr *expr;
+};
+
+
+//Expr . name ( ExprList )
+class CMethodExpr :public IExpr {
+public:
+	CMethodExpr( const IExpr *_expr, const std::string _methodName, const CExprList *_args ) : 
+		expr( _expr ), methodName( _methodName ), args( _args ) {};
+	~CMethodExpr() {}
+
+	const IExpr* GetExp() const { return expr; }
+	const std::string GetName() const { return methodName; }
+	const CExprList* GetExprList() const { return args; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *expr;
+	const std::string methodName;
+	const CExprList *args;
+};
+
+
+class CIntExpr : public IExpr {
+public:
+	CIntExpr( const int _number ) : number( _number ) {}
+	~CIntExpr() {}
+
+	const int GetNum() const { return number; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const int number; 
+};
+
+
+//true
+class CTrueExpr :public IExpr {
+public:
+	CTrueExpr() {}
+	~CTrueExpr() {}
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+};
+
+
+//false
+class CFalseExpr :public IExpr {
+public:
+	CFalseExpr() {}
+	~CFalseExpr() {}
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+};
+
+
+//name (имя переменной/метода/класса/...)
+class CNameExpr :public IExpr {
+public:
+	CNameExpr( const std::string _name ) : name( _name ) {}
+	~CNameExpr() {}
+
+	const std::string GetName() const { return name; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string name;
+};
+
+
+//this
+class CThisExpr :public IExpr {
+public:
+	CThisExpr() {}
+	~CThisExpr() {}
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+};
+
+
+//new int [ Expr]
+class CNewIntExpr :public IExpr {
+public:
+	CNewIntExpr( const IExpr *_expr ) : expr( _expr ) {}
+	~CNewIntExpr() {}
+
+	const IExpr* GetExpr() const { return expr; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *expr;
+};
+
+
+//new name ()
+class CNewIdExpr :public IExpr {
+public:
+	CNewIdExpr( const std::string _className ) : className( _className ) {}
+	~CNewIdExpr() {}
+
+	const std::string GetName() const { return className; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string className;
+};
+
+
+//! Expr
+class CNotExpr :public IExpr {
+public:
+	CNotExpr( const IExpr *_expr ) : expr( _expr ) {};
+	~CNotExpr() {}
+
+	const IExpr* GetExpr() const { return expr; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *expr;
+};
+
+
+//( Expr )
+class CBrExpr : public IExpr {
+public:
+	CBrExpr( const IExpr *_expr ) : expr( _expr ) {};
+	~CBrExpr() {}
+	const IExpr* GetExpr() const { return expr; }
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *expr;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+// name (имя класса)
+class CTypeName {
+public:
+	CTypeName( const std::string _name ) : name( _name ) {};
+	~CTypeName() {}
+
+	const std::string GetName() const { return name; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string name;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+class CExprList {
+public:
+	CExprList( const std::vector<IExpr*> _exprList ) : exprList( _exprList ) {};
+	~CExprList() {}
+
+	const std::vector<IExpr*> GetExprList() const { return exprList; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	std::vector<IExpr*> exprList;
+};
+
+
+//Type Name FormalList
+class CFormalList {
+public:
+	CFormalList( const std::string _type, const std::string _name, const CFormalList * _formals ) :
+		type( _type ), name( _name ), formals( _formals ) {};
+	~CFormalList() {}
+
+	const std::string GetType() const { return type; }
+	const std::string GetName() const { return name; }
+	const CFormalList* GetFormalList() const { return formals; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const std::string type;
+	const std::string name;
+	const CFormalList *formals;
+};
+
+
+class CClassDeclList {
+public:
+	CClassDeclList( std::vector<IClassDecl*> _declList) : declList( _declList ) {};
+	CClassDeclList() {}
+
+	const std::vector<IClassDecl*> GetDeclList() const { return declList; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	std::vector<IClassDecl*> declList;
+};
+
+
+class CVarDeclList {
+public:
+	CVarDeclList( std::vector<CVarDecl*> _varDeclList ) : varDeclList( _varDeclList ) {};
+	~CVarDeclList() {}
+
+	const std::vector<CVarDecl*> GetVarDeclList() const { return varDeclList; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	std::vector<CVarDecl*> varDeclList;
+};
+
+
+class CMethodDeclList {
+public:
+	CMethodDeclList( std::vector<CMethodDecl*> _methodDeclList ) : methodDeclList( _methodDeclList ) {};
+	~CMethodDeclList() {}
+
+	const std::vector<CMethodDecl*> GetMethodDeclList() const { return methodDeclList; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	std::vector<CMethodDecl*> methodDeclList;
+};
+
+
+class CStmtList {
+public:
+	CStmtList( std::vector<IStmt*> _stmtList ) : stmtList( _stmtList ) {};
+	~CStmtList() {}
+
+	const std::vector<IStmt*> GetStmtList() const { return stmtList; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	std::vector<IStmt*> stmtList;
+};
