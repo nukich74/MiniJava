@@ -1,11 +1,10 @@
-#pragma once
+п»ї#pragma once
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-// объявляем заранее, чтобы потом ссылаться на них 
 class CProgram;
 class CMainClass;
 
@@ -21,20 +20,18 @@ class CSOPStmt;
 class CAssignStmt;
 class CAssignExprStmt;
 
+class COpExpr;
+class CExExpr;
+class CMethodExpr;
+class CIntExpr;
 class CTrueExpr;
 class CFalseExpr;
-class CMethodExpr;
-class CNotExpr;
-class CNewIdExpr;
-class CNotExpr;
-class CBrExpr;
 class CNameExpr;
 class CThisExpr;
 class CNewIntExpr;
-class COpExpr;
-class CExExpr;
-class CIntExpr;
-
+class CNewIdExpr;
+class CNotExpr;
+class CBrExpr;
 
 class CTypeName;
 
@@ -48,7 +45,6 @@ class CStmtList;
 
 class IVisitor {
 public:
-	// описываем действия при посещении всех элементов дерева
 	virtual ~IVisitor() {};
 
 	virtual void Visit( const CProgram& p ) = 0;
