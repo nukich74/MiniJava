@@ -15,14 +15,14 @@ void yyerror(const char *s);
 %error-verbose
 %verbose
 
-%type<prog> Program
-%type<mClass> MainClass
-%type<clssDeclList> ClassDeclarationList
-%type<clssDecl> ClassDeclaration
+%type<program> Program
+%type<mainClass> MainClass
+%type<classDeclList> ClassDeclarationList
+%type<classDecl> ClassDeclaration
 %type<varDeclList> VarDeclarationList
 %type<varDecl> VarDeclaration
-%type<methDeclList> MethodDeclarationList
-%type<methDecl> MethodDeclaration
+%type<methodDeclList> MethodDeclarationList
+%type<methodDecl> MethodDeclaration
 %type<formalList> FormalList
 %type<formalList> FormalRestList
 %type<type> Type
@@ -60,14 +60,14 @@ void yyerror(const char *s);
 
 %union {
 	int ival;
-	IProgram* prog;
-	IMainClass* mClass;
-	IClassDeclList* clssDeclList;
-	IClassDecl* clssDecl;
+	IProgram* program;
+	IMainClass* mainClass;
+	IClassDeclList* classDeclList;
+	IClassDecl* classDecl;
 	IVarDeclList* varDeclList;
 	IVarDecl* varDecl;
-	IMethodDeclList* methDeclList;
-	IMethodDecl* methDecl;
+	IMethodDeclList* methodDeclList;
+	IMethodDecl* methodDecl;
 	IFormalList* formalList;
 	IType* type;
 	IStmtList* stmtList;

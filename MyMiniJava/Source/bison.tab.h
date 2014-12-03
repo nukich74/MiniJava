@@ -84,14 +84,14 @@ typedef union YYSTYPE
 #line 61 "bison.y"
 
 	int ival;
-	IProgram* prog;
-	IMainClass* mClass;
-	IClassDeclList* clssDeclList;
-	IClassDecl* clssDecl;
+	IProgram* program;
+	IMainClass* mainClass;
+	IClassDeclList* classDeclList;
+	IClassDecl* classDecl;
 	IVarDeclList* varDeclList;
 	IVarDecl* varDecl;
-	IMethodDeclList* methDeclList;
-	IMethodDecl* methDecl;
+	IMethodDeclList* methodDeclList;
+	IMethodDecl* methodDecl;
 	IFormalList* formalList;
 	IType* type;
 	IStmtList* stmtList;

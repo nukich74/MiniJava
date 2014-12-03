@@ -152,14 +152,14 @@ typedef union YYSTYPE
 #line 61 "bison.y"
 
 	int ival;
-	IProgram* prog;
-	IMainClass* mClass;
-	IClassDeclList* clssDeclList;
-	IClassDecl* clssDecl;
+	IProgram* program;
+	IMainClass* mainClass;
+	IClassDeclList* classDeclList;
+	IClassDecl* classDecl;
 	IVarDeclList* varDeclList;
 	IVarDecl* varDecl;
-	IMethodDeclList* methDeclList;
-	IMethodDecl* methDecl;
+	IMethodDeclList* methodDeclList;
+	IMethodDecl* methodDecl;
 	IFormalList* formalList;
 	IType* type;
 	IStmtList* stmtList;
@@ -1518,13 +1518,13 @@ yyreduce:
         case 2:
 /* Line 1792 of yacc.c  */
 #line 82 "bison.y"
-    { (yyval.prog) = new CProgram( (yyvsp[(1) - (2)].mClass), (yyvsp[(2) - (2)].clssDeclList) ); }
+    { (yyval.program) = new CProgram( (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
 #line 86 "bison.y"
-    { (yyval.mClass) = new CMainClass( (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].stmt) ); }
+    { (yyval.mainClass) = new CMainClass( (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].stmt) ); }
     break;
 
   case 4:
@@ -1560,31 +1560,31 @@ yyreduce:
   case 9:
 /* Line 1792 of yacc.c  */
 #line 104 "bison.y"
-    { (yyval.clssDeclList) = 0; /*TODO*/ }
+    { (yyval.classDeclList) = 0; /*TODO*/ }
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
 #line 105 "bison.y"
-    { (yyval.clssDeclList) = 0; }
+    { (yyval.classDeclList) = 0; }
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
 #line 109 "bison.y"
-    { (yyval.methDecl) = 0; /*TODO*/ }
+    { (yyval.methodDecl) = 0; /*TODO*/ }
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
 #line 113 "bison.y"
-    { (yyval.methDeclList) = 0; /*TODO*/ }
+    { (yyval.methodDeclList) = 0; /*TODO*/ }
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
 #line 114 "bison.y"
-    { (yyval.methDeclList) = 0; }
+    { (yyval.methodDeclList) = 0; }
     break;
 
   case 14:
