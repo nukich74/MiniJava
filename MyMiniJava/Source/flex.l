@@ -79,7 +79,7 @@ Comment { printToken( yytext );  }
 
 [\+\-\*/] return yytext[0];
 
-[\[\]\)\(\{\}\;\.,] {  std::cout << yytext[0]; return yytext[0]; }
+[\[\]\)\(\{\}\;\.,!] {  std::cout << yytext[0]; return yytext[0]; }
 
 
 ({NUMBER}) {  printToken( yytext ); yylval.ival = atoi( yytext ); return IntNum; }
@@ -95,6 +95,9 @@ Comment { printToken( yytext );  }
 	yyterminate();
 }
 
-. 	{ std::cout  << "Unknown: <" << yytext << ">" << std::endl;  }
+. 	{ 
+	std::cout  << "Unknown: <" << yytext << ">" << std::endl;  
+	getchar(); //нужно остановиться, если
+}
 
 %%
