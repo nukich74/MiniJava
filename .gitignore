@@ -173,3 +173,6 @@ UpgradeLog*.htm
 FakesAssemblies/
 *.sdf
 MyMiniJava/Source/bison.output
+MyMiniJava/Source/bison.tab.cpp
+MyMiniJava/Source/flex.flex.cpp
+MyMiniJava/Source/bison.tab.h
