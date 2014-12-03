@@ -1,7 +1,9 @@
 ﻿#pragma once
-#include "syntaxTree.cpp"
+#include "syntaxTree.h"
 #include "stdio.h"
 #include "prettyPrintVisitor.h"
+#include <assert.h>
+#include <iostream>
 
 std::string identt( "   " );
 
@@ -15,7 +17,7 @@ void PrettyPrintVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 
 void PrettyPrintVisitor::Visit( const CMainClass& p ) //class id { public static void main ( String [] id ) { Statement }}
 {
-	printf( "class %s { \n%spublic static Void main ( String [] %s ) { \n",p.GetNameFirst().c_str(), identt.c_str( ), p.GetArgsName( ).c_str( ) );
+	printf( "class %s { \n%spublic static Void main ( String [] %s ) { \n", p.GetNameFirst().c_str(), identt.c_str( ), p.GetArgsName( ).c_str( ) );
 	identt += "    ";
 	p.GetStmt()->Accept( this );
 	identt = identt.substr( 0, identt.length( ) - 4 );
@@ -139,25 +141,31 @@ void PrettyPrintVisitor::Visit( const CAssignExprStmt& p )//id [ Exp ] = Exp;
 void PrettyPrintVisitor::Visit( const COpExpr& p )//Exp op Exp
 {
 	p.GetExprFirst()->Accept( this );
-	if( p.GetOp( ) == Plus ) {
-		printf( " + " );
+	switch ( p.GetOp() )
+	{
+		case BO_And:
+			std::cout << " && ";
+			break;
+		case BO_Div:
+			std::cout << " / ";
+			break;
+		case BO_Less:
+			std::cout << " < ";
+			break;
+		case BO_Minus:
+			std::cout << " - ";
+			break;		
+		case BO_Mult:
+			std::cout << " * ";
+			break;
+		case BO_Plus:
+			std::cout << " + ";
+			break;
+		default:
+			assert( false );
+			break;
 	}
-	else if( p.GetOp( ) == Minus ) {
-		printf( " - " );
-	}
-	else if( p.GetOp( ) == Mult ) {
-		printf( " * " );
-	}
-	else if( p.GetOp( ) == Div ) {
-		printf( " / " );
-	}
-	else if( p.GetOp( ) == And ) {
-		printf( " && " );
-	}
-	else if( p.GetOp( ) == Less ) {
-		printf( " < " );
-	}
-	p.GetExprSecond( )->Accept( this );
+	p.GetExprSecond()->Accept( this );
 }
 
 void PrettyPrintVisitor::Visit( const CExExpr& p )//Exp [ Exp ]

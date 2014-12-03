@@ -21,12 +21,13 @@
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="syntaxTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="grammar.h" />
     <ClInclude Include="prettyPrintVisitor.h" />
-    <ClInclude Include="Source\bison.tab.h" />
     <ClInclude Include="iVisitor.h" />
+    <ClInclude Include="Source\bison.tab.h" />
+    <ClInclude Include="syntaxTree.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{11E6DD32-849C-47A0-B7EA-042B796F2117}</ProjectGuid>
@@ -57,7 +58,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)Source;$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>

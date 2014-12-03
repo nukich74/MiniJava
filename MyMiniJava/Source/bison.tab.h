@@ -46,36 +46,33 @@ extern int yydebug;
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     VarDeclarations = 258,
-     StatememtList = 259,
-     Id = 260,
-     IntNum = 261,
-     FloatNum = 262,
-     If = 263,
-     Else = 264,
-     While = 265,
-     Main = 266,
-     Class = 267,
-     Public = 268,
-     Static = 269,
-     Return = 270,
-     Extends = 271,
-     Int = 272,
-     Bool = 273,
-     Void = 274,
-     String = 275,
-     Print = 276,
-     True = 277,
-     False = 278,
-     This = 279,
-     New = 280,
-     Length = 281,
-     SystemOutPrintln = 282,
-     OperatorEq = 283,
-     OperatorAnd = 284,
-     OperatorMore = 285,
-     OperatorLess = 286,
-     UMINUS = 287
+     Id = 258,
+     IntNum = 259,
+     If = 260,
+     Else = 261,
+     While = 262,
+     Main = 263,
+     Class = 264,
+     Public = 265,
+     Static = 266,
+     Return = 267,
+     Extends = 268,
+     Int = 269,
+     Bool = 270,
+     Void = 271,
+     String = 272,
+     Print = 273,
+     True = 274,
+     False = 275,
+     This = 276,
+     New = 277,
+     Length = 278,
+     SystemOutPrintln = 279,
+     OperatorEq = 280,
+     OperatorAnd = 281,
+     OperatorMore = 282,
+     OperatorLess = 283,
+     UMINUS = 284
    };
 #endif
 
@@ -84,14 +81,28 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 12 "bison.y"
+#line 61 "bison.y"
 
 	int ival;
-	float fval;
+	IProgram* prog;
+	IMainClass* mClass;
+	IClassDeclList* clssDeclList;
+	IClassDecl* clssDecl;
+	IVarDeclList* varDeclList;
+	IVarDecl* varDecl;
+	IMethodDeclList* methDeclList;
+	IMethodDecl* methDecl;
+	IFormalList* formalList;
+	IType* type;
+	IStmtList* stmtList;
+	IStmt* stmt;
+	IExprList* exprList;
+	IExpr* expr;
+	char sval[100];
 
 
 /* Line 2058 of yacc.c  */
-#line 95 "bison.tab.h"
+#line 106 "bison.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -1,12 +1,14 @@
 %option yylineno
 %option noyywrap
 %{
+#pragma once
 #include <cstdlib>
 #include <cstdio>	
 #include <cstring>
 #include <cmath>
 #include <string>
 #include <iostream>
+#include "syntaxTree.h"
 #include "bison.tab.h"
 
 #define YY_DECL extern "C" int yylex()

@@ -1,10 +1,5 @@
 ﻿#pragma once
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-
-
 class CProgram;
 class CMainClass;
 
@@ -51,7 +46,7 @@ public:
 	virtual void Visit( const CMainClass& p ) = 0;
 	virtual void Visit( const CClassDecl& p ) = 0;
 	virtual void Visit( const CClassDeclList& p ) = 0;
-	///
+
 	virtual void Visit( const CExtendClassDecl& p ) = 0;
 	virtual void Visit( const CVarDecl& p ) = 0;
 

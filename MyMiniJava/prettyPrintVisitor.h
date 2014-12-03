@@ -1,6 +1,6 @@
 #pragma once
 #include "iVisitor.h"
-#include "syntaxTree.cpp"
+#include "syntaxTree.h"
  
 class PrettyPrintVisitor: public IVisitor
 {

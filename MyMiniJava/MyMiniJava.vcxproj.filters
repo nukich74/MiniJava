@@ -16,25 +16,18 @@
     <Filter Include="AutoGenFiles">
       <UniqueIdentifier>{6ab2c8e7-e552-4152-94d6-b2e186534ca3}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Bison Include="Source\bison.y">
-      <Filter>Файлы исходного кода</Filter>
-    </Bison>
-  </ItemGroup>
-  <ItemGroup>
-    <Flex Include="Source\flex.l">
-      <Filter>Файлы исходного кода</Filter>
-    </Flex>
+    <Filter Include="Grammar">
+      <UniqueIdentifier>{f4f4bcfd-6fce-40bc-8481-1cd4906f429f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TreeStructure">
+      <UniqueIdentifier>{baa731c1-e29c-4c71-b255-3d2a18633184}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="prettyPrintVisitor.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="syntaxTree.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="Source\bison.tab.cpp">
@@ -51,8 +44,24 @@
     <ClInclude Include="iVisitor.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="syntaxTree.h">
+      <Filter>TreeStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="grammar.h">
+      <Filter>TreeStructure</Filter>
+    </ClInclude>
     <ClInclude Include="Source\bison.tab.h">
       <Filter>AutoGenFiles</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Bison Include="Source\bison.y">
+      <Filter>Grammar</Filter>
+    </Bison>
+  </ItemGroup>
+  <ItemGroup>
+    <Flex Include="Source\flex.l">
+      <Filter>Grammar</Filter>
+    </Flex>
   </ItemGroup>
 </Project>
