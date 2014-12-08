@@ -1530,13 +1530,13 @@ yyreduce:
   case 4:
 /* Line 1792 of yacc.c  */
 #line 90 "bison.y"
-    { (yyval.varDecl) = 0; /*TODO*/ }
+    { (yyval.varDecl) = new CVarDecl( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval) ); }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
 #line 94 "bison.y"
-    { (yyval.varDeclList) = 0; /*TODO*/ }
+    { (yyval.varDeclList) = new CVarDeclList( (yyvsp[(2) - (2)].varDecl), (yyvsp[(1) - (2)].varDeclList) ); }
     break;
 
   case 6:
@@ -1548,19 +1548,19 @@ yyreduce:
   case 7:
 /* Line 1792 of yacc.c  */
 #line 99 "bison.y"
-    { }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (6)].sval), (yyvsp[(4) - (6)].varDeclList), (yyvsp[(5) - (6)].methodDeclList) ); }
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
 #line 100 "bison.y"
-    { }
+    { (yyval.classDecl) = new CExtendClassDecl( (yyvsp[(2) - (8)].sval), (yyvsp[(4) - (8)].sval), (yyvsp[(6) - (8)].varDeclList), (yyvsp[(7) - (8)].methodDeclList) ); }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
 #line 104 "bison.y"
-    { (yyval.classDeclList) = 0; /*TODO*/ }
+    { (yyval.classDeclList) = new CClassDeclList( (yyvsp[(1) - (2)].classDecl), (yyvsp[(2) - (2)].classDeclList) ); }
     break;
 
   case 10:
@@ -1572,13 +1572,13 @@ yyreduce:
   case 11:
 /* Line 1792 of yacc.c  */
 #line 109 "bison.y"
-    { (yyval.methodDecl) = 0; /*TODO*/ }
+    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (13)].type), (yyvsp[(3) - (13)].sval), (yyvsp[(5) - (13)].formalList), (yyvsp[(8) - (13)].varDeclList), (yyvsp[(9) - (13)].stmtList), (yyvsp[(11) - (13)].expr) ); }
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
 #line 113 "bison.y"
-    { (yyval.methodDeclList) = 0; /*TODO*/ }
+    { (yyval.methodDeclList) = new CMethodDeclList( (yyvsp[(2) - (2)].methodDecl), (yyvsp[(1) - (2)].methodDeclList) ); }
     break;
 
   case 13:
@@ -1590,7 +1590,7 @@ yyreduce:
   case 14:
 /* Line 1792 of yacc.c  */
 #line 118 "bison.y"
-    { (yyval.formalList) = 0; /*TODO*/ }
+    { (yyval.formalList) = new CFormalList( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), (yyvsp[(3) - (3)].formalList) ); }
     break;
 
   case 15:
@@ -1602,7 +1602,7 @@ yyreduce:
   case 16:
 /* Line 1792 of yacc.c  */
 #line 123 "bison.y"
-    { (yyval.formalList) = 0; /*TODO*/ }
+    { (yyval.formalList) = new CFormalList( (yyvsp[(2) - (4)].type), (yyvsp[(3) - (4)].sval), (yyvsp[(4) - (4)].formalList) ); }
     break;
 
   case 17:
@@ -1614,25 +1614,25 @@ yyreduce:
   case 18:
 /* Line 1792 of yacc.c  */
 #line 128 "bison.y"
-    { (yyval.type) = 0; /*TODO*/ }
+    { (yyval.type) = new CTypeName( "int" ); }
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
 #line 129 "bison.y"
-    { (yyval.type) = 0; /*TODO*/ }
+    { (yyval.type) = new CTypeName( "array" ); }
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
 #line 130 "bison.y"
-    { (yyval.type) = 0; /*TODO*/ }
+    { (yyval.type) = new CTypeName( "bool" ); }
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
 #line 131 "bison.y"
-    { (yyval.type) = 0; /*TODO*/ }
+    { (yyval.type) = new CTypeName( (yyvsp[(1) - (1)].sval) ); }
     break;
 
   case 22:

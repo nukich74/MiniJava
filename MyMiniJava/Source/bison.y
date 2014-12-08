@@ -87,48 +87,48 @@ MainClass
 	;
 	
 VarDeclaration 
-	: Type Id ';' { $$ = 0; /*TODO*/ }
+	: Type Id ';' { $$ = new CVarDecl( $1, $2 ); }
 	;
 
 VarDeclarationList 
-	:	VarDeclarationList VarDeclaration { $$ = 0; /*TODO*/ }
+	:	VarDeclarationList VarDeclaration { $$ = new CVarDeclList( $2, $1 ); }
 	| /*eps*/ { $$ = 0; }
 	;
 
 ClassDeclaration 
-	:	Class Id  '{' VarDeclarationList MethodDeclarationList '}' { }
-	|	Class Id Extends Id '{' VarDeclarationList MethodDeclarationList '}' { }
+	:	Class Id  '{' VarDeclarationList MethodDeclarationList '}' { $$ = new CClassDecl( $2, $4, $5 ); }
+	|	Class Id Extends Id '{' VarDeclarationList MethodDeclarationList '}' { $$ = new CExtendClassDecl( $2, $4, $6, $7 ); }
 	;
 
 ClassDeclarationList
-	:	ClassDeclaration ClassDeclarationList { $$ = 0; /*TODO*/ }
+	:	ClassDeclaration ClassDeclarationList { $$ = new CClassDeclList( $1, $2 ); }
 	|	/*epsilon*/ { $$ = 0; } 
 	;
 
 MethodDeclaration
-	: Public Type Id '(' FormalList ')' '{' VarDeclarationList StatementList Return Expr ';' '}' { $$ = 0; /*TODO*/ }
+	: Public Type Id '(' FormalList ')' '{' VarDeclarationList StatementList Return Expr ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, $9, $11 ); }
 	;
 
 MethodDeclarationList
-	:	MethodDeclarationList MethodDeclaration { $$ = 0; /*TODO*/ }
+	:	MethodDeclarationList MethodDeclaration { $$ = new CMethodDeclList( $2, $1 ); }
 	|	/*epsilon*/ { $$ = 0; }
 	;
 
 FormalList	
-	:	Type Id FormalRestList { $$ = 0; /*TODO*/ }
+	:	Type Id FormalRestList { $$ = new CFormalList( $1, $2, $3 ); }
 	|	/*epsilon*/ { $$ = 0; }
 	;
 
 FormalRestList
-	: ',' Type Id FormalRestList { $$ = 0; /*TODO*/ }
+	: ',' Type Id FormalRestList { $$ = new CFormalList( $2, $3, $4 ); }
 	| /*epsilon*/ { $$ = 0; }
 	;
 
 Type
-	:	Int { $$ = 0; /*TODO*/ }
-	|	Int '[' ']' { $$ = 0; /*TODO*/ }
-    |	Bool { $$ = 0; /*TODO*/ }
-    |	Id { $$ = 0; /*TODO*/ }
+	:	Int { $$ = new CTypeName( "int" ); }
+	|	Int '[' ']' { $$ = new CTypeName( "array" ); }
+    |	Bool { $$ = new CTypeName( "bool" ); }
+    |	Id { $$ = new CTypeName( $1 ); }
 	;
 
 StatementList

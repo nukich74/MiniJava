@@ -85,24 +85,24 @@ public:
 private:
 	std::string className;
 	std::string baseClassName;
-	const IVarDeclList *variables;
-	const IMethodDeclList *methods;
+	const IVarDeclList* variables;
+	const IMethodDeclList* methods;
 };
 
 
 //Type name;
 class CVarDecl : public IVarDecl {
 public:
-	CVarDecl( const std::string& _type, const std::string& _name ) : type( _type ), name( _name ) {}
+	CVarDecl( const IType* _type, const std::string& _name ) : type( _type ), name( _name ) {}
 
 	// тип переменной
-	const std::string GetType() const { return type; }
+	const IType* GetType() const { return type; }
 	// имя переменной
 	const std::string GetName() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
-	std::string type;
+	const IType* type;
 	std::string name;
 };
 
@@ -114,13 +114,12 @@ private:
 // }
 class CMethodDecl : public IMethodDecl {
 public:
-	CMethodDecl( const std::string& _type, const std::string& _name, const IFormalList* _formals, 
+	CMethodDecl( const IType* _type, const std::string& _name, const IFormalList* _formals, 
 		const IVarDeclList* _variables, const IStmtList* _statements, const IExpr* _returnExpr ) :
 	type( _type ), name( _name ), formals( _formals ), variables( _variables ), statements( _statements ), returnExpr( _returnExpr ) {}
-	~CMethodDecl() {}
 
 	// тип возвращаемого значения
-	std::string GetType() const { return type; }
+	const IType* GetType() const { return type; }
 	// имя метода
 	std::string GetName() const { return name; }
 	// список переменных
@@ -132,7 +131,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
-	std::string type;
+	const IType* type;
 	std::string name;
 	const IFormalList* formals;
 	const IVarDeclList* variables;
@@ -409,7 +408,7 @@ private:
 
 
 // name (имя класса)
-class CTypeName : IType {
+class CTypeName : public IType {
 public:
 	CTypeName( const std::string& _name ) : name( _name ) {};
 	
@@ -440,18 +439,18 @@ private:
 
 
 //Type Name FormalList
-class CFormalList : IFormalList {
+class CFormalList : public IFormalList {
 public:
-	CFormalList( const std::string& _type, const std::string _name, const IFormalList* _formals ) :
+	CFormalList( const IType* _type, const std::string _name, const IFormalList* _formals ) :
 		type( _type ), name( _name ), formals( _formals ) {};
 	
-	std::string GetType() const { return type; }
+	const IType* GetType() const { return type; }
 	std::string GetName() const { return name; }
 	const IFormalList* GetFormalList() const { return formals; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
-	std::string type;
+	const IType* type;
 	std::string name;
 	const IFormalList* formals;
 };

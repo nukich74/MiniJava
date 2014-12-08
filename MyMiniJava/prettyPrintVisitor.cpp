@@ -54,12 +54,16 @@ void PrettyPrintVisitor::Visit( const CExtendClassDecl& p ) //class id extends i
 
 void PrettyPrintVisitor::Visit( const CVarDecl& p ) //Type id
 {
-	printf( "%s%s %s ;\n", identt.c_str( ), p.GetType( ).c_str( ), p.GetName().c_str( ) );
+	std::cout << identt.c_str( );
+	p.GetType()->Accept( this );
+	std::cout << ' ' << p.GetName().c_str( ) << " ;\n";
 }
 
 void PrettyPrintVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) { VarDecl* Statement* return Exp ;}
 {
-	printf( "%spublic %s %s ( ", identt.c_str( ), p.GetType( ).c_str( ), p.GetName().c_str( ) );
+	std::cout << identt.c_str( ) << "public ";
+	p.GetType( )->Accept( this );
+	std::cout << " " << p.GetName() << " ( ";
 	if( p.GetFormalList( ) ) {
 		p.GetFormalList( )->Accept( this );
 	}
@@ -254,8 +258,7 @@ void PrettyPrintVisitor::Visit( const CTypeName& p )// id
 
 void PrettyPrintVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 {
-	//p.GetType()->Accept(this);
-	printf( "%s", p.GetType( ).c_str( ) );
+	p.GetType()->Accept(this);
 	printf( " %s ", p.GetName( ).c_str( ) );
 	if( p.GetFormalList( ) ) {
 		printf( ", " );
