@@ -3,6 +3,7 @@
 #include "grammar.h"
 
 namespace SymbolsTable {
+	
 	class CSymbolsTable;
 	class CVariableInfo;
 	class CMethodInfo;

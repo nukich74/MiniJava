@@ -250,7 +250,7 @@ void PrettyPrintVisitor::Visit( const CExprList& p )//Exp , ExpList
 {
 	p.GetCurrent()->Accept( this );
 	std::cout << " ";
-	if( ! p.GetList() ) {
+	if( p.GetList() ) {
 		std::cout << ", ";
 		p.GetList( )->Accept( this );
 	}
@@ -300,7 +300,6 @@ void PrettyPrintVisitor::Visit( const CStmtList& p )
 	}
 }
 
-//
 
 void PrettyPrintVisitor::Visit( const CIdExpr& p )
 {
@@ -308,14 +307,14 @@ void PrettyPrintVisitor::Visit( const CIdExpr& p )
 }
 
 
-void PrettyPrintVisitor::Visit( const CLengthExpr& p )
+void PrettyPrintVisitor::Visit( const CLengthExpr& p ) // Expr . length
 {
 	p.GetExp()->Accept( this );
 	std::cout << ". length";
 
 }
 
-void PrettyPrintVisitor::Visit( const CUnaryMinusExpr& p )
+void PrettyPrintVisitor::Visit( const CUnaryMinusExpr& p ) // - Expr
 {
 	std::cout << "-";
 	p.GetExpr()->Accept( this );

@@ -35,19 +35,20 @@ int main( int argc, char* argv[] )
 			yylineno = 0;
 			yyin = program;
 
-
-			//PrettyPrintVisitor prittyPrint;
-			//yyprogram->Accept( &prittyPrint );
-
-			/*
+			
 			do {
-				int rCode = yyparse();
+				int rCode = yyparse(); // парсим на лексемы
+
 				if( rCode != 0 ) {
 					std::cout << "Error code: " << rCode << std::endl;
 					break;
 				}
+
+				PrettyPrintVisitor prittyPrint;
+				yyprogram->Accept( &prittyPrint );
+
 			} while( !feof( yyin ) );
-			*/
+			
 		}
 	}
 
