@@ -285,9 +285,9 @@ private:
 
 
 //Expr . name ( ExprList )
-class CMethodExpr :public IExpr {
+class CMethodCallExpr :public IExpr {
 public:
-	CMethodExpr( const IExpr *_expr, const std::string& _methodName, const IExprList *_args ) : 
+	CMethodCallExpr( const IExpr *_expr, const std::string& _methodName, const IExprList *_args ) : 
 		expr( _expr ), methodName( _methodName ), args( _args ) {};
 	
 	const IExpr* GetExp() const { return expr; }
@@ -402,6 +402,36 @@ private:
 	const IExpr *expr;
 };
 
+//id wrapper
+class CIdExpr :public IExpr {
+public:
+	CIdExpr( const std::string _name ) : name( _name ) {}
+	std::string GetId() const { return name; }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	std::string name;
+};
+
+//expr.Length
+class CLengthExpr : public IExpr {
+public:
+	CLengthExpr( const IExpr *_source ) : source( _source ) {};
+	const IExpr* GetExp() const { return source; }
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+private:
+	const IExpr *source;
+};
+
+class CUnaryMinusExpr : public IExpr {
+public:
+	CUnaryMinusExpr( const IExpr* _expr ) : expr( _expr ) { }
+
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	const IExpr* GetExpr() const { return expr; }
+private:
+	const IExpr* expr;
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////

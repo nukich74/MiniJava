@@ -34,7 +34,7 @@ void yyerror(const char *s);
 
 %token<sval> Id
 
-%token IntNum
+%token<ival> IntNum
 %token If Else While Main Class Public Static Return Extends
 
 %token Int
@@ -150,21 +150,21 @@ Expr
 	|   Expr '+' Expr { $$ = new COpExpr( $1, BO_Plus, $3 ); }
 	|	Expr '/' Expr { $$ = new COpExpr( $1, BO_Div, $3 ); }
 	|	Expr '-' Expr { $$ = new COpExpr( $1, BO_Minus, $3 ); }
-	|	'-' Expr %prec UMINUS { /*TODO*/ }
+	|	'-' Expr %prec UMINUS { $$ = new CUnaryMinusExpr( $2 ); }
 	|	Expr '[' Expr ']' { $$ = new CExExpr($1, $3);  }
-	|	Expr '.' Length { /*TODO*/ }
-	|	Expr '.' Id '(' ExprList ')' { /*TODO*/ }
+	|	Expr '.' Length { $$ = new CLengthExpr( $1 ); }
+	|	Expr '.' Id '(' ExprList ')' { $$ = new CMethodCallExpr( $1, $3, $5 ); }
 	|	Expr OperatorLess Expr { $$ = new COpExpr( $1, BO_Less, $3 ); }
 	|	Expr OperatorAnd Expr { $$ = new COpExpr( $1, BO_And, $3 ); }
-	|	IntNum { /*TODO*/ }
+	|	IntNum { $$ = new CIntExpr( $1 ); }
 	|	True { $$ = new CTrueExpr(); }
 	|	False { $$ = new CFalseExpr(); }
-	|	Id { /*TODO*/ }
+	|	Id { $$ = new CIdExpr( $1 ); }
 	|	This { $$ = new CThisExpr(); }
 	|	New Int '[' Expr ']' { $$ = new CNewIntExpr( $4 ); }
 	|	New Id '(' ')' { $$ = new CNewIdExpr( $2 ); }
 	|	'!' Expr { $$ = new CNotExpr( $2 ); }
-	|	'(' Expr ')' {/*TODO*/}
+	|	'(' Expr ')' { $$ = new CBrExpr( $2 ); }
 	;
 
 ExprList

@@ -180,7 +180,7 @@ void PrettyPrintVisitor::Visit( const CExExpr& p )//Exp [ Exp ]
 	printf( " ] " );
 }
 
-void PrettyPrintVisitor::Visit( const CMethodExpr& p )//Exp . id ( ExpList )
+void PrettyPrintVisitor::Visit( const CMethodCallExpr& p )//Exp . id ( ExpList )
 {
 	p.GetExp( )->Accept( this );
 	printf( ". %s ( ", p.GetName().c_str( ) );

@@ -1710,7 +1710,7 @@ yyreduce:
   case 34:
 /* Line 1792 of yacc.c  */
 #line 153 "bison.y"
-    { /*TODO*/ }
+    { (yyval.expr) = new CUnaryMinusExpr( (yyvsp[(2) - (2)].expr) ); }
     break;
 
   case 35:
@@ -1722,13 +1722,13 @@ yyreduce:
   case 36:
 /* Line 1792 of yacc.c  */
 #line 155 "bison.y"
-    { /*TODO*/ }
+    { (yyval.expr) = new CLengthExpr( (yyvsp[(1) - (3)].expr) ); }
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
 #line 156 "bison.y"
-    { /*TODO*/ }
+    { (yyval.expr) = new CMethodCallExpr( (yyvsp[(1) - (6)].expr), (yyvsp[(3) - (6)].sval), (yyvsp[(5) - (6)].exprList) ); }
     break;
 
   case 38:
@@ -1746,7 +1746,7 @@ yyreduce:
   case 40:
 /* Line 1792 of yacc.c  */
 #line 159 "bison.y"
-    { /*TODO*/ }
+    { (yyval.expr) = new CIntExpr( (yyvsp[(1) - (1)].ival) ); }
     break;
 
   case 41:
@@ -1764,7 +1764,7 @@ yyreduce:
   case 43:
 /* Line 1792 of yacc.c  */
 #line 162 "bison.y"
-    { /*TODO*/ }
+    { (yyval.expr) = new CIdExpr( (yyvsp[(1) - (1)].sval) ); }
     break;
 
   case 44:
@@ -1794,7 +1794,7 @@ yyreduce:
   case 48:
 /* Line 1792 of yacc.c  */
 #line 167 "bison.y"
-    {/*TODO*/}
+    { (yyval.expr) = new CBrExpr( (yyvsp[(2) - (3)].expr) ); }
     break;
 
   case 49:

@@ -23,7 +23,7 @@ public:
 
 	void Visit( const COpExpr& p );
 	void Visit( const CExExpr& p );
-	void Visit( const CMethodExpr& p );
+	void Visit( const CMethodCallExpr& p );
 	void Visit( const CIntExpr& p );
 	void Visit( const CTrueExpr& p );
 	void Visit( const CFalseExpr& p );

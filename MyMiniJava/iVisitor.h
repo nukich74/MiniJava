@@ -17,7 +17,7 @@ class CAssignExprStmt;
 
 class COpExpr;
 class CExExpr;
-class CMethodExpr;
+class CMethodCallExpr;
 class CIntExpr;
 class CTrueExpr;
 class CFalseExpr;
@@ -27,6 +27,9 @@ class CNewIntExpr;
 class CNewIdExpr;
 class CNotExpr;
 class CBrExpr;
+class CIdExpr;
+class CLengthExpr;
+class CUnaryMinusExpr;
 
 class CTypeName;
 
@@ -60,7 +63,7 @@ public:
 
 	virtual void Visit( const COpExpr& p ) = 0;
 	virtual void Visit( const CExExpr& p ) = 0;
-	virtual void Visit( const CMethodExpr& p ) = 0;
+	virtual void Visit( const CMethodCallExpr& p ) = 0;
 	virtual void Visit( const CIntExpr& p ) = 0;
 	virtual void Visit( const CTrueExpr& p ) = 0;
 	virtual void Visit( const CFalseExpr& p ) = 0;
@@ -70,6 +73,9 @@ public:
 	virtual void Visit( const CNotExpr& p ) = 0;
 	virtual void Visit( const CBrExpr& p ) = 0;
 	virtual void Visit( const CNameExpr& p ) = 0;
+	virtual void Visit( const CIdExpr& p ) = 0;
+	virtual void Visit( const CLengthExpr& p ) = 0; 
+	virtual void Visit( const CUnaryMinusExpr& p ) = 0;
 
 	virtual void Visit( const CTypeName& p ) = 0;
 
