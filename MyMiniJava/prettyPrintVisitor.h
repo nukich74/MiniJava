@@ -5,7 +5,6 @@
 class PrettyPrintVisitor: public IVisitor
 {
 public:
-	~PrettyPrintVisitor();
 	void Visit( const CProgram& p );
 	void Visit( const CMainClass& p );
 

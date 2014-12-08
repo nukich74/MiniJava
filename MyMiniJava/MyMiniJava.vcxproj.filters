@@ -19,15 +19,18 @@
     <Filter Include="Grammar">
       <UniqueIdentifier>{f4f4bcfd-6fce-40bc-8481-1cd4906f429f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PPVisitor">
+      <UniqueIdentifier>{a8edbbe0-1183-43ee-8f0c-108d2ee228a8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="TreeStructure">
       <UniqueIdentifier>{baa731c1-e29c-4c71-b255-3d2a18633184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SymbolsTable">
+      <UniqueIdentifier>{91db2814-ba2b-4a25-a03c-bde2a7e484a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="prettyPrintVisitor.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="Source\bison.tab.cpp">
@@ -36,11 +39,11 @@
     <ClCompile Include="Source\flex.flex.cpp">
       <Filter>AutoGenFiles</Filter>
     </ClCompile>
+    <ClCompile Include="prettyPrintVisitor.cpp">
+      <Filter>PPVisitor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="prettyPrintVisitor.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="iVisitor.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
@@ -52,6 +55,12 @@
     </ClInclude>
     <ClInclude Include="Source\bison.tab.h">
       <Filter>AutoGenFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="prettyPrintVisitor.h">
+      <Filter>PPVisitor</Filter>
+    </ClInclude>
+    <ClInclude Include="symtable.h">
+      <Filter>SymbolsTable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

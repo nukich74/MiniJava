@@ -958,7 +958,7 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 75 "flex.l"
-{ std::cout << yytext; return Id; }
+{ std::cout << yytext; strcpy_s( yylval.sval, yytext ); return Id; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
@@ -998,7 +998,7 @@ YY_RULE_SETUP
 case 30:
 YY_RULE_SETUP
 #line 89 "flex.l"
-{ std::cout << " "; }
+{ printToken( " " ); }
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */

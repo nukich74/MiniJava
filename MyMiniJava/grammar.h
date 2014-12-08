@@ -2,6 +2,21 @@
 
 class IVisitor;
 
+class CCodeInfo {
+public:
+	CCodeInfo( int _lineNumber, int _posLine, int _lLine, int _lColomn ) : firstLine( _lineNumber ), firstColumn( _posLine ),
+		lastLine( _lLine ), lastColumn( _lColomn ) { }
+	int GetFirstLine() const { return firstLine; }
+	int GetFirstColumn() const { return firstColumn; }
+	int GetLastLine() const { return lastColumn; }
+	int GetLastColumn() const { return lastColumn; }
+private:
+  int firstLine;
+  int firstColumn;
+  int lastLine;
+  int lastColumn;
+};
+
 // Корневой интерфейс программы
 class IProgram {
 public:

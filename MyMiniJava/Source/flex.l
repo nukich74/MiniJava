@@ -72,7 +72,7 @@ Comment (/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)*
 
 Comment { printToken( yytext );  }
 
-[a-zA-Z_][a-zA-Z0-9_]* { std::cout << yytext; return Id; }
+[a-zA-Z_][a-zA-Z0-9_]* { std::cout << yytext; strcpy_s( yylval.sval, yytext ); return Id; }
 
 "<" { return OperatorLess; }
 ">" { return OperatorMore; }
@@ -86,7 +86,7 @@ Comment { printToken( yytext );  }
 
 ({NUMBER}) {  printToken( yytext ); yylval.ival = atoi( yytext ); return IntNum; }
 
-" "	{ std::cout << " "; }
+" "	{ printToken( " " ); }
 "\n" 	{ std::cout << "\n" << yylineno << ": "; }
 "\t"	{ std::cout << "\t"; }
 
