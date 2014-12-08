@@ -10,6 +10,7 @@
 #include <iostream>
 #include "syntaxTree.h"
 #include "bison.tab.h"
+#include <sstream>
 
 #define YY_DECL extern "C" int yylex()
 #define yyterminate() return YY_NULL
@@ -20,7 +21,7 @@
 
 
 void printToken( const std::string& token ) {
-	std::cout << token;
+//	std::cout << token;
 }
 
 %}
@@ -72,28 +73,28 @@ Comment (/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)*
 
 Comment { printToken( yytext );  }
 
-[a-zA-Z_][a-zA-Z0-9_]* { std::cout << yytext; strcpy_s( yylval.sval, yytext ); return Id; }
+[a-zA-Z_][a-zA-Z0-9_]* { printToken( yytext ); strcpy_s( yylval.sval, yytext ); return Id; }
 
 "<" { return OperatorLess; }
 ">" { return OperatorMore; }
 "&&" { return OperatorAnd; }
-"=" { std::cout << "="; return OperatorEq; }
+"=" { printToken( "=" ); return OperatorEq; }
 
 [\+\-\*/] return yytext[0];
 
-[\[\]\)\(\{\}\;\.,!] {  std::cout << yytext[0]; return yytext[0]; }
+[\[\]\)\(\{\}\;\.,!] {  printToken( yytext ); return yytext[0]; }
 
 
 ({NUMBER}) {  printToken( yytext ); yylval.ival = atoi( yytext ); return IntNum; }
 
 " "	{ printToken( " " ); }
-"\n" 	{ std::cout << "\n" << yylineno << ": "; }
-"\t"	{ std::cout << "\t"; }
+"\n" 	{ printToken( "\n" + std::to_string( yylineno ) + ": " ); }
+"\t"	{ printToken( "\t" ); }
 
 
 
 <<EOF>>	{
-	std::cout << "EOF" << std::endl;
+	printToken( "EOF\n" );
 	yyterminate();
 }
 
