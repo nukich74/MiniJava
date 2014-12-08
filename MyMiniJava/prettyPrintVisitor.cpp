@@ -242,58 +242,60 @@ void PrettyPrintVisitor::Visit( const CBrExpr& p )//( Exp )
 
 void PrettyPrintVisitor::Visit( const CTypeName& p )// id
 {
-	printf( "%s", p.GetName( ).c_str( ) );
+	std::cout << p.GetName();
 }
 
 
-//void PrettyPrintVisitor::Visit( const CExprList& p )//Exp , ExpList
-//{
-//	p.GetExprList( )[0]->Accept( this );
-//	printf( " " );
-//	if( !p.GetExprList( ).empty() ) {
-//		printf( ", " );//???
-//		p.GetExprList( )->Accept( this );
-//	}
-//}
-
+void PrettyPrintVisitor::Visit( const CExprList& p )//Exp , ExpList
+{
+	p.GetCurrent()->Accept( this );
+	std::cout << " ";
+	if( ! p.GetList() ) {
+		std::cout << ", ";
+		p.GetList( )->Accept( this );
+	}
+}
+ 
 void PrettyPrintVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 {
 	p.GetType()->Accept(this);
-	printf( " %s ", p.GetName( ).c_str( ) );
+	std::cout << " " << p.GetName() << " ";
 	if( p.GetFormalList( ) ) {
-		printf( ", " );
+		std::cout << ", ";
 		p.GetFormalList( )->Accept( this );
 	}
 }
 
-//void PrettyPrintVisitor::Visit( const CClassDeclList& p )//ClassDeclList
-//{
-//	p.GetTop( )->Accept( this );
-//	if( p.GetTail( ) ) {
-//		p.GetTail( )->Accept( this );
-//	}
-//}
 
-//void PrettyPrintVisitor::Visit( const CVarDeclList& p )
-//{
-//	p.GetTop( )->Accept( this );
-//	if( p.GetTail( ) ) {
-//		p.GetTail( )->Accept( this );
-//	}
-//}
+void PrettyPrintVisitor::Visit( const CClassDeclList& p )//ClassDeclList
+{
+	p.GetCurrent()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
+}
 
-//void PrettyPrintVisitor::Visit( const CMethodDeclList& p )
-//{
-//	p.GetTop( )->Accept( this );
-//	if( p.GetTail( ) ) {
-//		p.GetTail( )->Accept( this );
-//	}
-//}
+void PrettyPrintVisitor::Visit( const CVarDeclList& p )
+{
+	p.GetCurrent()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
+}
 
-//void PrettyPrintVisitor::Visit( const CStmtList& p )
-//{
-//	p.GetTop( )->Accept( this );
-//	if( p.GetTail( ) ) {
-//		p.GetTail( )->Accept( this );
-//	}
-//}
+void PrettyPrintVisitor::Visit( const CMethodDeclList& p )
+{
+	p.GetCurrent()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
+}
+
+
+void PrettyPrintVisitor::Visit( const CStmtList& p )
+{
+	p.GetStmt()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
+}
