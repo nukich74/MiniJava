@@ -4,13 +4,13 @@
 #include <string>
 
 
-//#include "prettyPrintVisitor.h"
+#include "prettyPrintVisitor.h"
 
 
 extern "C" int yyparse();
 extern FILE* yyin;
 extern int yylineno;
-
+extern IProgram* yyprogram;
 
 
 void yyerror( const char* s ) {
@@ -20,6 +20,9 @@ void yyerror( const char* s ) {
  
 int main( int argc, char* argv[] )
 {
+
+	
+
 
 	for( int i = 1; i < argc; i++ ) {
 		std::string inputFileName = argv[i];
@@ -32,6 +35,11 @@ int main( int argc, char* argv[] )
 			yylineno = 0;
 			yyin = program;
 
+
+			//PrettyPrintVisitor prittyPrint;
+			//yyprogram->Accept( &prittyPrint );
+
+			/*
 			do {
 				int rCode = yyparse();
 				if( rCode != 0 ) {
@@ -39,6 +47,7 @@ int main( int argc, char* argv[] )
 					break;
 				}
 			} while( !feof( yyin ) );
+			*/
 		}
 	}
 

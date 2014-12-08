@@ -42,4 +42,10 @@ public:
 	void Visit( const CVarDeclList& p );
 	void Visit( const CMethodDeclList& p );
 	void Visit( const CStmtList& p );
+
+
+	void Visit( const CIdExpr& p );
+	void Visit( const CLengthExpr& p );
+	void Visit( const CUnaryMinusExpr& p );
+
 };

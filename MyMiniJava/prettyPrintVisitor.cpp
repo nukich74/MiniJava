@@ -299,3 +299,24 @@ void PrettyPrintVisitor::Visit( const CStmtList& p )
 		p.GetList()->Accept( this );
 	}
 }
+
+//
+
+void PrettyPrintVisitor::Visit( const CIdExpr& p )
+{
+	std::cout << " " << p.GetId() << " ";
+}
+
+
+void PrettyPrintVisitor::Visit( const CLengthExpr& p )
+{
+	p.GetExp()->Accept( this );
+	std::cout << ". length";
+
+}
+
+void PrettyPrintVisitor::Visit( const CUnaryMinusExpr& p )
+{
+	std::cout << "-";
+	p.GetExpr()->Accept( this );
+}

@@ -81,7 +81,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 61 "bison.y"
+#line 62 "bison.y"
 
 	int ival;
 	IProgram* program;
