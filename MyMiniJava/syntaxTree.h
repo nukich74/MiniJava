@@ -146,13 +146,13 @@ private:
 //{ Statement }
 class CGroupStmt : public IStmt {
 public:
-	CGroupStmt( const IStmtList *_statements ) : statements( _statements ) {}
+	CGroupStmt( const IStmtList* _statements ) : statements( _statements ) {}
 	
 	const IStmtList* GetStmtList() const { return statements; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
-	const IStmtList *statements;
+	const IStmtList* statements;
 };
 
 

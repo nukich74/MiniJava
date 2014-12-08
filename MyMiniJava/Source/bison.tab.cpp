@@ -1638,7 +1638,7 @@ yyreduce:
   case 22:
 /* Line 1792 of yacc.c  */
 #line 135 "bison.y"
-    { (yyval.stmtList) = 0; /*TODO*/ }
+    { (yyval.stmtList) = new CStmtList( (yyvsp[(1) - (2)].stmt), (yyvsp[(2) - (2)].stmtList) ); }
     break;
 
   case 23:
@@ -1650,37 +1650,37 @@ yyreduce:
   case 24:
 /* Line 1792 of yacc.c  */
 #line 140 "bison.y"
-    { (yyval.stmt) = 0; /*TODO*/ }
+    { (yyval.stmt) = new CGroupStmt( (yyvsp[(2) - (3)].stmtList) ); }
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
 #line 141 "bison.y"
-    { (yyval.stmt) = 0; /*TODO*/ }
+    { (yyval.stmt) = new CAssignStmt( (yyvsp[(1) - (4)].sval), (yyvsp[(3) - (4)].expr) ); }
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
 #line 142 "bison.y"
-    { (yyval.stmt) = 0; /*TODO*/ }
+    { (yyval.stmt) = new CIfStmt( (yyvsp[(3) - (7)].expr), (yyvsp[(5) - (7)].stmt), (yyvsp[(7) - (7)].stmt) ); }
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
 #line 143 "bison.y"
-    { (yyval.stmt) = 0; /*TODO*/ }
+    { (yyval.stmt) = new CWhileStmt( (yyvsp[(3) - (5)].expr), (yyvsp[(5) - (5)].stmt) ); }
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
 #line 144 "bison.y"
-    { (yyval.stmt) = 0; /*TODO*/ }
+    { (yyval.stmt) = new CSOPStmt( (yyvsp[(3) - (5)].expr) ); }
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
 #line 145 "bison.y"
-    { (yyval.stmt) = 0; /*TODO*/ }
+    { (yyval.stmt) = new CAssignExprStmt( (yyvsp[(1) - (7)].sval), (yyvsp[(3) - (7)].expr), (yyvsp[(6) - (7)].expr) ); }
     break;
 
   case 30:

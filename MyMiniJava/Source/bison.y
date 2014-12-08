@@ -132,17 +132,17 @@ Type
 	;
 
 StatementList
-	:	Statement StatementList { $$ = 0; /*TODO*/ }
+	:	Statement StatementList { $$ = new CStmtList( $1, $2 ); }
 	|	/*epsilon*/ { $$ = 0; }
 	;
 
 Statement
-	:	'{' StatementList '}' { $$ = 0; /*TODO*/ }
-	|	Id OperatorEq Expr ';' { $$ = 0; /*TODO*/ }
-	|	If '(' Expr ')' Statement Else Statement { $$ = 0; /*TODO*/ }
-	|	While '(' Expr ')' Statement { $$ = 0; /*TODO*/ }
-	|	Print '(' Expr ')' ';' { $$ = 0; /*TODO*/ }
-	|	Id '[' Expr ']' OperatorEq Expr ';' { $$ = 0; /*TODO*/ }
+	:	'{' StatementList '}' { $$ = new CGroupStmt( $2 ); }
+	|	Id OperatorEq Expr ';' { $$ = new CAssignStmt( $1, $3 ); }
+	|	If '(' Expr ')' Statement Else Statement { $$ = new CIfStmt( $3, $5, $7 ); }
+	|	While '(' Expr ')' Statement { $$ = new CWhileStmt( $3, $5 ); }
+	|	Print '(' Expr ')' ';' { $$ = new CSOPStmt( $3 ); }
+	|	Id '[' Expr ']' OperatorEq Expr ';' { $$ = new CAssignExprStmt( $1, $3, $6 ); }
 	;
 
 Expr
