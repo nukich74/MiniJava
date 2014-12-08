@@ -2,6 +2,7 @@
 #pragma once
 #include <cstdio>
 #include <iostream>
+#include <string>
 #include "syntaxTree.h"
 #include "grammar.h"
 
@@ -14,6 +15,7 @@ extern IProgram* core;
 
 %error-verbose
 %verbose
+%locations
 
 %type<program> Program
 %type<mainClass> MainClass
