@@ -9,7 +9,7 @@ extern "C" int yylex();
 extern "C" int yyparse();
 extern "C" FILE *yyin;
 void yyerror(const char *s);
-
+extern IProgram* core;
 %} 
 
 %error-verbose
@@ -79,7 +79,7 @@ void yyerror(const char *s);
 
 %%
 Program 
-	:	MainClass ClassDeclarationList { $$ = new CProgram( $1, $2 ); }
+	:	MainClass ClassDeclarationList { core = $$ = new CProgram( $1, $2 ); }
 	;
 
 MainClass 

@@ -2,6 +2,16 @@
 
 class IVisitor;
 
+class CCodeInfo {
+public:
+	CCodeInfo( const int& _lineNumber, const int& _posLine ) : lineNumber( _lineNumber ), posInLine( _posLine ) {}
+	int GetLineNumber() const { return lineNumber; }
+	int GetPosInLine() const { return posInLine; }
+private:
+	int lineNumber;
+	int posInLine;
+};
+
 // Корневой интерфейс программы
 class IProgram {
 public:

@@ -75,7 +75,7 @@ extern "C" int yylex();
 extern "C" int yyparse();
 extern "C" FILE *yyin;
 void yyerror(const char *s);
-
+extern IProgram* core;
 
 /* Line 371 of yacc.c  */
 #line 82 "bison.tab.cpp"
@@ -1518,7 +1518,7 @@ yyreduce:
         case 2:
 /* Line 1792 of yacc.c  */
 #line 82 "bison.y"
-    { (yyval.program) = new CProgram( (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
+    { core = (yyval.program) = new CProgram( (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
     break;
 
   case 3:

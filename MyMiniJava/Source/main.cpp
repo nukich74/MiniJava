@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
-
+#include "grammar.h"
 
 //#include "prettyPrintVisitor.h"
 
@@ -11,6 +11,7 @@ extern "C" int yyparse();
 extern FILE* yyin;
 extern int yylineno;
 
+IProgram* core;
 
 
 void yyerror( const char* s ) {
