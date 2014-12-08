@@ -4,7 +4,9 @@
 
 namespace SymbolsTable {
 	class CSymbolsTable;
-	class CSymbol;
+	class CVariableInfo;
+	class CMethodInfo;
+	class CClassInfo;
 	
 	class CSTVisitor : public IVisitor {
 	public:
@@ -45,8 +47,8 @@ namespace SymbolsTable {
 		void Visit( const CMethodDeclList& p );
 		void Visit( const CStmtList& p );
 	private:
-		IMethodDecl* currentMethod;
-		IClassDecl* currentClass;
-		IVarDecl* currentVariable;
+		CClassInfo* currentMethod;
+		CMethodInfo* currentClass;
+		CSymbolsTable* currentVariable;
 	};
 }	
