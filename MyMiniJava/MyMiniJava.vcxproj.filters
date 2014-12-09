@@ -42,6 +42,9 @@
     <ClCompile Include="prettyPrintVisitor.cpp">
       <Filter>PPVisitor</Filter>
     </ClCompile>
+    <ClCompile Include="symtable.cpp">
+      <Filter>SymbolsTable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iVisitor.h">

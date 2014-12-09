@@ -21,6 +21,7 @@
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="symtable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grammar.h" />
@@ -38,7 +39,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
