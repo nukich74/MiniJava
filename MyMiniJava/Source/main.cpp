@@ -1,17 +1,15 @@
-#define _USE
+#include "prettyPrintVisitor.h"
+#include <utility>
 #include <cstdio>
 #include <iostream>
+#include <unordered_set>
 #include <string>
-
-
-#include "prettyPrintVisitor.h"
-
 
 extern "C" int yyparse();
 extern FILE* yyin;
 extern int yylineno;
 extern IProgram* yyprogram;
-
+std::unordered_set< std::string > symbolStorage;
 
 void yyerror( const char* s ) {
 	std::cout << s << std::endl;
@@ -20,10 +18,6 @@ void yyerror( const char* s ) {
  
 int main( int argc, char* argv[] )
 {
-
-	
-
-
 	for( int i = 1; i < argc; i++ ) {
 		std::string inputFileName = argv[i];
 		std::cout << "Processing file: " << inputFileName << std::endl;
@@ -51,7 +45,6 @@ int main( int argc, char* argv[] )
 			
 		}
 	}
-
 
 	return 0;
 }

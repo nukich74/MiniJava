@@ -42,7 +42,7 @@
     <ClCompile Include="prettyPrintVisitor.cpp">
       <Filter>PPVisitor</Filter>
     </ClCompile>
-    <ClCompile Include="symtable.cpp">
+    <ClCompile Include="SymVisitor.cpp">
       <Filter>SymbolsTable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,7 +62,19 @@
     <ClInclude Include="prettyPrintVisitor.h">
       <Filter>PPVisitor</Filter>
     </ClInclude>
-    <ClInclude Include="symtable.h">
+    <ClInclude Include="MethodInfo.h">
+      <Filter>SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassInfo.h">
+      <Filter>SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableInfo.h">
+      <Filter>SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolTable.h">
+      <Filter>SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="SymVisitor.h">
       <Filter>SymbolsTable</Filter>
     </ClInclude>
   </ItemGroup>

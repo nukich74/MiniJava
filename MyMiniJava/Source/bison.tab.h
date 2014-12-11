@@ -98,7 +98,7 @@ typedef union YYSTYPE
 	IStmt* stmt;
 	IExprList* exprList;
 	IExpr* expr;
-	char sval[100];
+	char* sval;
 
 
 /* Line 2058 of yacc.c  */

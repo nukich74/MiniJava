@@ -11,9 +11,13 @@
 #include "syntaxTree.h"
 #include "bison.tab.h"
 #include <sstream>
+#include <unordered_set>
 
 #define YY_DECL extern "C" int yylex()
 #define yyterminate() return YY_NULL
+
+extern std::unordered_set< std::string > symbolStorage;
+char* data;
 
 /*extern "C" int yywrap() {
 	return 1;
@@ -73,7 +77,18 @@ Comment (/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)*
 
 Comment { printToken( yytext );  }
 
-[a-zA-Z_][a-zA-Z0-9_]* { printToken( yytext ); strcpy_s( yylval.sval, yytext ); return Id; }
+[a-zA-Z_][a-zA-Z0-9_]* { 
+	printToken( yytext ); 
+	//так нельзя наверное?
+	data = new char[strlen( yytext ) + 1];
+	strcpy_s( data, strlen( yytext ) + 1, yytext );
+	auto insertRes = symbolStorage.insert( data );
+	if( insertRes.second == false ) {
+		delete[] data;
+	}
+	yylval.sval = const_cast<char*>( ( insertRes.first )->c_str() );
+	return Id; 
+}
 
 "<" { return OperatorLess; }
 ">" { return OperatorMore; }

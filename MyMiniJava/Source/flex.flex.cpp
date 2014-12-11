@@ -563,9 +563,13 @@ char *yytext;
 #include "syntaxTree.h"
 #include "bison.tab.h"
 #include <sstream>
+#include <unordered_set>
 
 #define YY_DECL extern "C" int yylex()
 #define yyterminate() return YY_NULL
+
+extern std::unordered_set< std::string > symbolStorage;
+char* data;
 
 /*extern "C" int yywrap() {
 	return 1;
@@ -576,7 +580,7 @@ void printToken( const std::string& token ) {
 //	std::cout << token;
 }
 
-#line 580 "flex.flex.cpp"
+#line 584 "flex.flex.cpp"
 
 #define INITIAL 0
 
@@ -755,10 +759,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 32 "flex.l"
+#line 36 "flex.l"
 
 
-#line 762 "flex.flex.cpp"
+#line 766 "flex.flex.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -853,167 +857,178 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 34 "flex.l"
+#line 38 "flex.l"
 { printToken( yytext ); return Class; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 36 "flex.l"
+#line 40 "flex.l"
 { printToken( yytext );  return Public; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 38 "flex.l"
+#line 42 "flex.l"
 { printToken( yytext );  return Static; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 40 "flex.l"
+#line 44 "flex.l"
 { printToken( yytext );  return Void; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 42 "flex.l"
+#line 46 "flex.l"
 {  printToken( yytext ); return Main; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 44 "flex.l"
+#line 48 "flex.l"
 { printToken( yytext );  return String; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 46 "flex.l"
+#line 50 "flex.l"
 { printToken( yytext );  return Extends; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 48 "flex.l"
+#line 52 "flex.l"
 { printToken( yytext );  return Return; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 50 "flex.l"
+#line 54 "flex.l"
 { printToken( yytext );  return Int; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 52 "flex.l"
+#line 56 "flex.l"
 {  printToken( yytext ); return Bool; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 54 "flex.l"
+#line 58 "flex.l"
 { printToken( yytext );  return If; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 56 "flex.l"
+#line 60 "flex.l"
 { printToken( yytext );  return Else; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 58 "flex.l"
+#line 62 "flex.l"
 { printToken( yytext );  return While; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 60 "flex.l"
+#line 64 "flex.l"
 { printToken( yytext );  return  Print; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 62 "flex.l"
+#line 66 "flex.l"
 { printToken( yytext ); 	return Length;	}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 64 "flex.l"
+#line 68 "flex.l"
 { printToken( yytext ); 	return True; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 66 "flex.l"
+#line 70 "flex.l"
 { printToken( yytext ); 	return False; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 68 "flex.l"
+#line 72 "flex.l"
 { printToken( yytext ); 	return This; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 70 "flex.l"
+#line 74 "flex.l"
 {	 printToken( yytext ); return New; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 72 "flex.l"
+#line 76 "flex.l"
 { }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 74 "flex.l"
+#line 78 "flex.l"
 { printToken( yytext );  }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 76 "flex.l"
-{ printToken( yytext ); strcpy_s( yylval.sval, yytext ); return Id; }
+#line 80 "flex.l"
+{ 
+	printToken( yytext ); 
+	//так нельзя наверное?
+	data = new char[strlen( yytext ) + 1];
+	strcpy_s( data, strlen( yytext ) + 1, yytext );
+	auto insertRes = symbolStorage.insert( data );
+	if( insertRes.second == false ) {
+		delete[] data;
+	}
+	yylval.sval = const_cast<char*>( ( insertRes.first )->c_str() );
+	return Id; 
+}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 78 "flex.l"
+#line 93 "flex.l"
 { return OperatorLess; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 79 "flex.l"
+#line 94 "flex.l"
 { return OperatorMore; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 80 "flex.l"
+#line 95 "flex.l"
 { return OperatorAnd; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 81 "flex.l"
+#line 96 "flex.l"
 { printToken( "=" ); return OperatorEq; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 83 "flex.l"
+#line 98 "flex.l"
 return yytext[0];
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 85 "flex.l"
+#line 100 "flex.l"
 {  printToken( yytext ); return yytext[0]; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 88 "flex.l"
+#line 103 "flex.l"
 {  printToken( yytext ); yylval.ival = atoi( yytext ); return IntNum; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 90 "flex.l"
+#line 105 "flex.l"
 { printToken( " " ); }
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 91 "flex.l"
+#line 106 "flex.l"
 { printToken( "\n" + std::to_string( yylineno ) + ": " ); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 92 "flex.l"
+#line 107 "flex.l"
 { printToken( "\t" ); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 96 "flex.l"
+#line 111 "flex.l"
 {
 	printToken( "EOF\n" );
 	yyterminate();
@@ -1021,7 +1036,7 @@ case YY_STATE_EOF(INITIAL):
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 101 "flex.l"
+#line 116 "flex.l"
 { 
 	std::cout  << "Unknown: <" << yytext << ">" << std::endl;  
 	getchar(); //нужно остановиться, если
@@ -1029,10 +1044,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 106 "flex.l"
+#line 121 "flex.l"
 ECHO;
 	YY_BREAK
-#line 1036 "flex.flex.cpp"
+#line 1051 "flex.flex.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2036,6 +2051,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 105 "flex.l"
+#line 120 "flex.l"
 
 

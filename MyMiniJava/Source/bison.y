@@ -75,7 +75,7 @@ extern IProgram* yyprogram = 0;
 	IStmt* stmt;
 	IExprList* exprList;
 	IExpr* expr;
-	char sval[100];
+	char* sval;
 }
 
 %%
