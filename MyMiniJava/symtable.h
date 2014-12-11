@@ -4,6 +4,12 @@
 
 namespace SymbolsTable {
 	
+
+	class CClassInfo;
+	class CMethodInfo;
+	class CSymbolsTable;
+
+
 	class CSTVisitor : public IVisitor {
 	public:
 		void Visit( const CProgram& p );
@@ -48,6 +54,8 @@ namespace SymbolsTable {
 		CSymbolsTable* currentVariable;
 	};
 
+
+	/*
 	class CVariableInf {
 	public:
 		CVariableInf( std::string  _c, std::string _name, CVariableInf* _next );
@@ -65,6 +73,8 @@ namespace SymbolsTable {
 		std::string name;
 		CVariableInf* next;
 	};
+
+
 
 	class CMethodInfo {
 	public:
@@ -120,4 +130,7 @@ namespace SymbolsTable {
 
 	class CSymbolsTable {
 	};
+	*/
+
 }	
+

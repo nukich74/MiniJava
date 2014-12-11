@@ -3,9 +3,7 @@
 #include <iostream>
 #include <string>
 
-
 #include "prettyPrintVisitor.h"
-
 
 extern "C" int yyparse();
 extern FILE* yyin;
@@ -21,10 +19,8 @@ void yyerror( const char* s ) {
 int main( int argc, char* argv[] )
 {
 
-	
-
-
 	for( int i = 1; i < argc; i++ ) {
+
 		std::string inputFileName = argv[i];
 		std::cout << "Processing file: " << inputFileName << std::endl;
 
@@ -52,6 +48,9 @@ int main( int argc, char* argv[] )
 		}
 	}
 
+
+	int g;
+	std::cin >> g;
 
 	return 0;
 }
