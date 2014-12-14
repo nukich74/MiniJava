@@ -1,15 +1,44 @@
 #pragma once
 #include "SymbolTable.h"
 #include "SymVisitor.h"
+#include "syntaxTree.h"
 
 using namespace SymbolsTable;
 
 void CSTVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 {
+	p.GetMainClass()->Accept( this );
+	if( p.GetClassDeclList() ){
+		p.GetClassDeclList( )->Accept( this );
+	}
 }
+
 
 void CSTVisitor::Visit( const CMainClass& p ) //class id { public static void main ( String [] id ) { Statement }}
 {
+	// добавляем класс в таблицу символов
+	CClassInfo* mainClass = new CClassInfo( p.GetNameFirst(), NULL );
+	
+	CMethodInfo* mainFunction = new CMethodInfo( "void", "main" );
+	(*mainClass).AddMethod( mainFunction );
+
+	// переменные, переданные в агрументах main(), есть локальными переменными
+	//CVariableInfo* mainParams =  new CVariableInfo( "String", p.GetArgsName, VT_ARRAY);
+	CVariableInfo* mainParams =  new CVariableInfo( "String", p.GetArgsName, false);
+	(*mainClass).AddLocalVar( mainParams );
+
+	table.insert( std::pair<std::string, CClassInfo*>( p.GetNameFirst, mainClass ) );
+
+	p.GetStmt()->Accept( this );
+
+}
+
+void CSTVisitor::Visit( const CClassDeclList& p )//ClassDeclList
+{
+	p.GetCurrent()->Accept( this );
+	if( p.GetList() != 0 ) {
+		p.GetList()->Accept( this );
+	}
 }
 
 void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDeclList }
@@ -113,10 +142,6 @@ void CSTVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 {
 }
 
-
-void CSTVisitor::Visit( const CClassDeclList& p )//ClassDeclList
-{
-}
 
 void CSTVisitor::Visit( const CVarDeclList& p )
 {
