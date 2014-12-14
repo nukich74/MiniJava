@@ -87,6 +87,7 @@ public:
 class IType {
 public:
 	virtual ~IType() {}
+	virtual std::string GetName() const = 0;
 	virtual void Accept( IVisitor* ) const = 0;
 };
 

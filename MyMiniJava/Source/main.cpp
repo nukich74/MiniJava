@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unordered_set>
 #include <string>
+#include <cassert>
 
 extern "C" int yyparse();
 extern FILE* yyin;
@@ -45,6 +46,9 @@ int main( int argc, char* argv[] )
 			
 		}
 	}
+
+	int g;
+	std::cin >> g;
 
 	return 0;
 }

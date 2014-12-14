@@ -441,7 +441,6 @@ private:
 class CTypeName : public IType {
 public:
 	CTypeName( const std::string& _name ) : name( _name ) {};
-	
 	std::string GetName() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }

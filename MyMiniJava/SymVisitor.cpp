@@ -2,7 +2,7 @@
 #include "SymbolTable.h"
 #include "SymVisitor.h"
 #include "syntaxTree.h"
-#include "assert.h"
+#include <cassert>
 
 using namespace SymbolsTable;
 
@@ -10,7 +10,7 @@ void CSTVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 {
 	p.GetMainClass()->Accept( this );
 	if( p.GetClassDeclList() ){
-		p.GetClassDeclList( )->Accept( this );
+		p.GetClassDeclList()->Accept( this );
 	}
 }
 
@@ -18,7 +18,7 @@ void CSTVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 void CSTVisitor::Visit( const CMainClass& p ) //class id { public static void main ( String [] id ) { Statement }}
 {
 	// добавляем класс в таблицу символов
-	CClassInfo* mainClass = new CClassInfo( p.GetNameFirst(), NULL );
+	CClassInfo* mainClass = new CClassInfo( p.GetNameFirst(), 0 );
 	
 	CMethodInfo* mainFunction = new CMethodInfo( "void", "main" );
 	(*mainClass).AddMethod( mainFunction );
@@ -46,7 +46,7 @@ void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 {
 
 	assert( currentMethod == 0 ); 
-	assert( currentClass == 0 ); // класс внутри класса не объявляем (если мы внутри, то вылетем) (?)
+	//assert( currentClass == 0 ); // класс внутри класса не объявляем (если мы внутри, то вылетем) (?)
 
 	CClassInfo* clazz = new CClassInfo( p.GetName(), 0 );
 	currentClass = clazz;
@@ -65,7 +65,7 @@ void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 void CSTVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarDeclList MethodDeclList }
 {
 	assert( currentMethod == 0 ); 
-	assert( currentClass == 0 );
+	//assert( currentClass == 0 );
 	
 	CClassInfo * clazz = new CClassInfo( p.GetClassName(), p.GetBaseClassName() );
 	currentClass = clazz;
@@ -83,12 +83,77 @@ void CSTVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 }
 
 void CSTVisitor::Visit( const CVarDecl& p ) //Type id
-{
+{ 
+	
+	assert( currentClass != 0 );
+
+	// (TODO?) может не работать не тестировал
+	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
+
+	if( currentMethod == 0 ) {
+		currentClass->AddLocalVar( variable );
+	} else {
+		currentMethod->AddLocalVar( variable );
+	}
+	
 }
 
 void CSTVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) { VarDecl* Statement* return Exp ;}
 {
+	
+	// (TODO?)
+	CMethodInfo* method = new CMethodInfo( p.GetType()->GetName(), p.GetName() );
+	currentMethod = method;
+
+	if( p.GetFormalList() != 0 ) {
+		p.GetFormalList()->Accept( this );
+	}
+
+	if( p.GetVarDeclList() != 0 ) {
+		p.GetVarDeclList()->Accept( this );
+	}
+	currentClass->AddMethod( method );
+	currentMethod = 0;
+	
 }
+
+void CSTVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
+{
+	assert( currentMethod != 0 ); 
+	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
+	currentMethod->AddArgument( variable );
+	if( p.GetFormalList() != 0 ) {
+		p.GetFormalList()->Accept( this );
+	}
+	
+}
+
+
+void CSTVisitor::Visit( const CVarDeclList& p )
+{
+	p.GetCurrent()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
+}
+
+void CSTVisitor::Visit( const CMethodDeclList& p )
+{
+	p.GetCurrent()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
+}
+
+
+void CSTVisitor::Visit( const CStmtList& p )
+{
+	p.GetStmt()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
+}
+
 
 void CSTVisitor::Visit( const CGroupStmt& p ) //{ Statement* }
 {
@@ -171,25 +236,6 @@ void CSTVisitor::Visit( const CExprList& p )//Exp , ExpList
 {
 }
  
-void CSTVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
-{
-}
-
-
-void CSTVisitor::Visit( const CVarDeclList& p )
-{
-}
-
-void CSTVisitor::Visit( const CMethodDeclList& p )
-{
-}
-
-
-void CSTVisitor::Visit( const CStmtList& p )
-{
-}
-
-
 void CSTVisitor::Visit( const CIdExpr& p )
 {
 }
