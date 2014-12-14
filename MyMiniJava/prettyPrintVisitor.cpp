@@ -294,10 +294,10 @@ void PrettyPrintVisitor::Visit( const CMethodDeclList& p )
 
 void PrettyPrintVisitor::Visit( const CStmtList& p )
 {
-	//p.GetStmt()->Accept( this );
-	//if( p.GetList() ) {
-	//	p.GetList()->Accept( this );
-	//}
+	p.GetStmt()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList()->Accept( this );
+	}
 }
 
 
