@@ -2,6 +2,7 @@
 #include "SymbolTable.h"
 #include "SymVisitor.h"
 #include "syntaxTree.h"
+#include "assert.h"
 
 using namespace SymbolsTable;
 
@@ -24,10 +25,10 @@ void CSTVisitor::Visit( const CMainClass& p ) //class id { public static void ma
 
 	// переменные, переданные в агрументах main(), есть локальными переменными
 	//CVariableInfo* mainParams =  new CVariableInfo( "String", p.GetArgsName, VT_ARRAY);
-	CVariableInfo* mainParams =  new CVariableInfo( "String", p.GetArgsName, false);
+	CVariableInfo* mainParams =  new CVariableInfo( "String", p.GetArgsName(), false);
 	(*mainClass).AddLocalVar( mainParams );
 
-	table.insert( std::pair<std::string, CClassInfo*>( p.GetNameFirst, mainClass ) );
+	table.insert( std::pair<std::string, CClassInfo*>( p.GetNameFirst(), mainClass ) );
 
 	p.GetStmt()->Accept( this );
 
@@ -43,10 +44,42 @@ void CSTVisitor::Visit( const CClassDeclList& p )//ClassDeclList
 
 void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDeclList }
 {
+
+	assert( currentMethod == 0 ); 
+	assert( currentClass == 0 ); // класс внутри класса не объявляем (если мы внутри, то вылетем) (?)
+
+	CClassInfo* clazz = new CClassInfo( p.GetName(), 0 );
+	currentClass = clazz;
+
+	if( p.GetMethodDeclList() != 0 ) {
+		p.GetMethodDeclList()->Accept( this );
+	}
+	if( p.GetVarDeclList() != 0 ) {
+		p.GetVarDeclList()->Accept( this );
+	}
+
+	table.insert( std::pair<std::string, CClassInfo*>( p.GetName(), clazz ) );
+	currentClass = 0;
 }
 
 void CSTVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarDeclList MethodDeclList }
 {
+	assert( currentMethod == 0 ); 
+	assert( currentClass == 0 );
+	
+	CClassInfo * clazz = new CClassInfo( p.GetClassName(), p.GetBaseClassName() );
+	currentClass = clazz;
+	
+	if( p.GetMethodDeclList() != 0 ) {
+		p.GetMethodDeclList()->Accept( this );
+	}
+	if( p.GetVarDeclList() != 0 ) {
+		p.GetVarDeclList()->Accept( this );
+	}
+
+	table.insert( std::pair<std::string, CClassInfo*>( p.GetClassName(), clazz ) );
+	currentClass = 0;
+
 }
 
 void CSTVisitor::Visit( const CVarDecl& p ) //Type id
