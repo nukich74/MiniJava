@@ -1649,25 +1649,25 @@ yyreduce:
         case 2:
 /* Line 1792 of yacc.c  */
 #line 84 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column );  yyprogram = (yyval.program) = new CProgram( info, (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column );  yyprogram = (yyval.program) = new CProgram( info, (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
 #line 88 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (17)]).first_line, (yylsp[(1) - (17)]).first_column, (yylsp[(1) - (17)]).last_line, (yylsp[(1) - (17)]).last_column ); (yyval.mainClass) = new CMainClass( info, (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].stmt) ); }
+    { CCodeInfo info( (yylsp[(1) - (17)]).first_line, (yylsp[(1) - (17)]).first_column, (yylsp[(17) - (17)]).last_line, (yylsp[(17) - (17)]).last_column ); (yyval.mainClass) = new CMainClass( info, (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].stmt) ); }
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
 #line 92 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(2) - (3)]).last_line, (yylsp[(2) - (3)]).last_column ); (yyval.varDecl) = new CVarDecl( info, (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.varDecl) = new CVarDecl( info, (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval) ); }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
 #line 96 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column ); (yyval.varDeclList) = new CVarDeclList( info, (yyvsp[(2) - (2)].varDecl), (yyvsp[(1) - (2)].varDeclList) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.varDeclList) = new CVarDeclList( info, (yyvsp[(2) - (2)].varDecl), (yyvsp[(1) - (2)].varDeclList) ); }
     break;
 
   case 6:
@@ -1679,19 +1679,19 @@ yyreduce:
   case 7:
 /* Line 1792 of yacc.c  */
 #line 101 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, (yylsp[(1) - (6)]).last_line, (yylsp[(1) - (6)]).last_column ); (yyval.classDecl) = new CClassDecl( info, (yyvsp[(2) - (6)].sval), (yyvsp[(4) - (6)].varDeclList), (yyvsp[(5) - (6)].methodDeclList) ); }
+    { CCodeInfo info( (yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, (yylsp[(6) - (6)]).last_line, (yylsp[(6) - (6)]).last_column ); (yyval.classDecl) = new CClassDecl( info, (yyvsp[(2) - (6)].sval), (yyvsp[(4) - (6)].varDeclList), (yyvsp[(5) - (6)].methodDeclList) ); }
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
 #line 102 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, (yylsp[(1) - (8)]).last_line, (yylsp[(1) - (8)]).last_column ); (yyval.classDecl) = new CExtendClassDecl( info, (yyvsp[(2) - (8)].sval), (yyvsp[(4) - (8)].sval), (yyvsp[(6) - (8)].varDeclList), (yyvsp[(7) - (8)].methodDeclList) ); }
+    { CCodeInfo info( (yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, (yylsp[(8) - (8)]).last_line, (yylsp[(8) - (8)]).last_column ); (yyval.classDecl) = new CExtendClassDecl( info, (yyvsp[(2) - (8)].sval), (yyvsp[(4) - (8)].sval), (yyvsp[(6) - (8)].varDeclList), (yyvsp[(7) - (8)].methodDeclList) ); }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
 #line 106 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column ); (yyval.classDeclList) = new CClassDeclList( info, (yyvsp[(1) - (2)].classDecl), (yyvsp[(2) - (2)].classDeclList) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.classDeclList) = new CClassDeclList( info, (yyvsp[(1) - (2)].classDecl), (yyvsp[(2) - (2)].classDeclList) ); }
     break;
 
   case 10:
@@ -1703,13 +1703,13 @@ yyreduce:
   case 11:
 /* Line 1792 of yacc.c  */
 #line 111 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (13)]).first_line, (yylsp[(1) - (13)]).first_column, (yylsp[(1) - (13)]).last_line, (yylsp[(1) - (13)]).last_column ); (yyval.methodDecl) = new CMethodDecl( info, (yyvsp[(2) - (13)].type), (yyvsp[(3) - (13)].sval), (yyvsp[(5) - (13)].formalList), (yyvsp[(8) - (13)].varDeclList), (yyvsp[(9) - (13)].stmtList), (yyvsp[(11) - (13)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (13)]).first_line, (yylsp[(1) - (13)]).first_column, (yylsp[(13) - (13)]).last_line, (yylsp[(13) - (13)]).last_column ); (yyval.methodDecl) = new CMethodDecl( info, (yyvsp[(2) - (13)].type), (yyvsp[(3) - (13)].sval), (yyvsp[(5) - (13)].formalList), (yyvsp[(8) - (13)].varDeclList), (yyvsp[(9) - (13)].stmtList), (yyvsp[(11) - (13)].expr) ); }
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
 #line 115 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column ); (yyval.methodDeclList) = new CMethodDeclList( info, (yyvsp[(2) - (2)].methodDecl), (yyvsp[(1) - (2)].methodDeclList) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.methodDeclList) = new CMethodDeclList( info, (yyvsp[(2) - (2)].methodDecl), (yyvsp[(1) - (2)].methodDeclList) ); }
     break;
 
   case 13:
@@ -1721,7 +1721,7 @@ yyreduce:
   case 14:
 /* Line 1792 of yacc.c  */
 #line 120 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.formalList) = new CFormalList( info, (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), (yyvsp[(3) - (3)].formalList) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.formalList) = new CFormalList( info, (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), (yyvsp[(3) - (3)].formalList) ); }
     break;
 
   case 15:
@@ -1733,7 +1733,7 @@ yyreduce:
   case 16:
 /* Line 1792 of yacc.c  */
 #line 125 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(1) - (4)]).last_line, (yylsp[(1) - (4)]).last_column ); (yyval.formalList) = new CFormalList( info, (yyvsp[(2) - (4)].type), (yyvsp[(3) - (4)].sval), (yyvsp[(4) - (4)].formalList) ); }
+    { CCodeInfo info( (yylsp[(2) - (4)]).first_line, (yylsp[(2) - (4)]).first_column, (yylsp[(4) - (4)]).last_line, (yylsp[(4) - (4)]).last_column ); (yyval.formalList) = new CFormalList( info, (yyvsp[(2) - (4)].type), (yyvsp[(3) - (4)].sval), (yyvsp[(4) - (4)].formalList) ); }
     break;
 
   case 17:
@@ -1751,7 +1751,7 @@ yyreduce:
   case 19:
 /* Line 1792 of yacc.c  */
 #line 131 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.type) = new CTypeName( info, "array" ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.type) = new CTypeName( info, "array" ); }
     break;
 
   case 20:
@@ -1769,7 +1769,7 @@ yyreduce:
   case 22:
 /* Line 1792 of yacc.c  */
 #line 137 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column ); (yyval.stmtList) = new CStmtList( info, (yyvsp[(1) - (2)].stmt), (yyvsp[(2) - (2)].stmtList) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.stmtList) = new CStmtList( info, (yyvsp[(1) - (2)].stmt), (yyvsp[(2) - (2)].stmtList) ); }
     break;
 
   case 23:
@@ -1781,97 +1781,97 @@ yyreduce:
   case 24:
 /* Line 1792 of yacc.c  */
 #line 142 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.stmt) = new CGroupStmt( info, (yyvsp[(2) - (3)].stmtList) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.stmt) = new CGroupStmt( info, (yyvsp[(2) - (3)].stmtList) ); }
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
 #line 143 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(1) - (4)]).last_line, (yylsp[(1) - (4)]).last_column ); (yyval.stmt) = new CAssignStmt( info, (yyvsp[(1) - (4)].sval), (yyvsp[(3) - (4)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(3) - (4)]).last_line, (yylsp[(3) - (4)]).last_column ); (yyval.stmt) = new CAssignStmt( info, (yyvsp[(1) - (4)].sval), (yyvsp[(3) - (4)].expr) ); }
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
 #line 144 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, (yylsp[(1) - (7)]).last_line, (yylsp[(1) - (7)]).last_column ); (yyval.stmt) = new CIfStmt( info, (yyvsp[(3) - (7)].expr), (yyvsp[(5) - (7)].stmt), (yyvsp[(7) - (7)].stmt) ); }
+    { CCodeInfo info( (yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, (yylsp[(7) - (7)]).last_line, (yylsp[(7) - (7)]).last_column ); (yyval.stmt) = new CIfStmt( info, (yyvsp[(3) - (7)].expr), (yyvsp[(5) - (7)].stmt), (yyvsp[(7) - (7)].stmt) ); }
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
 #line 145 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(1) - (5)]).last_line, (yylsp[(1) - (5)]).last_column ); (yyval.stmt) = new CWhileStmt( info, (yyvsp[(3) - (5)].expr), (yyvsp[(5) - (5)].stmt) ); }
+    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(5) - (5)]).last_line, (yylsp[(5) - (5)]).last_column ); (yyval.stmt) = new CWhileStmt( info, (yyvsp[(3) - (5)].expr), (yyvsp[(5) - (5)].stmt) ); }
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
 #line 146 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(1) - (5)]).last_line, (yylsp[(1) - (5)]).last_column ); (yyval.stmt) = new CSOPStmt( info, (yyvsp[(3) - (5)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(4) - (5)]).last_line, (yylsp[(4) - (5)]).last_column ); (yyval.stmt) = new CSOPStmt( info, (yyvsp[(3) - (5)].expr) ); }
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
 #line 147 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, (yylsp[(1) - (7)]).last_line, (yylsp[(1) - (7)]).last_column ); (yyval.stmt) = new CAssignExprStmt( info, (yyvsp[(1) - (7)].sval), (yyvsp[(3) - (7)].expr), (yyvsp[(6) - (7)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, (yylsp[(6) - (7)]).last_line, (yylsp[(6) - (7)]).last_column ); (yyval.stmt) = new CAssignExprStmt( info, (yyvsp[(1) - (7)].sval), (yyvsp[(3) - (7)].expr), (yyvsp[(6) - (7)].expr) ); }
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
 #line 151 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Mult, (yyvsp[(3) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Mult, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
 #line 152 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Plus, (yyvsp[(3) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Plus, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
 #line 153 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Div, (yyvsp[(3) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Div, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
 #line 154 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Minus, (yyvsp[(3) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Minus, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
 #line 155 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column ); (yyval.expr) = new CUnaryMinusExpr( info, (yyvsp[(2) - (2)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.expr) = new CUnaryMinusExpr( info, (yyvsp[(2) - (2)].expr) ); }
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
 #line 156 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(1) - (4)]).last_line, (yylsp[(1) - (4)]).last_column ); (yyval.expr) = new CExExpr( info,(yyvsp[(1) - (4)].expr), (yyvsp[(3) - (4)].expr));  }
+    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(4) - (4)]).last_line, (yylsp[(4) - (4)]).last_column ); (yyval.expr) = new CExExpr( info,(yyvsp[(1) - (4)].expr), (yyvsp[(3) - (4)].expr));  }
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
 #line 157 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new CLengthExpr( info, (yyvsp[(1) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new CLengthExpr( info, (yyvsp[(1) - (3)].expr) ); }
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
 #line 158 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, (yylsp[(1) - (6)]).last_line, (yylsp[(1) - (6)]).last_column ); (yyval.expr) = new CMethodCallExpr( info, (yyvsp[(1) - (6)].expr), (yyvsp[(3) - (6)].sval), (yyvsp[(5) - (6)].exprList) ); }
+    { CCodeInfo info( (yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, (yylsp[(6) - (6)]).last_line, (yylsp[(6) - (6)]).last_column ); (yyval.expr) = new CMethodCallExpr( info, (yyvsp[(1) - (6)].expr), (yyvsp[(3) - (6)].sval), (yyvsp[(5) - (6)].exprList) ); }
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
 #line 159 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Less, (yyvsp[(3) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Less, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
 #line 160 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_And, (yyvsp[(3) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_And, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 40:
@@ -1907,31 +1907,31 @@ yyreduce:
   case 45:
 /* Line 1792 of yacc.c  */
 #line 166 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(1) - (5)]).last_line, (yylsp[(1) - (5)]).last_column ); (yyval.expr) = new CNewIntExpr( info, (yyvsp[(4) - (5)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(5) - (5)]).last_line, (yylsp[(5) - (5)]).last_column ); (yyval.expr) = new CNewIntExpr( info, (yyvsp[(4) - (5)].expr) ); }
     break;
 
   case 46:
 /* Line 1792 of yacc.c  */
 #line 167 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(1) - (4)]).last_line, (yylsp[(1) - (4)]).last_column ); (yyval.expr) = new CNewIdExpr( info, (yyvsp[(2) - (4)].sval) ); }
+    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(4) - (4)]).last_line, (yylsp[(4) - (4)]).last_column ); (yyval.expr) = new CNewIdExpr( info, (yyvsp[(2) - (4)].sval) ); }
     break;
 
   case 47:
 /* Line 1792 of yacc.c  */
 #line 168 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column ); (yyval.expr) = new CNotExpr( info, (yyvsp[(2) - (2)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.expr) = new CNotExpr( info, (yyvsp[(2) - (2)].expr) ); }
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
 #line 169 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.expr) = new CBrExpr( info, (yyvsp[(2) - (3)].expr) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new CBrExpr( info, (yyvsp[(2) - (3)].expr) ); }
     break;
 
   case 49:
 /* Line 1792 of yacc.c  */
 #line 173 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(1) - (2)]).last_line, (yylsp[(1) - (2)]).last_column ); (yyval.exprList) = new CExprList( info, (yyvsp[(1) - (2)].expr), (yyvsp[(2) - (2)].exprList) ); }
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.exprList) = new CExprList( info, (yyvsp[(1) - (2)].expr), (yyvsp[(2) - (2)].exprList) ); }
     break;
 
   case 50:
@@ -1943,7 +1943,7 @@ yyreduce:
   case 51:
 /* Line 1792 of yacc.c  */
 #line 178 "bison.y"
-    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(1) - (3)]).last_line, (yylsp[(1) - (3)]).last_column ); (yyval.exprList) = new CExprList( info, (yyvsp[(2) - (3)].expr), (yyvsp[(3) - (3)].exprList) ); }
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.exprList) = new CExprList( info, (yyvsp[(2) - (3)].expr), (yyvsp[(3) - (3)].exprList) ); }
     break;
 
   case 52:

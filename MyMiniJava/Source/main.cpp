@@ -82,14 +82,14 @@ int main( int argc, char* argv[] )
 					break;
 				}
 
-				PrettyPrintVisitor prittyPrint;
-				yyprogram->Accept( &prittyPrint );
+				//PrettyPrintVisitor prittyPrint;
+				//yyprogram->Accept( &prittyPrint );
 
-				//SymbolsTable::CSTVisitor symbolTableVisitor;
-				//yyprogram->Accept( &symbolTableVisitor );
+				SymbolsTable::CSTVisitor symbolTableVisitor;
+				yyprogram->Accept( &symbolTableVisitor );
 
-				//const SymbolTable* symbolTable = symbolTableVisitor.GetTable();
-				//SymbolTablePrint(symbolTable);
+				const SymbolTable* symbolTable = symbolTableVisitor.GetTable();
+				SymbolTablePrint(symbolTable);
 
 			} while( !feof( yyin ) );
 			
