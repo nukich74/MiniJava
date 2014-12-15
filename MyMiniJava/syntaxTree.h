@@ -7,8 +7,8 @@
 
 class CProgram : public IProgram {
 public:
-	CProgram( const IMainClass *_mainClass, const IClassDeclList *_classDeclList) : 
-		mainClass( _mainClass ), classDeclList( _classDeclList ) {}
+	CProgram( const CCodeInfo& _info, const IMainClass *_mainClass, const IClassDeclList *_classDeclList) : 
+		mainClass( _mainClass ), classDeclList( _classDeclList ), info( _info ) {}
 	
 	const IMainClass* GetMainClass() const { return mainClass; }
 	const IClassDeclList* GetClassDeclList() const { return classDeclList; }
@@ -16,6 +16,7 @@ public:
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
 private:
+	CCodeInfo info;
 	const IMainClass *mainClass;
 	const IClassDeclList *classDeclList;
 };
@@ -27,8 +28,8 @@ private:
 // }
 class CMainClass : public IMainClass {
 public:
-	CMainClass( const std::string& _className, const std::string& _argsName, const IStmt* _stmt ) :
-		className( _className ), argsName( _argsName ), stmt( _stmt ) {}	
+	CMainClass( const CCodeInfo& _info, const std::string& _className, const std::string& _argsName, const IStmt* _stmt ) :
+		className( _className ), argsName( _argsName ), stmt( _stmt ), info( _info ) {}	
 	// имя главного класса
 	std::string GetNameFirst() const { return className; }
 	// имя массива параметров у main() - функции
@@ -38,6 +39,7 @@ public:
 	
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;	
 	std::string className;
 	std::string argsName;
 	const IStmt* stmt;
@@ -50,8 +52,8 @@ private:
 // }
 class CClassDecl : public IClassDecl {
 public:
-	CClassDecl( const std::string& _className, const IVarDeclList* _variables, const IMethodDeclList* _methods ) :
-		className( _className ), variables( _variables ), methods( _methods ) {}
+	CClassDecl( const CCodeInfo& _info, const std::string& _className, const IVarDeclList* _variables, const IMethodDeclList* _methods ) :
+		className( _className ), variables( _variables ), methods( _methods ), info( _info ) {}
 
 	// имя класса
 	std::string GetName() const { return className; }
@@ -63,6 +65,7 @@ public:
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
 private:
+	CCodeInfo info;
 	std::string className;
 	const IVarDeclList* variables;
 	const IMethodDeclList* methods;
@@ -72,8 +75,8 @@ private:
 //class id extends id { VarDecl* MethodDecl* }
 class CExtendClassDecl : public IClassDecl {
 public:
-	CExtendClassDecl( const std::string& _className, const std::string& _baseClassName, const IVarDeclList* _variables, const IMethodDeclList *_methods ) :
-		className( _className ), baseClassName( _baseClassName ), variables( _variables ), methods( _methods ) {}
+	CExtendClassDecl( const CCodeInfo& _info, const std::string& _className, const std::string& _baseClassName, const IVarDeclList* _variables, const IMethodDeclList *_methods ) :
+		className( _className ), baseClassName( _baseClassName ), variables( _variables ), methods( _methods ), info( _info ) {}
 
 	std::string GetClassName() const { return className; }
 	std::string GetBaseClassName() const { return baseClassName; }
@@ -83,6 +86,7 @@ public:
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
 private:
+	CCodeInfo info;
 	std::string className;
 	std::string baseClassName;
 	const IVarDeclList* variables;
@@ -93,7 +97,7 @@ private:
 //Type name;
 class CVarDecl : public IVarDecl {
 public:
-	CVarDecl( const IType* _type, const std::string& _name ) : type( _type ), name( _name ) {}
+	CVarDecl( const CCodeInfo& _info, const IType* _type, const std::string& _name ) : type( _type ), name( _name ), info( _info ) {}
 
 	// тип переменной
 	const IType* GetType() const { return type; }
@@ -102,6 +106,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IType* type;
 	std::string name;
 };
@@ -114,9 +119,9 @@ private:
 // }
 class CMethodDecl : public IMethodDecl {
 public:
-	CMethodDecl( const IType* _type, const std::string& _name, const IFormalList* _formals, 
+	CMethodDecl( const CCodeInfo& _info, const IType* _type, const std::string& _name, const IFormalList* _formals, 
 		const IVarDeclList* _variables, const IStmtList* _statements, const IExpr* _returnExpr ) :
-	type( _type ), name( _name ), formals( _formals ), variables( _variables ), statements( _statements ), returnExpr( _returnExpr ) {}
+	type( _type ), name( _name ), formals( _formals ), variables( _variables ), statements( _statements ), returnExpr( _returnExpr ), info( _info ) {}
 
 	// тип возвращаемого значения
 	const IType* GetType() const { return type; }
@@ -131,6 +136,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IType* type;
 	std::string name;
 	const IFormalList* formals;
@@ -146,12 +152,13 @@ private:
 //{ Statement }
 class CGroupStmt : public IStmt {
 public:
-	CGroupStmt( const IStmtList* _statements ) : statements( _statements ) {}
+	CGroupStmt( const CCodeInfo& _info, const IStmtList* _statements ) : statements( _statements ), info( _info ) {}
 	
 	const IStmtList* GetStmtList() const { return statements; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IStmtList* statements;
 };
 
@@ -162,8 +169,8 @@ private:
 //	 Statement
 class CIfStmt : public IStmt {
 public:
-	CIfStmt( const IExpr *_condition, const IStmt *_trueStatement, const IStmt *_falseStatement ) : 
-		condition( _condition ), trueStatement( _trueStatement ), falseStatement( _falseStatement ) {};
+	CIfStmt( const CCodeInfo& _info, const IExpr *_condition, const IStmt *_trueStatement, const IStmt *_falseStatement ) : 
+		condition( _condition ), trueStatement( _trueStatement ), falseStatement( _falseStatement ), info( _info ) {}
 	
 	const IExpr* GetExp() const { return condition; }
 	const IStmt* GetStmFirst() const { return trueStatement; }
@@ -171,6 +178,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *condition;
 	const IStmt *trueStatement;
 	const IStmt *falseStatement;
@@ -180,13 +188,14 @@ private:
 //   Statement
 class CWhileStmt : public IStmt {
 public:
-	CWhileStmt( const IExpr *_condition, const IStmt*_statement ) : condition( _condition ), statement( _statement ) {};
+	CWhileStmt( const CCodeInfo& _info, const IExpr *_condition, const IStmt*_statement ) : condition( _condition ), statement( _statement ), info( _info ) {}
 	CWhileStmt() {}
 	const IExpr* GetExpr() const { return condition; }
 	const IStmt* GetStmt() const { return statement; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *condition;
 	const IStmt *statement;
 };
@@ -195,13 +204,14 @@ private:
 //System.out.println( Expr ) ;
 class CSOPStmt : public IStmt {
 public:
-	CSOPStmt( const IExpr *_printedExpr ) : printedExpr( _printedExpr ) {};
+	CSOPStmt( const CCodeInfo& _info, const IExpr *_printedExpr ) : printedExpr( _printedExpr ), info( _info ) {}
 	CSOPStmt() {}
 
 	const IExpr* GetExpr() const { return printedExpr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *printedExpr;
 };
 
@@ -209,13 +219,14 @@ private:
 //name = Expr ;
 class CAssignStmt : public IStmt {
 public:
-	CAssignStmt( const std::string& _name, const IExpr *_value ) : name( _name ), value( _value ) {};
+	CAssignStmt( const CCodeInfo& _info, const std::string& _name, const IExpr *_value ) : name( _name ), value( _value ), info( _info ) {}
 	
 	std::string GetName() const { return name; }
 	const IExpr* GetExpr() const { return value; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	std::string name;
 	const IExpr* value;
 };
@@ -224,7 +235,7 @@ private:
 //name [ Expr ]= Expr
 class CAssignExprStmt : public IStmt {
 public:
-	CAssignExprStmt( const std::string& _name, const IExpr *_id, const IExpr *_value ) : name( _name ), id( _id ), value( _value ) {};
+	CAssignExprStmt( const CCodeInfo& _info, const std::string& _name, const IExpr *_id, const IExpr *_value ) : name( _name ), id( _id ), value( _value ), info( _info ) {}
 	
 	std::string GetName() const { return name; }
 	const IExpr* GetExprId() const { return id; }
@@ -232,6 +243,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	std::string name;
 	const IExpr *id;
 	const IExpr *value;
@@ -255,7 +267,7 @@ enum BinOp {
 //Expr op Expr
 class COpExpr :public IExpr {
 public:
-	COpExpr( const IExpr *_lExpr, BinOp _op, const IExpr *_rExpr ) : lExpr( _lExpr ), op( _op ), rExpr( _rExpr ) {}
+	COpExpr( const CCodeInfo& _info, const IExpr *_lExpr, BinOp _op, const IExpr *_rExpr ) : lExpr( _lExpr ), op( _op ), rExpr( _rExpr ), info( _info ) {}
 	
 	const IExpr* GetExprFirst() const { return lExpr; }
 	BinOp GetOp() const { return op; }
@@ -263,6 +275,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *lExpr;
 	BinOp op;
 	const IExpr *rExpr;
@@ -272,13 +285,14 @@ private:
 //Expr [ Expr ]
 class CExExpr :public IExpr {
 public:
-	CExExpr( const IExpr *_idExpr, const IExpr *_expr ) : idExpr( _idExpr ), expr( _expr ) {};
+	CExExpr( const CCodeInfo& _info, const IExpr *_idExpr, const IExpr *_expr ) : idExpr( _idExpr ), expr( _expr ), info( _info ) {}
 	
 	const IExpr* GetExpId() const { return idExpr; }
 	const IExpr* GetExp() const { return expr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *idExpr;
 	const IExpr *expr;
 };
@@ -287,8 +301,8 @@ private:
 //Expr . name ( ExprList )
 class CMethodCallExpr :public IExpr {
 public:
-	CMethodCallExpr( const IExpr *_expr, const std::string& _methodName, const IExprList *_args ) : 
-		expr( _expr ), methodName( _methodName ), args( _args ) {};
+	CMethodCallExpr( const CCodeInfo& _info, const IExpr *_expr, const std::string& _methodName, const IExprList *_args ) : 
+		expr( _expr ), methodName( _methodName ), args( _args ), info( _info ) {}
 	
 	const IExpr* GetExp() const { return expr; }
 	std::string GetName() const { return methodName; }
@@ -296,6 +310,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *expr;
 	std::string methodName;
 	const IExprList *args;
@@ -304,12 +319,13 @@ private:
 
 class CIntExpr : public IExpr {
 public:
-	CIntExpr( const int _number ) : number( _number ) {}
+	CIntExpr( const CCodeInfo& _info, const int _number ) : number( _number ), info( _info ) {}
 	
 	int GetNum() const { return number; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	int number; 
 };
 
@@ -317,8 +333,8 @@ private:
 //true
 class CTrueExpr : public IExpr {
 public:
-	CTrueExpr() {}
-	
+	CTrueExpr( const CCodeInfo& _info ) : info( _info ) {}
+	CCodeInfo info;
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 };
 
@@ -326,8 +342,8 @@ public:
 //false
 class CFalseExpr : public IExpr {
 public:
-	CFalseExpr() {}
-	
+	CFalseExpr( const CCodeInfo& _info ) : info( _info ) {}
+	CCodeInfo info;	
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 };
 
@@ -335,12 +351,13 @@ public:
 //name (имя переменной/метода/класса/...)
 class CNameExpr : public IExpr {
 public:
-	CNameExpr( const std::string& _name ) : name( _name ) {}
+	CNameExpr( const CCodeInfo& _info, const std::string& _name ) : name( _name ), info( _info ) {}
 	
 	std::string GetName() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	std::string name;
 };
 
@@ -348,20 +365,22 @@ private:
 //this
 class CThisExpr : public IExpr {
 public:
-	CThisExpr() {}
-		void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CThisExpr( const CCodeInfo& _info ) : info( _info ) {}
+	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo info;
 };
 
 
 //new int [ Expr]
 class CNewIntExpr : public IExpr {
 public:
-	CNewIntExpr( const IExpr *_expr ) : expr( _expr ) {}
+	CNewIntExpr( const CCodeInfo& _info, const IExpr *_expr ) : expr( _expr ), info( _info ) {}
 	
 	const IExpr* GetExpr() const { return expr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *expr;
 };
 
@@ -369,12 +388,13 @@ private:
 //new name ()
 class CNewIdExpr : public IExpr {
 public:
-	CNewIdExpr( const std::string _className ) : className( _className ) {}
+	CNewIdExpr( const CCodeInfo& _info, const std::string _className ) : className( _className ), info( _info ) {}
 	
 	std::string GetName() const { return className; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	std::string className;
 };
 
@@ -382,12 +402,13 @@ private:
 //! Expr
 class CNotExpr : public IExpr {
 public:
-	CNotExpr( const IExpr *_expr ) : expr( _expr ) {};
+	CNotExpr( const CCodeInfo& _info, const IExpr *_expr ) : expr( _expr ), info( _info ) {}
 	
 	const IExpr* GetExpr() const { return expr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *expr;
 };
 
@@ -395,41 +416,45 @@ private:
 //( Expr )
 class CBrExpr : public IExpr {
 public:
-	CBrExpr( const IExpr *_expr ) : expr( _expr ) {};
+	CBrExpr( const CCodeInfo& _info, const IExpr *_expr ) : expr( _expr ), info( _info ) {}
 		const IExpr* GetExpr() const { return expr; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *expr;
 };
 
 //id wrapper
 class CIdExpr :public IExpr {
 public:
-	CIdExpr( const std::string _name ) : name( _name ) {}
+	CIdExpr( const CCodeInfo& _info, const std::string _name ) : name( _name ), info( _info ) {}
 	std::string GetId() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	std::string name;
 };
 
 //expr.Length
 class CLengthExpr : public IExpr {
 public:
-	CLengthExpr( const IExpr *_source ) : source( _source ) {};
+	CLengthExpr( const CCodeInfo& _info, const IExpr *_source ) : source( _source ), info( _info ) {}
 	const IExpr* GetExp() const { return source; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExpr *source;
 };
 
 class CUnaryMinusExpr : public IExpr {
 public:
-	CUnaryMinusExpr( const IExpr* _expr ) : expr( _expr ) { }
+	CUnaryMinusExpr( const CCodeInfo& _info, const IExpr* _expr ) : expr( _expr ) { }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 	const IExpr* GetExpr() const { return expr; }
 private:
+	CCodeInfo info;
 	const IExpr* expr;
 };
 
@@ -440,11 +465,12 @@ private:
 // name (имя класса)
 class CTypeName : public IType {
 public:
-	CTypeName( const std::string& _name ) : name( _name ) {};
+	CTypeName( const CCodeInfo& _info, const std::string& _name ) : name( _name ), info( _info ) {}
 	std::string GetName() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	std::string name;
 };
 
@@ -455,13 +481,14 @@ private:
 
 class CExprList : public IExprList {
 public:
-	CExprList( const IExpr* expr, const IExprList* list ) : exprList( list ), curExpr( expr )  {};
+	CExprList( const CCodeInfo& _info, const IExpr* expr, const IExprList* list ) : exprList( list ), curExpr( expr ) , info( _info ) {}
 	
 	const IExprList* GetList() const { return exprList; }
 	const IExpr* GetCurrent() const { return curExpr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IExprList* exprList;
 	const IExpr* curExpr;
 };
@@ -470,8 +497,8 @@ private:
 //Type Name FormalList
 class CFormalList : public IFormalList {
 public:
-	CFormalList( const IType* _type, const std::string _name, const IFormalList* _formals ) :
-		type( _type ), name( _name ), formals( _formals ) {};
+	CFormalList( const CCodeInfo& _info, const IType* _type, const std::string _name, const IFormalList* _formals ) :
+		type( _type ), name( _name ), formals( _formals ), info( _info ) {}
 	
 	const IType* GetType() const { return type; }
 	std::string GetName() const { return name; }
@@ -479,6 +506,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IType* type;
 	std::string name;
 	const IFormalList* formals;
@@ -487,12 +515,13 @@ private:
 
 class CClassDeclList : public IClassDeclList {
 public:
-	CClassDeclList( const IClassDecl *_current, const IClassDeclList *_list ) : curClassDecl( _current ), list( _list ) {};
+	CClassDeclList( const CCodeInfo& _info, const IClassDecl *_current, const IClassDeclList *_list ) : curClassDecl( _current ), list( _list ), info( _info ) {}
 	CClassDeclList() {}
 	const IClassDecl* GetCurrent() const { return curClassDecl; }
 	const IClassDeclList* GetList() const { return list; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IClassDecl* curClassDecl;
 	const IClassDeclList* list;
 };
@@ -500,12 +529,12 @@ private:
 
 class CVarDeclList : public IVarDeclList {
 public:
-	CVarDeclList( const IVarDecl* _curDecl, const IVarDeclList* _list ) : curDecl( _curDecl ), list( _list ) {};
-	~CVarDeclList() {}
+	CVarDeclList( const CCodeInfo& _info, const IVarDecl* _curDecl, const IVarDeclList* _list ) : curDecl( _curDecl ), list( _list ), info( _info ) {}
 	const IVarDecl* GetCurrent() const { return curDecl; }
 	const IVarDeclList* GetList() const { return list; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IVarDecl* curDecl;
 	const IVarDeclList* list;
 };
@@ -513,25 +542,26 @@ private:
 
 class CMethodDeclList : public IMethodDeclList {
 public:
-	CMethodDeclList( const IMethodDecl *_method, const IMethodDeclList *_list ) : method( _method ), list( _list ) {};
-	~CMethodDeclList() {}
+	CMethodDeclList( const CCodeInfo& _info, const IMethodDecl *_method, const IMethodDeclList *_list ) : method( _method ), list( _list ), info( _info ) {}
 	const IMethodDecl* GetCurrent() const { return method; }
 	const IMethodDeclList* GetList() const { return list; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IMethodDecl* method;
 	const IMethodDeclList* list;
 };
 
 class CStmtList : public IStmtList {
 public:
-	CStmtList( const IStmt* cStmt, const IStmtList* _stmtList ) : stmtList( _stmtList ), curStmt( cStmt ) {};
+	CStmtList( const CCodeInfo& _info, const IStmt* cStmt, const IStmtList* _stmtList ) : stmtList( _stmtList ), curStmt( cStmt ), info( _info ) {}
 	
 	const IStmtList* GetList() const { return stmtList; }
 	const IStmt* GetStmt() const { return curStmt; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 private:
+	CCodeInfo info;
 	const IStmt* curStmt;
 	const IStmtList* stmtList;
 };

@@ -36,6 +36,9 @@
     <ClInclude Include="SymVisitor.h" />
     <ClInclude Include="syntaxTree.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="debugOutput.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{11E6DD32-849C-47A0-B7EA-042B796F2117}</ProjectGuid>
     <RootNamespace>MyMiniJava</RootNamespace>
@@ -75,6 +78,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

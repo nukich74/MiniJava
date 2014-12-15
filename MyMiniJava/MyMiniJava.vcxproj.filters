@@ -94,4 +94,7 @@
       <Filter>Grammar</Filter>
     </Flex>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="debugOutput.txt" />
+  </ItemGroup>
 </Project>

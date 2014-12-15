@@ -1,23 +1,18 @@
 #pragma once
-
 class IVisitor;
 
-class CCodeInfo {
-public:
-	CCodeInfo( int _lineNumber ) : firstLine( _lineNumber ) { }
-	CCodeInfo( int _lineNumber, int _posLine, int _lLine, int _lColomn ) 
-		: firstLine( _lineNumber ), firstColumn( _posLine ), lastLine( _lLine ), lastColumn( _lColomn ) { }
+//http://www.ibm.com/developerworks/library/l-flexbison/
+struct CCodeInfo {
+	int firstLine;
+	int firstColumn;
+	int lastLine;
+	int lastColumn;
 
-	int GetFirstLine() const { return firstLine; }
-	int GetFirstColumn() const { return firstColumn; }
-	int GetLastLine() const { return lastColumn; }
-	int GetLastColumn() const { return lastColumn; }
-
-private:
-  int firstLine;
-  int firstColumn;
-  int lastLine;
-  int lastColumn;
+	CCodeInfo() {}
+	CCodeInfo( const int begLine, const int begPos, const int endLine, const int endPos ) : firstLine( begLine ),
+		firstColumn( begPos ),
+		lastLine( endLine ),
+		lastColumn( endPos ) { }
 };
 
 // Корневой интерфейс программы

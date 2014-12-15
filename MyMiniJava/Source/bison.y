@@ -10,11 +10,12 @@ extern "C" int yyparse();
 extern "C" FILE *yyin;
 void yyerror(const char *s);
 extern IProgram* yyprogram = 0;
-
+extern int yylineno;
 %} 
 
 %error-verbose
 %verbose
+%locations
 
 %type<program> Program
 %type<mainClass> MainClass
@@ -80,101 +81,101 @@ extern IProgram* yyprogram = 0;
 
 %%
 Program 
-	:	MainClass ClassDeclarationList { yyprogram = $$ = new CProgram( $1, $2 ); }
+	:	MainClass ClassDeclarationList { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column );  yyprogram = $$ = new CProgram( info, $1, $2 ); }
 	;
 
 MainClass 
-	:	Class Id '{' Public Static Void Main '(' String '[' ']' Id ')' '{' Statement '}' '}' { $$ = new CMainClass( $2, $12, $15 ); }
+	:	Class Id '{' Public Static Void Main '(' String '[' ']' Id ')' '{' Statement '}' '}' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CMainClass( info, $2, $12, $15 ); }
 	;
 	
 VarDeclaration 
-	: Type Id ';' { $$ = new CVarDecl( $1, $2 ); }
+	: Type Id ';' { CCodeInfo info( @1.first_line, @1.first_column, @2.last_line, @2.last_column ); $$ = new CVarDecl( info, $1, $2 ); }
 	;
 
 VarDeclarationList 
-	:	VarDeclarationList VarDeclaration { $$ = new CVarDeclList( $2, $1 ); }
+	:	VarDeclarationList VarDeclaration { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CVarDeclList( info, $2, $1 ); }
 	| /*eps*/ { $$ = 0; }
 	;
 
 ClassDeclaration 
-	:	Class Id  '{' VarDeclarationList MethodDeclarationList '}' { $$ = new CClassDecl( $2, $4, $5 ); }
-	|	Class Id Extends Id '{' VarDeclarationList MethodDeclarationList '}' { $$ = new CExtendClassDecl( $2, $4, $6, $7 ); }
+	:	Class Id  '{' VarDeclarationList MethodDeclarationList '}' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CClassDecl( info, $2, $4, $5 ); }
+	|	Class Id Extends Id '{' VarDeclarationList MethodDeclarationList '}' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CExtendClassDecl( info, $2, $4, $6, $7 ); }
 	;
 
 ClassDeclarationList
-	:	ClassDeclaration ClassDeclarationList { $$ = new CClassDeclList( $1, $2 ); }
+	:	ClassDeclaration ClassDeclarationList { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CClassDeclList( info, $1, $2 ); }
 	|	/*epsilon*/ { $$ = 0; } 
 	;
 
 MethodDeclaration
-	: Public Type Id '(' FormalList ')' '{' VarDeclarationList StatementList Return Expr ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, $9, $11 ); }
+	: Public Type Id '(' FormalList ')' '{' VarDeclarationList StatementList Return Expr ';' '}' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CMethodDecl( info, $2, $3, $5, $8, $9, $11 ); }
 	;
 
 MethodDeclarationList
-	:	MethodDeclarationList MethodDeclaration { $$ = new CMethodDeclList( $2, $1 ); }
+	:	MethodDeclarationList MethodDeclaration { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CMethodDeclList( info, $2, $1 ); }
 	|	/*epsilon*/ { $$ = 0; }
 	;
 
 FormalList	
-	:	Type Id FormalRestList { $$ = new CFormalList( $1, $2, $3 ); }
+	:	Type Id FormalRestList { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CFormalList( info, $1, $2, $3 ); }
 	|	/*epsilon*/ { $$ = 0; }
 	;
 
 FormalRestList
-	: ',' Type Id FormalRestList { $$ = new CFormalList( $2, $3, $4 ); }
+	: ',' Type Id FormalRestList { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CFormalList( info, $2, $3, $4 ); }
 	| /*epsilon*/ { $$ = 0; }
 	;
 
 Type
-	:	Int { $$ = new CTypeName( "int" ); }
-	|	Int '[' ']' { $$ = new CTypeName( "array" ); }
-    |	Bool { $$ = new CTypeName( "bool" ); }
-    |	Id { $$ = new CTypeName( $1 ); }
+	:	Int { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTypeName( info, "int" ); }
+	|	Int '[' ']' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTypeName( info, "array" ); }
+    |	Bool { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTypeName( info, "bool" ); }
+    |	Id { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTypeName( info, $1 ); }
 	;
 
 StatementList
-	:	Statement StatementList { $$ = new CStmtList( $1, $2 ); }
+	:	Statement StatementList { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CStmtList( info, $1, $2 ); }
 	|	/*epsilon*/ { $$ = 0; }
 	;
 
 Statement
-	:	'{' StatementList '}' { $$ = new CGroupStmt( $2 ); }
-	|	Id OperatorEq Expr ';' { $$ = new CAssignStmt( $1, $3 ); }
-	|	If '(' Expr ')' Statement Else Statement { $$ = new CIfStmt( $3, $5, $7 ); }
-	|	While '(' Expr ')' Statement { $$ = new CWhileStmt( $3, $5 ); }
-	|	Print '(' Expr ')' ';' { $$ = new CSOPStmt( $3 ); }
-	|	Id '[' Expr ']' OperatorEq Expr ';' { $$ = new CAssignExprStmt( $1, $3, $6 ); }
+	:	'{' StatementList '}' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CGroupStmt( info, $2 ); }
+	|	Id OperatorEq Expr ';' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CAssignStmt( info, $1, $3 ); }
+	|	If '(' Expr ')' Statement Else Statement { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CIfStmt( info, $3, $5, $7 ); }
+	|	While '(' Expr ')' Statement { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CWhileStmt( info, $3, $5 ); }
+	|	Print '(' Expr ')' ';' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CSOPStmt( info, $3 ); }
+	|	Id '[' Expr ']' OperatorEq Expr ';' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CAssignExprStmt( info, $1, $3, $6 ); }
 	;
 
 Expr
-	:	Expr '*' Expr { $$ = new COpExpr( $1, BO_Mult, $3 ); }
-	|   Expr '+' Expr { $$ = new COpExpr( $1, BO_Plus, $3 ); }
-	|	Expr '/' Expr { $$ = new COpExpr( $1, BO_Div, $3 ); }
-	|	Expr '-' Expr { $$ = new COpExpr( $1, BO_Minus, $3 ); }
-	|	'-' Expr %prec UMINUS { $$ = new CUnaryMinusExpr( $2 ); }
-	|	Expr '[' Expr ']' { $$ = new CExExpr($1, $3);  }
-	|	Expr '.' Length { $$ = new CLengthExpr( $1 ); }
-	|	Expr '.' Id '(' ExprList ')' { $$ = new CMethodCallExpr( $1, $3, $5 ); }
-	|	Expr OperatorLess Expr { $$ = new COpExpr( $1, BO_Less, $3 ); }
-	|	Expr OperatorAnd Expr { $$ = new COpExpr( $1, BO_And, $3 ); }
-	|	IntNum { $$ = new CIntExpr( $1 ); }
-	|	True { $$ = new CTrueExpr(); }
-	|	False { $$ = new CFalseExpr(); }
-	|	Id { $$ = new CIdExpr( $1 ); }
-	|	This { $$ = new CThisExpr(); }
-	|	New Int '[' Expr ']' { $$ = new CNewIntExpr( $4 ); }
-	|	New Id '(' ')' { $$ = new CNewIdExpr( $2 ); }
-	|	'!' Expr { $$ = new CNotExpr( $2 ); }
-	|	'(' Expr ')' { $$ = new CBrExpr( $2 ); }
+	:	Expr '*' Expr { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new COpExpr( info, $1, BO_Mult, $3 ); }
+	|   Expr '+' Expr { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new COpExpr( info, $1, BO_Plus, $3 ); }
+	|	Expr '/' Expr { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new COpExpr( info, $1, BO_Div, $3 ); }
+	|	Expr '-' Expr { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new COpExpr( info, $1, BO_Minus, $3 ); }
+	|	'-' Expr %prec UMINUS { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CUnaryMinusExpr( info, $2 ); }
+	|	Expr '[' Expr ']' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CExExpr( info,$1, $3);  }
+	|	Expr '.' Length { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CLengthExpr( info, $1 ); }
+	|	Expr '.' Id '(' ExprList ')' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CMethodCallExpr( info, $1, $3, $5 ); }
+	|	Expr OperatorLess Expr { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new COpExpr( info, $1, BO_Less, $3 ); }
+	|	Expr OperatorAnd Expr { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new COpExpr( info, $1, BO_And, $3 ); }
+	|	IntNum { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CIntExpr( info, $1 ); }
+	|	True { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTrueExpr( info ); }
+	|	False { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CFalseExpr( info ); }
+	|	Id { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CIdExpr( info, $1 ); }
+	|	This { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CThisExpr( info ); }
+	|	New Int '[' Expr ']' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CNewIntExpr( info, $4 ); }
+	|	New Id '(' ')' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CNewIdExpr( info, $2 ); }
+	|	'!' Expr { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CNotExpr( info, $2 ); }
+	|	'(' Expr ')' { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CBrExpr( info, $2 ); }
 	;
 
 ExprList
-	:	Expr ExprRestList { $$ = new CExprList( $1, $2 ); }
+	:	Expr ExprRestList { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CExprList( info, $1, $2 ); }
 	|	/*epsilon*/ { $$ = 0; }
 	;
 
 ExprRestList
-	: ',' Expr ExprRestList { $$ = new CExprList( $2, $3 ); }
+	: ',' Expr ExprRestList { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CExprList( info, $2, $3 ); }
 	| /*epsilon*/ { $$ = 0; }
 	;
 

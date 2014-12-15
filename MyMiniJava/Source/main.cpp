@@ -7,6 +7,8 @@
 #include <cassert>
 #include "SymVisitor.h"
 
+//#define DEBUG_TO_FILE
+
 
 using namespace SymbolsTable;
 
@@ -55,6 +57,11 @@ void SymbolTablePrint(const SymbolTable* symbolTable) {
 
 int main( int argc, char* argv[] )
 {
+
+#ifdef DEBUG_TO_FILE
+	freopen( "debugOutput.txt", "w", stdout);
+#endif
+
 	for( int i = 1; i < argc; i++ ) {
 		std::string inputFileName = argv[i];
 		std::cout << "Processing file: " << inputFileName << std::endl;
@@ -75,22 +82,22 @@ int main( int argc, char* argv[] )
 					break;
 				}
 
-				//PrettyPrintVisitor prittyPrint;
-				//yyprogram->Accept( &prittyPrint );
+				PrettyPrintVisitor prittyPrint;
+				yyprogram->Accept( &prittyPrint );
 
-				SymbolsTable::CSTVisitor symbolTableVisitor;
-				yyprogram->Accept( &symbolTableVisitor );
+				//SymbolsTable::CSTVisitor symbolTableVisitor;
+				//yyprogram->Accept( &symbolTableVisitor );
 
-				const SymbolTable* symbolTable = symbolTableVisitor.GetTable();
-				SymbolTablePrint(symbolTable);
+				//const SymbolTable* symbolTable = symbolTableVisitor.GetTable();
+				//SymbolTablePrint(symbolTable);
 
 			} while( !feof( yyin ) );
 			
 		}
 	}
 
-	int g;
-	std::cin >> g;
-
+#ifndef DEBUG_TO_FILE
+	system( "pause" );
+#endif
 	return 0;
 }
