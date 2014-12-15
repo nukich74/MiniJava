@@ -30,7 +30,6 @@
     <ClInclude Include="prettyPrintVisitor.h" />
     <ClInclude Include="iVisitor.h" />
     <ClInclude Include="Source\bison.tab.h" />
-    <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="VariableInfo.h" />
     <ClInclude Include="SymVisitor.h" />
     <ClInclude Include="syntaxTree.h" />

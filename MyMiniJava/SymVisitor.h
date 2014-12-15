@@ -4,6 +4,8 @@
 #include "MethodInfo.h"
 #include "ClassInfo.h"
 #include "VariableInfo.h"
+#include <map>
+
 
 namespace SymbolsTable {
 
@@ -49,9 +51,14 @@ namespace SymbolsTable {
 		void Visit( const CVarDeclList& p );
 		void Visit( const CMethodDeclList& p );
 		void Visit( const CStmtList& p );
+
+
+		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
+
 	private:
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
+		std::map < std::string, CClassInfo* > table;
 	};
 
 }	

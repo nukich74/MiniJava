@@ -5,6 +5,14 @@
 #include <unordered_set>
 #include <string>
 #include <cassert>
+#include "SymVisitor.h"
+
+
+using namespace SymbolsTable;
+
+//extern std::map< std::string, CClassInfo* > table;
+
+typedef std::map< std::string,  CClassInfo* > SymbolTable;
 
 extern "C" int yyparse();
 extern FILE* yyin;
@@ -17,6 +25,34 @@ void yyerror( const char* s ) {
 	getchar();
 }
  
+
+void SymbolTablePrint(const SymbolTable* symbolTable) {
+
+	std::cout << "Symbol table size: " << symbolTable->size() << std::endl;
+				
+	for( auto it = symbolTable->begin(); it != symbolTable->end(); ++it ) {
+		std::cout << "-------------------------------" << std::endl;
+		std::cout << "Class name : " << it->first << "\n" << std::endl;
+		std::cout << "Class methods: \n" << std::endl;
+		for ( auto z = it->second->GetMethods().begin(); z != it->second->GetMethods().end(); ++z ) {
+			std::cout << (*z)->GetName() << std::endl;
+					
+		}
+
+		std::cout << "\n";
+		std::cout << "Class variables: \n" << std::endl;
+		for ( auto z = it->second->GetLocals().begin(); z != it->second->GetLocals().end(); ++z ) {
+			std::cout << (*z)->GetName() << std::endl;
+					
+		}
+	}
+				
+	std::cout << "-------------------------------" << std::endl;
+	std::cout << "-------------------------------" << std::endl;
+	std::cout << "\n\n";
+}
+
+
 int main( int argc, char* argv[] )
 {
 	for( int i = 1; i < argc; i++ ) {
@@ -39,8 +75,14 @@ int main( int argc, char* argv[] )
 					break;
 				}
 
-				PrettyPrintVisitor prittyPrint;
-				yyprogram->Accept( &prittyPrint );
+				//PrettyPrintVisitor prittyPrint;
+				//yyprogram->Accept( &prittyPrint );
+
+				SymbolsTable::CSTVisitor symbolTableVisitor;
+				yyprogram->Accept( &symbolTableVisitor );
+
+				const SymbolTable* symbolTable = symbolTableVisitor.GetTable();
+				SymbolTablePrint(symbolTable);
 
 			} while( !feof( yyin ) );
 			

@@ -71,9 +71,6 @@
     <ClInclude Include="VariableInfo.h">
       <Filter>SymbolsTable</Filter>
     </ClInclude>
-    <ClInclude Include="SymbolTable.h">
-      <Filter>SymbolsTable</Filter>
-    </ClInclude>
     <ClInclude Include="SymVisitor.h">
       <Filter>SymbolsTable</Filter>
     </ClInclude>

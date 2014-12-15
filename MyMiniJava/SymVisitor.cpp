@@ -1,5 +1,7 @@
 #pragma once
-#include "SymbolTable.h"
+#include "ClassInfo.h"
+#include <map>
+#include <utility>
 #include "SymVisitor.h"
 #include "syntaxTree.h"
 #include <cassert>
@@ -18,7 +20,7 @@ void CSTVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 void CSTVisitor::Visit( const CMainClass& p ) //class id { public static void main ( String [] id ) { Statement }}
 {
 	// добавляем класс в таблицу символов
-	CClassInfo* mainClass = new CClassInfo( p.GetNameFirst(), 0 );
+	CClassInfo* mainClass = new CClassInfo( p.GetNameFirst(), "" );
 	
 	CMethodInfo* mainFunction = new CMethodInfo( "void", "main" );
 	(*mainClass).AddMethod( mainFunction );
@@ -28,7 +30,9 @@ void CSTVisitor::Visit( const CMainClass& p ) //class id { public static void ma
 	CVariableInfo* mainParams =  new CVariableInfo( "String", p.GetArgsName(), false);
 	(*mainClass).AddLocalVar( mainParams );
 
-	table.insert( std::pair<std::string, CClassInfo*>( p.GetNameFirst(), mainClass ) );
+	// почему то, то что добавляет в таблицу здесь не видит в main
+	table[p.GetNameFirst()] = mainClass;
+	//table.insert( std::pair<std::string, CClassInfo*>( p.GetNameFirst(), mainClass ) );
 
 	p.GetStmt()->Accept( this );
 
@@ -48,7 +52,7 @@ void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 	assert( currentMethod == 0 ); 
 	//assert( currentClass == 0 ); // класс внутри класса не объявляем (если мы внутри, то вылетем) (?)
 
-	CClassInfo* clazz = new CClassInfo( p.GetName(), 0 );
+	CClassInfo* clazz = new CClassInfo( p.GetName(), "" );
 	currentClass = clazz;
 
 	if( p.GetMethodDeclList() != 0 ) {
@@ -119,12 +123,14 @@ void CSTVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) {
 
 void CSTVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 {
+	
 	assert( currentMethod != 0 ); 
 	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
 	currentMethod->AddArgument( variable );
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}
+	
 	
 }
 

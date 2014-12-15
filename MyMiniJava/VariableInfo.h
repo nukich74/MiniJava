@@ -19,8 +19,8 @@ namespace SymbolsTable {
 
 		void SetType( const std::string& _type ) { type = _type; }
 		void SetName( const std::string& _name ) { name = _name; }
-		std::string getType() const { return type; }
-		std::string getName() const { return name; }
+		std::string GetType() const { return type; }
+		std::string GetName() const { return name; }
 		bool isUserDefined() const { return definedByUser; }
 
 	private:
