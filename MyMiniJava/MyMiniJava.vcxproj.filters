@@ -28,6 +28,9 @@
     <Filter Include="SymbolsTable">
       <UniqueIdentifier>{91db2814-ba2b-4a25-a03c-bde2a7e484a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TCVisitor">
+      <UniqueIdentifier>{ee18506a-86f4-43ed-951e-0f7a469901f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="SymVisitor.cpp">
       <Filter>SymbolsTable</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeCheckVisitor.cpp">
+      <Filter>TCVisitor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="SymVisitor.h">
       <Filter>SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeCheckVisitor.h">
+      <Filter>TCVisitor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
