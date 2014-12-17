@@ -62,7 +62,11 @@ void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 		p.GetVarDeclList()->Accept( this );
 	}
 
-	table.insert( std::pair<std::string, CClassInfo*>( p.GetName(), clazz ) );
+	if( table.find( p.GetName() ) == table.end() ) {
+		table.insert( std::make_pair( p.GetName(), clazz ) );
+	} else {
+		errorsStack.push( CNameRedefinition( p.GetName(), p.GetLocation() ) );
+	}
 	currentClass = 0;
 }
 
@@ -80,31 +84,37 @@ void CSTVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 	if( p.GetVarDeclList() != 0 ) {
 		p.GetVarDeclList()->Accept( this );
 	}
-
-	table.insert( std::pair<std::string, CClassInfo*>( p.GetClassName(), clazz ) );
+	if( table.find( p.GetClassName() ) == table.end() ) {
+		table.insert( std::make_pair( p.GetClassName(), clazz ) );
+	} else {
+		errorsStack.push( CNameRedefinition( p.GetClassName(), p.GetLocation() ) );
+	}
 	currentClass = 0;
-
 }
 
 void CSTVisitor::Visit( const CVarDecl& p ) //Type id
 { 
-	
 	assert( currentClass != 0 );
-
 	// (TODO?) может не работать не тестировал
 	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
 
 	if( currentMethod == 0 ) {
-		currentClass->AddLocalVar( variable );
+		if( currentClass->HaveVariable( p.GetName() ) ) {
+			errorsStack.push( CNameRedefinition( p.GetName(), p.GetLocation() ) );
+		} else {
+			currentClass->AddLocalVar( variable );
+		}
 	} else {
-		currentMethod->AddLocalVar( variable );
+		if( currentMethod->HaveInArgs( p.GetName() ) || currentMethod->HaveLocalVar( p.GetName() ) )  {
+			errorsStack.push( CNameRedefinition( p.GetName(), p.GetLocation() ) );
+		} else {
+			currentMethod->AddLocalVar( variable );			
+		}
 	}
-	
 }
 
 void CSTVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) { VarDecl* Statement* return Exp ;}
 {
-	
 	// (TODO?)
 	CMethodInfo* method = new CMethodInfo( p.GetType()->GetName(), p.GetName() );
 	currentMethod = method;
@@ -117,21 +127,17 @@ void CSTVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) {
 		p.GetVarDeclList()->Accept( this );
 	}
 	currentClass->AddMethod( method );
-	currentMethod = 0;
-	
+	currentMethod = 0;	
 }
 
 void CSTVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 {
-	
 	assert( currentMethod != 0 ); 
 	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
 	currentMethod->AddArgument( variable );
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
-	}
-	
-	
+	}	
 }
 
 

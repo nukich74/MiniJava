@@ -16,6 +16,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IMainClass *mainClass;
@@ -39,6 +40,7 @@ public:
 	const IStmt* GetStmt() const { return stmt; }
 	
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;	
 	std::string className;
@@ -65,6 +67,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string className;
@@ -86,6 +89,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string className;
@@ -106,6 +110,7 @@ public:
 	const std::string GetName() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IType* type;
@@ -136,6 +141,7 @@ public:
 	const IExpr* GetExp() const { return returnExpr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IType* type;
@@ -158,6 +164,7 @@ public:
 	const IStmtList* GetStmtList() const { return statements; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IStmtList* statements;
@@ -178,6 +185,7 @@ public:
 	const IStmt* GetStmSecond() const { return falseStatement; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *condition;
@@ -195,6 +203,7 @@ public:
 	const IStmt* GetStmt() const { return statement; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *condition;
@@ -211,6 +220,7 @@ public:
 	const IExpr* GetExpr() const { return printedExpr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *printedExpr;
@@ -226,6 +236,7 @@ public:
 	const IExpr* GetExpr() const { return value; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string name;
@@ -243,6 +254,7 @@ public:
 	const IExpr* GetExprValue() const { return value; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string name;
@@ -275,6 +287,7 @@ public:
 	const IExpr* GetExprSecond() const { return rExpr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *lExpr;
@@ -292,6 +305,7 @@ public:
 	const IExpr* GetExp() const { return expr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *idExpr;
@@ -310,6 +324,7 @@ public:
 	const IExprList* GetExprList() const { return args; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *expr;
@@ -325,6 +340,7 @@ public:
 	int GetNum() const { return number; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	int number; 
@@ -335,8 +351,10 @@ private:
 class CTrueExpr : public IExpr {
 public:
 	CTrueExpr( const CCodeInfo& _info ) : info( _info ) {}
-	CCodeInfo info;
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
+private:
+	CCodeInfo info;
 };
 
 
@@ -344,8 +362,10 @@ public:
 class CFalseExpr : public IExpr {
 public:
 	CFalseExpr( const CCodeInfo& _info ) : info( _info ) {}
-	CCodeInfo info;	
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }	
+private:
+	CCodeInfo info;
 };
 
 
@@ -357,6 +377,7 @@ public:
 	std::string GetName() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string name;
@@ -368,6 +389,9 @@ class CThisExpr : public IExpr {
 public:
 	CThisExpr( const CCodeInfo& _info ) : info( _info ) {}
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
+
+private:
 	CCodeInfo info;
 };
 
@@ -380,6 +404,7 @@ public:
 	const IExpr* GetExpr() const { return expr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *expr;
@@ -394,6 +419,7 @@ public:
 	std::string GetName() const { return className; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string className;
@@ -408,6 +434,7 @@ public:
 	const IExpr* GetExpr() const { return expr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *expr;
@@ -420,6 +447,7 @@ public:
 	CBrExpr( const CCodeInfo& _info, const IExpr *_expr ) : expr( _expr ), info( _info ) {}
 		const IExpr* GetExpr() const { return expr; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *expr;
@@ -432,6 +460,7 @@ public:
 	std::string GetId() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string name;
@@ -443,6 +472,7 @@ public:
 	CLengthExpr( const CCodeInfo& _info, const IExpr *_source ) : source( _source ), info( _info ) {}
 	const IExpr* GetExp() const { return source; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr *source;
@@ -454,6 +484,7 @@ public:
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 	const IExpr* GetExpr() const { return expr; }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExpr* expr;
@@ -470,6 +501,7 @@ public:
 	std::string GetName() const { return name; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	std::string name;
@@ -488,6 +520,7 @@ public:
 	const IExpr* GetCurrent() const { return curExpr; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IExprList* exprList;
@@ -506,6 +539,7 @@ public:
 	const IFormalList* GetFormalList() const { return formals; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IType* type;
@@ -521,6 +555,7 @@ public:
 	const IClassDecl* GetCurrent() const { return curClassDecl; }
 	const IClassDeclList* GetList() const { return list; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IClassDecl* curClassDecl;
@@ -534,6 +569,7 @@ public:
 	const IVarDecl* GetCurrent() const { return curDecl; }
 	const IVarDeclList* GetList() const { return list; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IVarDecl* curDecl;
@@ -547,6 +583,7 @@ public:
 	const IMethodDecl* GetCurrent() const { return method; }
 	const IMethodDeclList* GetList() const { return list; }
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IMethodDecl* method;
@@ -561,6 +598,7 @@ public:
 	const IStmt* GetStmt() const { return curStmt; }
 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
+	CCodeInfo GetLocation() const { return info; }
 private:
 	CCodeInfo info;
 	const IStmt* curStmt;

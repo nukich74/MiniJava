@@ -1,6 +1,7 @@
 #pragma once
 #include "VariableInfo.h"
 #include "MethodInfo.h"
+#include <algorithm>
 
 namespace SymbolsTable {
 	
@@ -14,6 +15,10 @@ namespace SymbolsTable {
 		std::string GetExtendedName() { return extendedName; }
 		const std::vector< CVariableInfo* >& GetLocals() { return localVars; }
 		const std::vector< CMethodInfo* >& GetMethods() { return methods; }
+		bool HaveVariable( const std::string& id ) {
+			return std::find_if( localVars.begin(), localVars.end(), [&id]( const CVariableInfo* info ) 
+				{ return info->GetName() == id; } ) != localVars.end();
+		}
 
 	private:
 

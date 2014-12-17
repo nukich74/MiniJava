@@ -15,9 +15,9 @@ protected:
 };
 
 
-class CDoubleNameRedefinition : public CSemanticError {
+class CNameRedefinition : public CSemanticError {
 public:
-	CDoubleNameRedefinition::CDoubleNameRedefinition( const std::string& name, const const CCodeInfo& place ) 
+	CNameRedefinition::CNameRedefinition( const std::string& name, const const CCodeInfo& place ) 
 	{
 		message = "Name at position " + place.ToString() + ' ' + name + "was already defined";
 	}
