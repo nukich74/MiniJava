@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "grammar.h"
+#include "CodeInfo.h"
 
 class CProgram : public IProgram {
 public:
