@@ -54,8 +54,9 @@ namespace SymbolsTable {
 		void Visit( const CMethodDeclList& p );
 		void Visit( const CStmtList& p );
 
-
+		
 		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
+		bool isSuccessfull() { return errorsStack.size(); }
 
 	private:
 		CMethodInfo* currentMethod;

@@ -20,6 +20,11 @@ namespace SymbolsTable {
 				{ return info->GetName() == id; } ) != localVars.end();
 		}
 
+		bool HaveMethod( const std::string& id ) { 
+			return std::find_if( methods.begin(), methods.end(), [&id]( const CVariableInfo* info ) 
+				{ return info->GetName() == id; } ) != methods.end();
+		}
+
 	private:
 
 		std::string name;
