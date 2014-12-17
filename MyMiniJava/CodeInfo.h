@@ -12,4 +12,8 @@ struct CCodeInfo {
 		firstColumn( begPos ),
 		lastLine( endLine ),
 		lastColumn( endPos ) { }
+
+	std::string ToString() const {
+		return std::to_string( firstLine ) + ':' + std::to_string( firstColumn );
+	}
 };

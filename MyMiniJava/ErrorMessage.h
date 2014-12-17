@@ -3,22 +3,39 @@
 #include <exception>
 #include <string>
 
-class CTypeException : public std::exception {
+class CSemanticError {
 public:
-	CTypeException::CTypeException( const std::string& msg ) : message( msg ), havePosition( false ) { }
-
-	CTypeException::CTypeException( const std::string& msg, const CCodeInfo& info ) : message( msg ), errorPosition( info ), 
-		havePosition( true ) { }
-
-	virtual const char* CTypeException::what() const throw();
-
-
-private:
-	bool havePosition;
-	CCodeInfo errorPosition;
+	CSemanticError::CSemanticError() {}
+	CSemanticError::CSemanticError( const std::string& msg ) : message( msg ) { }
+	std::string What() {
+		return "Error: " + message;
+	}
+protected:
 	std::string message;
 };
 
-	const char* CTypeException::what() const throw() {
-		return "1";
+
+class CDoubleNameRedefinition : public CSemanticError {
+public:
+	CDoubleNameRedefinition::CDoubleNameRedefinition( const std::string& name, const const CCodeInfo& place ) 
+	{
+		message = "Name at position " + place.ToString() + ' ' + name + "was already defined";
 	}
+};
+
+class CIncompatibleTypes : public CSemanticError {
+public:
+	CIncompatibleTypes::CIncompatibleTypes( const std::string& type1, const std::string& type2, const CCodeInfo& place1, 
+		const CCodeInfo& place2 ) 
+	{
+		message = "Incompatible types " + type1 + " " + type2 + " at " + place1.ToString() + " and " + place2.ToString();
+	}
+};
+
+class CNoSuchVariable : public CSemanticError {
+public:
+	CNoSuchVariable::CNoSuchVariable( const std::string& name, const CCodeInfo& place )
+	{
+		message = "Undefined variable <" + name + "> at" + place.ToString();
+	}
+};
