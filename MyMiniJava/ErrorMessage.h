@@ -39,3 +39,11 @@ public:
 		message = "Undefined variable <" + name + "> at" + place.ToString();
 	}
 };
+
+class CCyclicInheritance : public CSemanticError {
+public:
+	CCyclicInheritance::CCyclicInheritance( const std::string& name, const CCodeInfo& place ) 
+	{
+		message = "Name at position " + place.ToString() + ' ' + name + " has cyclic inheritance";
+	}
+};

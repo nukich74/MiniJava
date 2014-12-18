@@ -3,6 +3,7 @@
 #include "syntaxTree.h"
 #include "ErrorMessage.h"
 #include <queue>
+#include <hash_set>
 
 namespace SymbolsTable {
 
@@ -59,6 +60,8 @@ namespace SymbolsTable {
 		CClassInfo* currentClass;
 		const std::map < std::string, CClassInfo* >& table;
 		std::queue< CSemanticError* > errorsStack;
+
+		bool isCyclicInheritance( const std::string& id );
 	};
 }	
 

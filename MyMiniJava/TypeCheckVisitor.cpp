@@ -5,6 +5,7 @@
 #include "TypeCheckVisitor.h"
 #include "syntaxTree.h"
 #include <cassert>
+#include <set>
 
 using namespace SymbolsTable;
 
@@ -67,6 +68,9 @@ void CTCVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 	assert( classIter != table.end() );
 	currentClass = classIter->second;
 
+	if( isCyclicInheritance( p.GetClassName() ) ) {
+		errorsStack.push( new CCyclicInheritance( p.GetClassName(), p.GetLocation() ) );
+	}
 
 	if( p.GetMethodDeclList() != 0 ) {
 		p.GetMethodDeclList()->Accept( this );
@@ -81,7 +85,6 @@ void CTCVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 void CTCVisitor::Visit( const CVarDecl& p ) //Type id
 { 
 	assert( currentClass != 0 );
-
 }
 
 void CTCVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) { VarDecl* Statement* return Exp ;}
@@ -225,4 +228,28 @@ void CTCVisitor::Visit( const CLengthExpr& p ) // Expr . length
 
 void CTCVisitor::Visit( const CUnaryMinusExpr& p ) // - Expr
 {
+}
+
+bool CTCVisitor::isCyclicInheritance( const std::string& id ) {
+	auto iter = table.find( id );
+	CClassInfo* vertex = 0;
+	if( iter != table.end() ) {
+		vertex = iter->second;
+	} else {
+		return false;
+	}
+
+	std::hash_set< std::string > used;
+	while( true ) {
+		if( vertex->GetExtendedName() == "" ) {
+			return false;
+		} else {
+			if( used.find( vertex->GetExtendedName() ) != used.end() ) {
+				return true; //нашли цикл
+			} else {
+				used.insert( vertex->GetExtendedName() );
+				vertex = table.find( vertex->GetExtendedName() )->second;
+			}
+		}
+	}
 }
