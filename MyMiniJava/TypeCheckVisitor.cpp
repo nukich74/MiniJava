@@ -89,6 +89,7 @@ void CTCVisitor::Visit( const CVarDecl& p ) //Type id
 
 void CTCVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) { VarDecl* Statement* return Exp ;}
 {
+	currentMethod = findMethodInClass( p.GetName(), currentClass );
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}
@@ -252,4 +253,9 @@ bool CTCVisitor::isCyclicInheritance( const std::string& id ) {
 			}
 		}
 	}
+}
+
+CMethodInfo* CTCVisitor::findMethodInClass( const std::string& id, const CClassInfo* clazz )
+{
+	return 0;
 }

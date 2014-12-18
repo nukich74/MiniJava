@@ -62,6 +62,7 @@ namespace SymbolsTable {
 		std::queue< CSemanticError* > errorsStack;
 
 		bool isCyclicInheritance( const std::string& id );
+		CMethodInfo* findMethodInClass( const std::string& id, const CClassInfo* clazz );
 	};
 }	
 
