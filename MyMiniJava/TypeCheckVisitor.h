@@ -42,7 +42,6 @@ namespace SymbolsTable {
 		void Visit( const CLengthExpr& p );
 		void Visit( const CUnaryMinusExpr& p );
 
-
 		void Visit( const CTypeName& p );
 		void Visit( const CExprList& p );
 		void Visit( const CFormalList& p );
@@ -51,7 +50,6 @@ namespace SymbolsTable {
 		void Visit( const CMethodDeclList& p );
 		void Visit( const CStmtList& p );
 
-		
 		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
 		bool isSuccessfull() { return errorsStack.size() > 0; }
 
@@ -62,7 +60,7 @@ namespace SymbolsTable {
 		std::queue< CSemanticError* > errorsStack;
 
 		bool isCyclicInheritance( const std::string& id );
-		CMethodInfo* findMethodInClass( const std::string& id, const CClassInfo* clazz );
+		CMethodInfo* findMethodInClass( const std::string& methodName, const CClassInfo* clazz );
 	};
 }	
 

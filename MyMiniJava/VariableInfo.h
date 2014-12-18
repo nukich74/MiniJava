@@ -13,7 +13,6 @@ namespace SymbolsTable {
 
 	class CVariableInfo {
 	public:
-
 		CVariableInfo( const std::string& _type, const std::string& _name, bool _isUserDefined ) 
 			: type( _type ), name( _name ), definedByUser( _isUserDefined ) { }
 
@@ -24,11 +23,9 @@ namespace SymbolsTable {
 		bool isUserDefined() const { return definedByUser; }
 
 	private:
-
 		//VariableTypes type;
 		bool definedByUser;
 		std::string type;
 		std::string name;
-
 	};
 }

@@ -499,7 +499,7 @@ class CTypeName : public IType {
 public:
 	CTypeName( const CCodeInfo& _info, const std::string& _name ) : name( _name ), info( _info ) {}
 	std::string GetName() const { return name; }
-
+	bool isPOD() const { return ( ( name != "bool" ) && ( name == "int" ) && ( name == "array" ) ); } 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 	CCodeInfo GetLocation() const { return info; }
 private:

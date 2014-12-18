@@ -6,6 +6,7 @@
 #include "syntaxTree.h"
 #include <cassert>
 #include <set>
+#include <algorithm>
 
 using namespace SymbolsTable;
 
@@ -85,17 +86,34 @@ void CTCVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 void CTCVisitor::Visit( const CVarDecl& p ) //Type id
 { 
 	assert( currentClass != 0 );
+
+	const CTypeName* retType = static_cast<const CTypeName*>( p.GetType() );
+	//не POD-тип && нет в таблице
+	if( !retType->isPOD() && table.find( p.GetType()->GetName() ) == table.end() ) {
+		errorsStack.push( new CNoSuchType( retType->GetName(), retType->GetLocation() ) ); 	
+	}
 }
 
 void CTCVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) { VarDecl* Statement* return Exp ;}
 {
-	currentMethod = findMethodInClass( p.GetName(), currentClass );
+	for( auto &item : currentClass->GetMethods() ) {
+		if( item->GetName() == p.GetName() ) {
+			currentMethod = item;
+		}
+	}
+
+	assert( currentMethod != 0 );
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}
 
 	if( p.GetVarDeclList() != 0 ) {
 		p.GetVarDeclList()->Accept( this );
+	}
+
+	const CTypeName* retType = static_cast<const CTypeName*>( p.GetType() );
+	if( !retType->isPOD() && table.find( p.GetType()->GetName() ) == table.end() ) {
+		errorsStack.push( new CNoSuchType( retType->GetName(), retType->GetLocation() ) );
 	}
 
 	currentMethod = 0;	
@@ -255,7 +273,22 @@ bool CTCVisitor::isCyclicInheritance( const std::string& id ) {
 	}
 }
 
-CMethodInfo* CTCVisitor::findMethodInClass( const std::string& id, const CClassInfo* clazz )
+CMethodInfo* CTCVisitor::findMethodInClass( const std::string& methodName, const CClassInfo* clazz )
 {
+	while( clazz != 0 ) {
+		for( auto& item : clazz->GetMethods() ) {
+			if( item->GetName() == methodName ) {
+				return item;
+			}
+		}
+		if( clazz->GetExtendedName() == "" ) {
+			break;
+		} else {
+			//TODO сделать такую функцию и везде поменять
+			auto iter = table.find( clazz->GetExtendedName() );
+			clazz = iter == table.end() ? 0 : iter->second;
+		}
+	}
 	return 0;
 }
+

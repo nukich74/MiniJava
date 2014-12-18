@@ -40,6 +40,14 @@ public:
 	}
 };
 
+class CNoSuchType : public CSemanticError {
+public:
+	CNoSuchType::CNoSuchType( const std::string& name, const CCodeInfo& place )
+	{
+		message = "Undefined type at <" + name + "> at" + place.ToString();
+	}
+};
+
 class CCyclicInheritance : public CSemanticError {
 public:
 	CCyclicInheritance::CCyclicInheritance( const std::string& name, const CCodeInfo& place ) 
