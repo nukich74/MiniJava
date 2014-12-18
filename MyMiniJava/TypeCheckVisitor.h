@@ -58,7 +58,7 @@ namespace SymbolsTable {
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
 		const std::map < std::string, CClassInfo* >& table;
-		std::queue< CSemanticError > errorsStack;
+		std::queue< CSemanticError* > errorsStack;
 	};
 }	
 

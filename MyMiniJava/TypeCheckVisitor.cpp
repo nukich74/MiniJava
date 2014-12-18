@@ -21,7 +21,7 @@ void CTCVisitor::Visit( const CMainClass& p ) //class id { public static void ma
 {
 	auto mainClassIter = table.find( p.GetName() );
 	
-	assert( mainClassIter == table.end() );
+	assert( mainClassIter != table.end() );
 
 	currentClass = mainClassIter->second;
 	currentMethod = currentClass->GetMethods()[0];
@@ -46,7 +46,7 @@ void CTCVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 	assert( currentMethod == 0 ); 
 
 	auto classIter = table.find( p.GetName() );
-	assert( classIter == table.end() );
+	assert( classIter != table.end() );
 	currentClass = classIter->second;
 
 	if( p.GetMethodDeclList() != 0 ) {
@@ -61,11 +61,13 @@ void CTCVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 
 void CTCVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarDeclList MethodDeclList }
 {
-	assert( currentMethod == 0 ); 
-	
-	CClassInfo * clazz = new CClassInfo( p.GetClassName(), p.GetBaseClassName() );
-	currentClass = clazz;
-	
+	assert( currentMethod == 0 ); 	
+
+	auto classIter = table.find( p.GetClassName() );
+	assert( classIter != table.end() );
+	currentClass = classIter->second;
+
+
 	if( p.GetMethodDeclList() != 0 ) {
 		p.GetMethodDeclList()->Accept( this );
 	}

@@ -6,6 +6,7 @@
 #include <string>
 #include <cassert>
 #include "SymVisitor.h"
+#include "TypeCheckVisitor.h"
 
 //#define DEBUG_TO_FILE
 
@@ -89,6 +90,10 @@ int main( int argc, char* argv[] )
 				yyprogram->Accept( &symbolTableVisitor );
 
 				const SymbolTable* symbolTable = symbolTableVisitor.GetTable();
+				SymbolsTable::CTCVisitor typeCheckVisitor( *symbolTable );
+
+				yyprogram->Accept( &typeCheckVisitor );
+
 				SymbolTablePrint(symbolTable);
 
 			} while( !feof( yyin ) );
