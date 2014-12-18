@@ -21,7 +21,7 @@ namespace SymbolsTable {
 		}
 
 		bool HaveMethod( const std::string& id ) { 
-			return std::find_if( methods.begin(), methods.end(), [&id]( const CVariableInfo* info ) 
+			return std::find_if( methods.begin(), methods.end(), [&id]( const CMethodInfo* info ) 
 				{ return info->GetName() == id; } ) != methods.end();
 		}
 

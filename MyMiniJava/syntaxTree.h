@@ -33,7 +33,7 @@ public:
 	CMainClass( const CCodeInfo& _info, const std::string& _className, const std::string& _argsName, const IStmt* _stmt ) :
 		className( _className ), argsName( _argsName ), stmt( _stmt ), info( _info ) {}	
 	// имя главного класса
-	std::string GetNameFirst() const { return className; }
+	std::string GetName() const { return className; }
 	// имя массива параметров у main() - функции
 	std::string GetArgsName() const { return argsName; }
 	// выражение (TODO: не массив ли выражений?)

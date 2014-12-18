@@ -17,6 +17,7 @@
     <Flex Include="Source\flex.l" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ErrorMessage.cpp" />
     <ClCompile Include="prettyPrintVisitor.cpp" />
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
@@ -26,6 +27,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClassInfo.h" />
+    <ClInclude Include="CodeInfo.h" />
+    <ClInclude Include="ErrorMessage.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="MethodInfo.h" />
     <ClInclude Include="prettyPrintVisitor.h" />

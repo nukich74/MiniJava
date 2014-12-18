@@ -1,11 +1,15 @@
 #pragma once
 #include "iVisitor.h"
 #include "syntaxTree.h"
+#include "ErrorMessage.h"
+#include <queue>
 
 namespace SymbolsTable {
 
 	class CTCVisitor : public IVisitor {
 	public:
+		CTCVisitor( const std::map< std::string, CClassInfo* >& _table ) : table( _table ) { } 
+
 		void Visit( const CProgram& p );
 		void Visit( const CMainClass& p );
 
@@ -39,7 +43,6 @@ namespace SymbolsTable {
 
 
 		void Visit( const CTypeName& p );
-
 		void Visit( const CExprList& p );
 		void Visit( const CFormalList& p );
 		void Visit( const CClassDeclList& p );
@@ -47,8 +50,16 @@ namespace SymbolsTable {
 		void Visit( const CMethodDeclList& p );
 		void Visit( const CStmtList& p );
 
-	};
+		
+		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
+		bool isSuccessfull() { return errorsStack.size() > 0; }
 
+	private:
+		CMethodInfo* currentMethod;
+		CClassInfo* currentClass;
+		const std::map < std::string, CClassInfo* >& table;
+		std::queue< CSemanticError > errorsStack;
+	};
 }	
 
 

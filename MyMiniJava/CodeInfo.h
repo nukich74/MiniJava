@@ -1,4 +1,5 @@
 #pragma once 
+#include <string>
 
 //http://www.ibm.com/developerworks/library/l-flexbison/
 struct CCodeInfo {

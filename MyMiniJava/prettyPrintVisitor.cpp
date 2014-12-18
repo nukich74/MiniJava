@@ -17,7 +17,7 @@ void PrettyPrintVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 
 void PrettyPrintVisitor::Visit( const CMainClass& p ) //class id { public static void main ( String [] id ) { Statement }}
 {
-	printf( "class %s { \n%spublic static Void main ( String [] %s ) { \n", p.GetNameFirst().c_str(), identt.c_str( ), p.GetArgsName( ).c_str( ) );
+	printf( "class %s { \n%spublic static Void main ( String [] %s ) { \n", p.GetName().c_str(), identt.c_str( ), p.GetArgsName( ).c_str( ) );
 	identt += "    ";
 	p.GetStmt()->Accept( this );
 	identt = identt.substr( 0, identt.length( ) - 4 );

@@ -20,7 +20,7 @@ void CSTVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 void CSTVisitor::Visit( const CMainClass& p ) //class id { public static void main ( String [] id ) { Statement }}
 {
 	// добавляем класс в таблицу символов
-	CClassInfo* mainClass = new CClassInfo( p.GetNameFirst(), "" );
+	CClassInfo* mainClass = new CClassInfo( p.GetName(), "" );
 	
 	CMethodInfo* mainFunction = new CMethodInfo( "void", "main" );
 	(*mainClass).AddMethod( mainFunction );
@@ -31,8 +31,8 @@ void CSTVisitor::Visit( const CMainClass& p ) //class id { public static void ma
 	(*mainClass).AddLocalVar( mainParams );
 
 	// почему то, то что добавляет в таблицу здесь не видит в main
-	table[p.GetNameFirst()] = mainClass;
-	//table.insert( std::pair<std::string, CClassInfo*>( p.GetNameFirst(), mainClass ) );
+	table[p.GetName()] = mainClass;
+	//table.insert( std::pair<std::string, CClassInfo*>( p.GetName(), mainClass ) );
 
 	p.GetStmt()->Accept( this );
 
@@ -65,7 +65,7 @@ void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 	if( table.find( p.GetName() ) == table.end() ) {
 		table.insert( std::make_pair( p.GetName(), clazz ) );
 	} else {
-		errorsStack.push( CNameRedefinition( p.GetName(), p.GetLocation() ) );
+		errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 	}
 	currentClass = 0;
 }
@@ -87,7 +87,7 @@ void CSTVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 	if( table.find( p.GetClassName() ) == table.end() ) {
 		table.insert( std::make_pair( p.GetClassName(), clazz ) );
 	} else {
-		errorsStack.push( CNameRedefinition( p.GetClassName(), p.GetLocation() ) );
+		errorsStack.push( new CNameRedefinition( p.GetClassName(), p.GetLocation() ) );
 	}
 	currentClass = 0;
 }
@@ -99,13 +99,13 @@ void CSTVisitor::Visit( const CVarDecl& p ) //Type id
 
 	if( currentMethod == 0 ) {
 		if( currentClass->HaveVariable( p.GetName() ) ) {
-			errorsStack.push( CNameRedefinition( p.GetName(), p.GetLocation() ) );
+			errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 		} else {
 			currentClass->AddLocalVar( variable );
 		}
 	} else {
 		if( currentMethod->HaveInArgs( p.GetName() ) || currentMethod->HaveLocalVar( p.GetName() ) )  {
-			errorsStack.push( CNameRedefinition( p.GetName(), p.GetLocation() ) );
+			errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 		} else {
 			currentMethod->AddLocalVar( variable );			
 		}
@@ -125,7 +125,7 @@ void CSTVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) {
 		p.GetVarDeclList()->Accept( this );
 	}
 	if( currentClass->HaveMethod( p.GetName() ) )  {
-		errorsStack.push( CNameRedefinition( p.GetName, p.GetLocation ) );
+		errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 	} else {
 		currentClass->AddMethod( method );
 	}
@@ -137,7 +137,7 @@ void CSTVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 	assert( currentMethod != 0 ); 
 	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
 	if( currentMethod->HaveInArgs( p.GetName() ) ) {
-		errorsStack.push( CNameRedefinition( p.GetName(), p.GetLocation() ) ); 
+		errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) ); 
 	} else {
 		currentMethod->AddArgument( variable );
 	}

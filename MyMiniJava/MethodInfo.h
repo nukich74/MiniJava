@@ -1,6 +1,7 @@
 #pragma once
 #include "VariableInfo.h"
 #include <vector>
+#include <algorithm>
 
 namespace SymbolsTable {
 
@@ -21,12 +22,12 @@ namespace SymbolsTable {
 		CVariableInfo* FindVarAmongLocals( const std::string& id );
 
 		bool HaveLocalVar( const std::string& id ) {
-			bool haveInLocal = std::find_if( localVariables.begin(), localVariables.end(), [&id]( const CVariableInfo* info ) 
+			return std::find_if( localVariables.begin(), localVariables.end(), [&id]( const CVariableInfo* info ) 
 				{ return info->GetName() == id; } ) != localVariables.end();
 		}
 
 		bool HaveInArgs( const std::string& id ) {
-			bool haveInArgs = std::find_if( arguments.begin(), arguments.end(), [&id]( const CVariableInfo* info ) 
+			return std::find_if( arguments.begin(), arguments.end(), [&id]( const CVariableInfo* info ) 
 				{ return info->GetName() == id; } ) != arguments.end();
 		}
 	private:
