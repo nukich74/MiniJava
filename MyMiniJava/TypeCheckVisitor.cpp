@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "ClassInfo.h"
 #include <map>
 #include <utility>
@@ -83,12 +83,16 @@ void CTCVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 	currentClass = 0;
 }
 
+
 void CTCVisitor::Visit( const CVarDecl& p ) //Type id
 { 
+	
 	assert( currentClass != 0 );
 
+	// –ø—Ä–æ–≤–µ—Ä–∫–∞: –º–æ–∂–µ–º –ª–∏ –æ–±—ä—è–≤–∏—Ç—å –ø–µ—Ä–µ–º–µ–Ω–Ω—É—é –¥–∞–Ω–Ω–æ–≥–æ —Ç–∏–ø–∞
+
 	const CTypeName* retType = static_cast<const CTypeName*>( p.GetType() );
-	//ÌÂ POD-ÚËÔ && ÌÂÚ ‚ Ú‡·ÎËˆÂ
+	//–Ω–µ POD-—Ç–∏–ø && –Ω–µ—Ç –≤ —Ç–∞–±–ª–∏—Ü–µ
 	if( !retType->isPOD() && table.find( p.GetType()->GetName() ) == table.end() ) {
 		errorsStack.push( new CNoSuchType( retType->GetName(), retType->GetLocation() ) ); 	
 	}
@@ -229,11 +233,19 @@ void CTCVisitor::Visit( const CBrExpr& p )//( Exp )
 
 void CTCVisitor::Visit( const CTypeName& p )// id
 {
+
+	if( !currentClass->HaveVariable( p.GetName ) ) {
+
+		errorsStack.push( new CNoSuchVariable( p.GetName(), p.GetLocation() ) );
+
+	}
+
 }
 
 
 void CTCVisitor::Visit( const CExprList& p )//Exp , ExpList
 {
+
 }
  
 void CTCVisitor::Visit( const CIdExpr& p )
@@ -264,7 +276,7 @@ bool CTCVisitor::isCyclicInheritance( const std::string& id ) {
 			return false;
 		} else {
 			if( used.find( vertex->GetExtendedName() ) != used.end() ) {
-				return true; //Ì‡¯ÎË ˆËÍÎ
+				return true; //–Ω–∞—à–ª–∏ —Ü–∏–∫–ª
 			} else {
 				used.insert( vertex->GetExtendedName() );
 				vertex = table.find( vertex->GetExtendedName() )->second;
@@ -284,7 +296,7 @@ CMethodInfo* CTCVisitor::findMethodInClass( const std::string& methodName, const
 		if( clazz->GetExtendedName() == "" ) {
 			break;
 		} else {
-			//TODO Ò‰ÂÎ‡Ú¸ Ú‡ÍÛ˛ ÙÛÌÍˆË˛ Ë ‚ÂÁ‰Â ÔÓÏÂÌˇÚ¸
+			//TODO —Å–¥–µ–ª–∞—Ç—å —Ç–∞–∫—É—é —Ñ—É–Ω–∫—Ü–∏—é –∏ –≤–µ–∑–¥–µ –ø–æ–º–µ–Ω—è—Ç—å
 			auto iter = table.find( clazz->GetExtendedName() );
 			clazz = iter == table.end() ? 0 : iter->second;
 		}
