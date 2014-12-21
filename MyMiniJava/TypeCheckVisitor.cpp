@@ -165,6 +165,7 @@ void CTCVisitor::Visit( const CGroupStmt& p ) //{ Statement* }
 
 void CTCVisitor::Visit( const CIfStmt& p ) //if ( Exp ) Statement else Statement
 {
+	//p.GetExp()-
 }
 
 void CTCVisitor::Visit( const CWhileStmt& p )//while ( Exp ) Statement
@@ -233,28 +234,32 @@ void CTCVisitor::Visit( const CBrExpr& p )//( Exp )
 
 void CTCVisitor::Visit( const CTypeName& p )// id
 {
-
-	if( !currentClass->HaveVariable( p.GetName() ) ) {
-
-		errorsStack.push( new CNoSuchVariable( p.GetName(), p.GetLocation() ) );
-
+	if( !currentMethod->HaveInArgs( p.GetName() ) && !currentMethod->HaveLocalVar( p.GetName() ) )
+	{
+		if( !currentClass->HaveVariable( p.GetName() ) ) {
+			errorsStack.push( new CNoSuchVariable( p.GetName(), p.GetLocation() ) );
+		}
 	}
-
 }
 
 
 void CTCVisitor::Visit( const CExprList& p )//Exp , ExpList
 {
-
+	// выражения записанные через запятую (,)
+	p.GetCurrent()->Accept( this );
+	if( p.GetList() ) {
+		p.GetList( )->Accept( this );
+	}
 }
  
 
 void CTCVisitor::Visit( const CIdExpr& p ) // id
 {
-	if( !currentClass->HaveVariable( p.GetId() ) ) {
-
-		errorsStack.push( new CNoSuchVariable( p.GetId(), p.GetLocation() ) );
-
+	if( !currentMethod->HaveInArgs( p.GetId() ) && !currentMethod->HaveLocalVar( p.GetId() ) )
+	{
+		if( !currentClass->HaveVariable( p.GetId() ) ) {
+			errorsStack.push( new CNoSuchVariable( p.GetId(), p.GetLocation() ) );
+		}
 	}
 }
 
