@@ -28,6 +28,9 @@
     <Filter Include="SymbolsTable">
       <UniqueIdentifier>{91db2814-ba2b-4a25-a03c-bde2a7e484a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="StackFrame">
+      <UniqueIdentifier>{bfc17a40-5c86-47cb-a7f2-3fcc1497a482}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -41,6 +44,12 @@
     </ClCompile>
     <ClCompile Include="prettyPrintVisitor.cpp">
       <Filter>PPVisitor</Filter>
+    </ClCompile>
+    <ClCompile Include="StackFrame.cpp">
+      <Filter>StackFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="Temp.cpp">
+      <Filter>StackFrame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +70,21 @@
     </ClInclude>
     <ClInclude Include="symtable.h">
       <Filter>SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="StackFrame.h">
+      <Filter>StackFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Temp.h">
+      <Filter>StackFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidRepresent.h">
+      <Filter>StackFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTreeVisitor.h">
+      <Filter>StackFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantsAndComClasses.h">
+      <Filter>StackFrame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
