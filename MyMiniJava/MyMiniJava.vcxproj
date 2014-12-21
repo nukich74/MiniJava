@@ -22,18 +22,25 @@
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="StackFrame.cpp" />
     <ClCompile Include="SymVisitor.cpp" />
+    <ClCompile Include="Temp.cpp" />
     <ClCompile Include="TypeCheckVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClassInfo.h" />
     <ClInclude Include="CodeInfo.h" />
+    <ClInclude Include="ConstantsAndComClasses.h" />
     <ClInclude Include="ErrorMessage.h" />
     <ClInclude Include="grammar.h" />
+    <ClInclude Include="IntermidRepresent.h" />
+    <ClInclude Include="IRTreeVisitor.h" />
     <ClInclude Include="MethodInfo.h" />
     <ClInclude Include="prettyPrintVisitor.h" />
     <ClInclude Include="iVisitor.h" />
     <ClInclude Include="Source\bison.tab.h" />
+    <ClInclude Include="StackFrame.h" />
+    <ClInclude Include="Temp.h" />
     <ClInclude Include="TypeCheckVisitor.h" />
     <ClInclude Include="VariableInfo.h" />
     <ClInclude Include="SymVisitor.h" />

@@ -31,6 +31,9 @@
     <Filter Include="TCVisitor">
       <UniqueIdentifier>{ee18506a-86f4-43ed-951e-0f7a469901f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IRTree">
+      <UniqueIdentifier>{ebb76716-06e3-415e-9b55-d8eb30dcde8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -53,6 +56,12 @@
     </ClCompile>
     <ClCompile Include="ErrorMessage.cpp">
       <Filter>SymbolsTable</Filter>
+    </ClCompile>
+    <ClCompile Include="StackFrame.cpp">
+      <Filter>IRTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Temp.cpp">
+      <Filter>IRTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +100,21 @@
     </ClInclude>
     <ClInclude Include="ErrorMessage.h">
       <Filter>SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantsAndComClasses.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidRepresent.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTreeVisitor.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="StackFrame.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Temp.h">
+      <Filter>IRTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
