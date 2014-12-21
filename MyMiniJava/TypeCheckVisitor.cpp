@@ -234,7 +234,7 @@ void CTCVisitor::Visit( const CBrExpr& p )//( Exp )
 void CTCVisitor::Visit( const CTypeName& p )// id
 {
 
-	if( !currentClass->HaveVariable( p.GetName ) ) {
+	if( !currentClass->HaveVariable( p.GetName() ) ) {
 
 		errorsStack.push( new CNoSuchVariable( p.GetName(), p.GetLocation() ) );
 
@@ -248,8 +248,14 @@ void CTCVisitor::Visit( const CExprList& p )//Exp , ExpList
 
 }
  
-void CTCVisitor::Visit( const CIdExpr& p )
+
+void CTCVisitor::Visit( const CIdExpr& p ) // id
 {
+	if( !currentClass->HaveVariable( p.GetId() ) ) {
+
+		errorsStack.push( new CNoSuchVariable( p.GetId(), p.GetLocation() ) );
+
+	}
 }
 
 
