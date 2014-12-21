@@ -76,7 +76,7 @@ extern "C" int yyparse();
 extern "C" FILE *yyin;
 void yyerror(const char *s);
 extern IProgram* yyprogram = 0;
-
+extern int yylineno;
 
 /* Line 371 of yacc.c  */
 #line 83 "bison.tab.cpp"
@@ -150,7 +150,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 62 "bison.y"
+#line 63 "bison.y"
 
 	int ival;
 	IProgram* program;
@@ -167,7 +167,7 @@ typedef union YYSTYPE
 	IStmt* stmt;
 	IExprList* exprList;
 	IExpr* expr;
-	char sval[100];
+	char* sval;
 
 
 /* Line 387 of yacc.c  */
@@ -178,8 +178,21 @@ typedef union YYSTYPE
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-extern YYSTYPE yylval;
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+} YYLTYPE;
+# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
 
+extern YYSTYPE yylval;
+extern YYLTYPE yylloc;
 #ifdef YYPARSE_PARAM
 #if defined __STDC__ || defined __cplusplus
 int yyparse (void *YYPARSE_PARAM);
@@ -199,7 +212,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 203 "bison.tab.cpp"
+#line 216 "bison.tab.cpp"
 
 #ifdef short
 # undef short
@@ -358,13 +371,15 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-	 || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+	 || (defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL \
+	     && defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
   yytype_int16 yyss_alloc;
   YYSTYPE yyvs_alloc;
+  YYLTYPE yyls_alloc;
 };
 
 /* The size of the maximum gap between one aligned stack and the next.  */
@@ -373,8 +388,8 @@ union yyalloc
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE)) \
-      + YYSTACK_GAP_MAXIMUM)
+     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE) + sizeof (YYLTYPE)) \
+      + 2 * YYSTACK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
 
@@ -514,12 +529,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    83,    83,    87,    91,    95,    96,   100,   101,   105,
-     106,   110,   114,   115,   119,   120,   124,   125,   129,   130,
-     131,   132,   136,   137,   141,   142,   143,   144,   145,   146,
-     150,   151,   152,   153,   154,   155,   156,   157,   158,   159,
-     160,   161,   162,   163,   164,   165,   166,   167,   168,   172,
-     173,   177,   178
+       0,    84,    84,    88,    92,    96,    97,   101,   102,   106,
+     107,   111,   115,   116,   120,   121,   125,   126,   130,   131,
+     132,   133,   137,   138,   142,   143,   144,   145,   146,   147,
+     151,   152,   153,   154,   155,   156,   157,   158,   159,   160,
+     161,   162,   163,   164,   165,   166,   167,   168,   169,   173,
+     174,   178,   179
 };
 #endif
 
@@ -768,9 +783,90 @@ while (YYID (0))
 #define YYERRCODE	256
 
 
-/* This macro is provided for backward compatibility. */
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
+
+#ifndef YYLLOC_DEFAULT
+# define YYLLOC_DEFAULT(Current, Rhs, N)                                \
+    do                                                                  \
+      if (YYID (N))                                                     \
+        {                                                               \
+          (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;        \
+          (Current).first_column = YYRHSLOC (Rhs, 1).first_column;      \
+          (Current).last_line    = YYRHSLOC (Rhs, N).last_line;         \
+          (Current).last_column  = YYRHSLOC (Rhs, N).last_column;       \
+        }                                                               \
+      else                                                              \
+        {                                                               \
+          (Current).first_line   = (Current).last_line   =              \
+            YYRHSLOC (Rhs, 0).last_line;                                \
+          (Current).first_column = (Current).last_column =              \
+            YYRHSLOC (Rhs, 0).last_column;                              \
+        }                                                               \
+    while (YYID (0))
+#endif
+
+#define YYRHSLOC(Rhs, K) ((Rhs)[K])
+
+
+/* YY_LOCATION_PRINT -- Print the location on the stream.
+   This macro was not mandated originally: define only if we know
+   we won't break user code: when these are the locations we know.  */
+
+#ifndef __attribute__
+/* This feature is available in gcc versions 2.5 and later.  */
+# if (! defined __GNUC__ || __GNUC__ < 2 \
+      || (__GNUC__ == 2 && __GNUC_MINOR__ < 5))
+#  define __attribute__(Spec) /* empty */
+# endif
+#endif
+
 #ifndef YY_LOCATION_PRINT
-# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+
+/* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
+
+__attribute__((__unused__))
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static unsigned
+yy_location_print_ (FILE *yyo, YYLTYPE const * const yylocp)
+#else
+static unsigned
+yy_location_print_ (yyo, yylocp)
+    FILE *yyo;
+    YYLTYPE const * const yylocp;
+#endif
+{
+  unsigned res = 0;
+  int end_col = 0 != yylocp->last_column ? yylocp->last_column - 1 : 0;
+  if (0 <= yylocp->first_line)
+    {
+      res += fprintf (yyo, "%d", yylocp->first_line);
+      if (0 <= yylocp->first_column)
+        res += fprintf (yyo, ".%d", yylocp->first_column);
+    }
+  if (0 <= yylocp->last_line)
+    {
+      if (yylocp->first_line < yylocp->last_line)
+        {
+          res += fprintf (yyo, "-%d", yylocp->last_line);
+          if (0 <= end_col)
+            res += fprintf (yyo, ".%d", end_col);
+        }
+      else if (0 <= end_col && yylocp->first_column < end_col)
+        res += fprintf (yyo, "-%d", end_col);
+    }
+  return res;
+ }
+
+#  define YY_LOCATION_PRINT(File, Loc)          \
+  yy_location_print_ (File, &(Loc))
+
+# else
+#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# endif
 #endif
 
 
@@ -801,7 +897,7 @@ do {									  \
     {									  \
       YYFPRINTF (stderr, "%s ", Title);					  \
       yy_symbol_print (stderr,						  \
-		  Type, Value); \
+		  Type, Value, Location); \
       YYFPRINTF (stderr, "\n");						  \
     }									  \
 } while (YYID (0))
@@ -815,19 +911,21 @@ do {									  \
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 #else
 static void
-yy_symbol_value_print (yyoutput, yytype, yyvaluep)
+yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    YYLTYPE const * const yylocationp;
 #endif
 {
   FILE *yyo = yyoutput;
   YYUSE (yyo);
   if (!yyvaluep)
     return;
+  YYUSE (yylocationp);
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
     YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
@@ -849,13 +947,14 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 #else
 static void
-yy_symbol_print (yyoutput, yytype, yyvaluep)
+yy_symbol_print (yyoutput, yytype, yyvaluep, yylocationp)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    YYLTYPE const * const yylocationp;
 #endif
 {
   if (yytype < YYNTOKENS)
@@ -863,7 +962,9 @@ yy_symbol_print (yyoutput, yytype, yyvaluep)
   else
     YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
 
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep);
+  YY_LOCATION_PRINT (yyoutput, *yylocationp);
+  YYFPRINTF (yyoutput, ": ");
+  yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp);
   YYFPRINTF (yyoutput, ")");
 }
 
@@ -906,11 +1007,12 @@ do {								\
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (YYSTYPE *yyvsp, int yyrule)
+yy_reduce_print (YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
 #else
 static void
-yy_reduce_print (yyvsp, yyrule)
+yy_reduce_print (yyvsp, yylsp, yyrule)
     YYSTYPE *yyvsp;
+    YYLTYPE *yylsp;
     int yyrule;
 #endif
 {
@@ -925,7 +1027,7 @@ yy_reduce_print (yyvsp, yyrule)
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
 		       &(yyvsp[(yyi + 1) - (yynrhs)])
-		       		       );
+		       , &(yylsp[(yyi + 1) - (yynrhs)])		       );
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -933,7 +1035,7 @@ yy_reduce_print (yyvsp, yyrule)
 # define YY_REDUCE_PRINT(Rule)		\
 do {					\
   if (yydebug)				\
-    yy_reduce_print (yyvsp, Rule); \
+    yy_reduce_print (yyvsp, yylsp, Rule); \
 } while (YYID (0))
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -1213,16 +1315,18 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
 #else
 static void
-yydestruct (yymsg, yytype, yyvaluep)
+yydestruct (yymsg, yytype, yyvaluep, yylocationp)
     const char *yymsg;
     int yytype;
     YYSTYPE *yyvaluep;
+    YYLTYPE *yylocationp;
 #endif
 {
   YYUSE (yyvaluep);
+  YYUSE (yylocationp);
 
   if (!yymsg)
     yymsg = "Deleting";
@@ -1253,6 +1357,14 @@ int yychar;
 
 /* The semantic value of the lookahead symbol.  */
 YYSTYPE yylval YY_INITIAL_VALUE(yyval_default);
+
+/* Location data for the lookahead symbol.  */
+YYLTYPE yylloc
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+  = { 1, 1, 1, 1 }
+# endif
+;
+
 
 /* Number of syntax errors so far.  */
 int yynerrs;
@@ -1291,6 +1403,7 @@ yyparse ()
     /* The stacks and their tools:
        `yyss': related to states.
        `yyvs': related to semantic values.
+       `yyls': related to locations.
 
        Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
@@ -1305,6 +1418,14 @@ yyparse ()
     YYSTYPE *yyvs;
     YYSTYPE *yyvsp;
 
+    /* The location stack.  */
+    YYLTYPE yylsa[YYINITDEPTH];
+    YYLTYPE *yyls;
+    YYLTYPE *yylsp;
+
+    /* The locations where the error started and ended.  */
+    YYLTYPE yyerror_range[3];
+
     YYSIZE_T yystacksize;
 
   int yyn;
@@ -1314,6 +1435,7 @@ yyparse ()
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
+  YYLTYPE yyloc;
 
 #if YYERROR_VERBOSE
   /* Buffer for error messages, and its allocated size.  */
@@ -1322,7 +1444,7 @@ yyparse ()
   YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
-#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
+#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
 
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
@@ -1330,6 +1452,7 @@ yyparse ()
 
   yyssp = yyss = yyssa;
   yyvsp = yyvs = yyvsa;
+  yylsp = yyls = yylsa;
   yystacksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
@@ -1338,6 +1461,7 @@ yyparse ()
   yyerrstatus = 0;
   yynerrs = 0;
   yychar = YYEMPTY; /* Cause a token to be read.  */
+  yylsp[0] = yylloc;
   goto yysetstate;
 
 /*------------------------------------------------------------.
@@ -1363,6 +1487,7 @@ yyparse ()
 	   memory.  */
 	YYSTYPE *yyvs1 = yyvs;
 	yytype_int16 *yyss1 = yyss;
+	YYLTYPE *yyls1 = yyls;
 
 	/* Each stack pointer address is followed by the size of the
 	   data in use in that stack, in bytes.  This used to be a
@@ -1371,8 +1496,10 @@ yyparse ()
 	yyoverflow (YY_("memory exhausted"),
 		    &yyss1, yysize * sizeof (*yyssp),
 		    &yyvs1, yysize * sizeof (*yyvsp),
+		    &yyls1, yysize * sizeof (*yylsp),
 		    &yystacksize);
 
+	yyls = yyls1;
 	yyss = yyss1;
 	yyvs = yyvs1;
       }
@@ -1395,6 +1522,7 @@ yyparse ()
 	  goto yyexhaustedlab;
 	YYSTACK_RELOCATE (yyss_alloc, yyss);
 	YYSTACK_RELOCATE (yyvs_alloc, yyvs);
+	YYSTACK_RELOCATE (yyls_alloc, yyls);
 #  undef YYSTACK_RELOCATE
 	if (yyss1 != yyssa)
 	  YYSTACK_FREE (yyss1);
@@ -1404,6 +1532,7 @@ yyparse ()
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
+      yylsp = yyls + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
 		  (unsigned long int) yystacksize));
@@ -1481,7 +1610,7 @@ yybackup:
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
-
+  *++yylsp = yylloc;
   goto yynewstate;
 
 
@@ -1512,319 +1641,320 @@ yyreduce:
      GCC warning that YYVAL may be used uninitialized.  */
   yyval = yyvsp[1-yylen];
 
-
+  /* Default location.  */
+  YYLLOC_DEFAULT (yyloc, (yylsp - yylen), yylen);
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 83 "bison.y"
-    { yyprogram = (yyval.program) = new CProgram( (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
+#line 84 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column );  yyprogram = (yyval.program) = new CProgram( info, (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 87 "bison.y"
-    { (yyval.mainClass) = new CMainClass( (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].stmt) ); }
+#line 88 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (17)]).first_line, (yylsp[(1) - (17)]).first_column, (yylsp[(17) - (17)]).last_line, (yylsp[(17) - (17)]).last_column ); (yyval.mainClass) = new CMainClass( info, (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].stmt) ); }
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 91 "bison.y"
-    { (yyval.varDecl) = new CVarDecl( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval) ); }
+#line 92 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.varDecl) = new CVarDecl( info, (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval) ); }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 95 "bison.y"
-    { (yyval.varDeclList) = new CVarDeclList( (yyvsp[(2) - (2)].varDecl), (yyvsp[(1) - (2)].varDeclList) ); }
+#line 96 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.varDeclList) = new CVarDeclList( info, (yyvsp[(2) - (2)].varDecl), (yyvsp[(1) - (2)].varDeclList) ); }
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 96 "bison.y"
+#line 97 "bison.y"
     { (yyval.varDeclList) = 0; }
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 100 "bison.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (6)].sval), (yyvsp[(4) - (6)].varDeclList), (yyvsp[(5) - (6)].methodDeclList) ); }
+#line 101 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, (yylsp[(6) - (6)]).last_line, (yylsp[(6) - (6)]).last_column ); (yyval.classDecl) = new CClassDecl( info, (yyvsp[(2) - (6)].sval), (yyvsp[(4) - (6)].varDeclList), (yyvsp[(5) - (6)].methodDeclList) ); }
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 101 "bison.y"
-    { (yyval.classDecl) = new CExtendClassDecl( (yyvsp[(2) - (8)].sval), (yyvsp[(4) - (8)].sval), (yyvsp[(6) - (8)].varDeclList), (yyvsp[(7) - (8)].methodDeclList) ); }
+#line 102 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, (yylsp[(8) - (8)]).last_line, (yylsp[(8) - (8)]).last_column ); (yyval.classDecl) = new CExtendClassDecl( info, (yyvsp[(2) - (8)].sval), (yyvsp[(4) - (8)].sval), (yyvsp[(6) - (8)].varDeclList), (yyvsp[(7) - (8)].methodDeclList) ); }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 105 "bison.y"
-    { (yyval.classDeclList) = new CClassDeclList( (yyvsp[(1) - (2)].classDecl), (yyvsp[(2) - (2)].classDeclList) ); }
+#line 106 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.classDeclList) = new CClassDeclList( info, (yyvsp[(1) - (2)].classDecl), (yyvsp[(2) - (2)].classDeclList) ); }
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 106 "bison.y"
+#line 107 "bison.y"
     { (yyval.classDeclList) = 0; }
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 110 "bison.y"
-    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (13)].type), (yyvsp[(3) - (13)].sval), (yyvsp[(5) - (13)].formalList), (yyvsp[(8) - (13)].varDeclList), (yyvsp[(9) - (13)].stmtList), (yyvsp[(11) - (13)].expr) ); }
+#line 111 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (13)]).first_line, (yylsp[(1) - (13)]).first_column, (yylsp[(13) - (13)]).last_line, (yylsp[(13) - (13)]).last_column ); (yyval.methodDecl) = new CMethodDecl( info, (yyvsp[(2) - (13)].type), (yyvsp[(3) - (13)].sval), (yyvsp[(5) - (13)].formalList), (yyvsp[(8) - (13)].varDeclList), (yyvsp[(9) - (13)].stmtList), (yyvsp[(11) - (13)].expr) ); }
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 114 "bison.y"
-    { (yyval.methodDeclList) = new CMethodDeclList( (yyvsp[(2) - (2)].methodDecl), (yyvsp[(1) - (2)].methodDeclList) ); }
+#line 115 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.methodDeclList) = new CMethodDeclList( info, (yyvsp[(2) - (2)].methodDecl), (yyvsp[(1) - (2)].methodDeclList) ); }
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 115 "bison.y"
+#line 116 "bison.y"
     { (yyval.methodDeclList) = 0; }
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 119 "bison.y"
-    { (yyval.formalList) = new CFormalList( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), (yyvsp[(3) - (3)].formalList) ); }
+#line 120 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.formalList) = new CFormalList( info, (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), (yyvsp[(3) - (3)].formalList) ); }
     break;
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 120 "bison.y"
+#line 121 "bison.y"
     { (yyval.formalList) = 0; }
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 124 "bison.y"
-    { (yyval.formalList) = new CFormalList( (yyvsp[(2) - (4)].type), (yyvsp[(3) - (4)].sval), (yyvsp[(4) - (4)].formalList) ); }
+#line 125 "bison.y"
+    { CCodeInfo info( (yylsp[(2) - (4)]).first_line, (yylsp[(2) - (4)]).first_column, (yylsp[(4) - (4)]).last_line, (yylsp[(4) - (4)]).last_column ); (yyval.formalList) = new CFormalList( info, (yyvsp[(2) - (4)].type), (yyvsp[(3) - (4)].sval), (yyvsp[(4) - (4)].formalList) ); }
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 125 "bison.y"
+#line 126 "bison.y"
     { (yyval.formalList) = 0; }
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 129 "bison.y"
-    { (yyval.type) = new CTypeName( "int" ); }
+#line 130 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.type) = new CTypeName( info, "int" ); }
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 130 "bison.y"
-    { (yyval.type) = new CTypeName( "array" ); }
+#line 131 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.type) = new CTypeName( info, "array" ); }
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 131 "bison.y"
-    { (yyval.type) = new CTypeName( "bool" ); }
+#line 132 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.type) = new CTypeName( info, "bool" ); }
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 132 "bison.y"
-    { (yyval.type) = new CTypeName( (yyvsp[(1) - (1)].sval) ); }
+#line 133 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.type) = new CTypeName( info, (yyvsp[(1) - (1)].sval) ); }
     break;
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 136 "bison.y"
-    { (yyval.stmtList) = new CStmtList( (yyvsp[(1) - (2)].stmt), (yyvsp[(2) - (2)].stmtList) ); }
+#line 137 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.stmtList) = new CStmtList( info, (yyvsp[(1) - (2)].stmt), (yyvsp[(2) - (2)].stmtList) ); }
     break;
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 137 "bison.y"
+#line 138 "bison.y"
     { (yyval.stmtList) = 0; }
     break;
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 141 "bison.y"
-    { (yyval.stmt) = new CGroupStmt( (yyvsp[(2) - (3)].stmtList) ); }
+#line 142 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.stmt) = new CGroupStmt( info, (yyvsp[(2) - (3)].stmtList) ); }
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 142 "bison.y"
-    { (yyval.stmt) = new CAssignStmt( (yyvsp[(1) - (4)].sval), (yyvsp[(3) - (4)].expr) ); }
+#line 143 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(3) - (4)]).last_line, (yylsp[(3) - (4)]).last_column ); (yyval.stmt) = new CAssignStmt( info, (yyvsp[(1) - (4)].sval), (yyvsp[(3) - (4)].expr) ); }
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 143 "bison.y"
-    { (yyval.stmt) = new CIfStmt( (yyvsp[(3) - (7)].expr), (yyvsp[(5) - (7)].stmt), (yyvsp[(7) - (7)].stmt) ); }
+#line 144 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, (yylsp[(7) - (7)]).last_line, (yylsp[(7) - (7)]).last_column ); (yyval.stmt) = new CIfStmt( info, (yyvsp[(3) - (7)].expr), (yyvsp[(5) - (7)].stmt), (yyvsp[(7) - (7)].stmt) ); }
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 144 "bison.y"
-    { (yyval.stmt) = new CWhileStmt( (yyvsp[(3) - (5)].expr), (yyvsp[(5) - (5)].stmt) ); }
+#line 145 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(5) - (5)]).last_line, (yylsp[(5) - (5)]).last_column ); (yyval.stmt) = new CWhileStmt( info, (yyvsp[(3) - (5)].expr), (yyvsp[(5) - (5)].stmt) ); }
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 145 "bison.y"
-    { (yyval.stmt) = new CSOPStmt( (yyvsp[(3) - (5)].expr) ); }
+#line 146 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(4) - (5)]).last_line, (yylsp[(4) - (5)]).last_column ); (yyval.stmt) = new CSOPStmt( info, (yyvsp[(3) - (5)].expr) ); }
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 146 "bison.y"
-    { (yyval.stmt) = new CAssignExprStmt( (yyvsp[(1) - (7)].sval), (yyvsp[(3) - (7)].expr), (yyvsp[(6) - (7)].expr) ); }
+#line 147 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, (yylsp[(6) - (7)]).last_line, (yylsp[(6) - (7)]).last_column ); (yyval.stmt) = new CAssignExprStmt( info, (yyvsp[(1) - (7)].sval), (yyvsp[(3) - (7)].expr), (yyvsp[(6) - (7)].expr) ); }
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 150 "bison.y"
-    { (yyval.expr) = new COpExpr( (yyvsp[(1) - (3)].expr), BO_Mult, (yyvsp[(3) - (3)].expr) ); }
+#line 151 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Mult, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 151 "bison.y"
-    { (yyval.expr) = new COpExpr( (yyvsp[(1) - (3)].expr), BO_Plus, (yyvsp[(3) - (3)].expr) ); }
+#line 152 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Plus, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 152 "bison.y"
-    { (yyval.expr) = new COpExpr( (yyvsp[(1) - (3)].expr), BO_Div, (yyvsp[(3) - (3)].expr) ); }
+#line 153 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Div, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 153 "bison.y"
-    { (yyval.expr) = new COpExpr( (yyvsp[(1) - (3)].expr), BO_Minus, (yyvsp[(3) - (3)].expr) ); }
+#line 154 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Minus, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 154 "bison.y"
-    { (yyval.expr) = new CUnaryMinusExpr( (yyvsp[(2) - (2)].expr) ); }
+#line 155 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.expr) = new CUnaryMinusExpr( info, (yyvsp[(2) - (2)].expr) ); }
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 155 "bison.y"
-    { (yyval.expr) = new CExExpr((yyvsp[(1) - (4)].expr), (yyvsp[(3) - (4)].expr));  }
+#line 156 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(4) - (4)]).last_line, (yylsp[(4) - (4)]).last_column ); (yyval.expr) = new CExExpr( info,(yyvsp[(1) - (4)].expr), (yyvsp[(3) - (4)].expr));  }
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 156 "bison.y"
-    { (yyval.expr) = new CLengthExpr( (yyvsp[(1) - (3)].expr) ); }
+#line 157 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new CLengthExpr( info, (yyvsp[(1) - (3)].expr) ); }
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 157 "bison.y"
-    { (yyval.expr) = new CMethodCallExpr( (yyvsp[(1) - (6)].expr), (yyvsp[(3) - (6)].sval), (yyvsp[(5) - (6)].exprList) ); }
+#line 158 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, (yylsp[(6) - (6)]).last_line, (yylsp[(6) - (6)]).last_column ); (yyval.expr) = new CMethodCallExpr( info, (yyvsp[(1) - (6)].expr), (yyvsp[(3) - (6)].sval), (yyvsp[(5) - (6)].exprList) ); }
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 158 "bison.y"
-    { (yyval.expr) = new COpExpr( (yyvsp[(1) - (3)].expr), BO_Less, (yyvsp[(3) - (3)].expr) ); }
+#line 159 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_Less, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 159 "bison.y"
-    { (yyval.expr) = new COpExpr( (yyvsp[(1) - (3)].expr), BO_And, (yyvsp[(3) - (3)].expr) ); }
+#line 160 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new COpExpr( info, (yyvsp[(1) - (3)].expr), BO_And, (yyvsp[(3) - (3)].expr) ); }
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 160 "bison.y"
-    { (yyval.expr) = new CIntExpr( (yyvsp[(1) - (1)].ival) ); }
+#line 161 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.expr) = new CIntExpr( info, (yyvsp[(1) - (1)].ival) ); }
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 161 "bison.y"
-    { (yyval.expr) = new CTrueExpr(); }
+#line 162 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.expr) = new CTrueExpr( info ); }
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 162 "bison.y"
-    { (yyval.expr) = new CFalseExpr(); }
+#line 163 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.expr) = new CFalseExpr( info ); }
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 163 "bison.y"
-    { (yyval.expr) = new CIdExpr( (yyvsp[(1) - (1)].sval) ); }
+#line 164 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.expr) = new CIdExpr( info, (yyvsp[(1) - (1)].sval) ); }
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 164 "bison.y"
-    { (yyval.expr) = new CThisExpr(); }
+#line 165 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, (yylsp[(1) - (1)]).last_line, (yylsp[(1) - (1)]).last_column ); (yyval.expr) = new CThisExpr( info ); }
     break;
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 165 "bison.y"
-    { (yyval.expr) = new CNewIntExpr( (yyvsp[(4) - (5)].expr) ); }
+#line 166 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, (yylsp[(5) - (5)]).last_line, (yylsp[(5) - (5)]).last_column ); (yyval.expr) = new CNewIntExpr( info, (yyvsp[(4) - (5)].expr) ); }
     break;
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 166 "bison.y"
-    { (yyval.expr) = new CNewIdExpr( (yyvsp[(2) - (4)].sval) ); }
+#line 167 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, (yylsp[(4) - (4)]).last_line, (yylsp[(4) - (4)]).last_column ); (yyval.expr) = new CNewIdExpr( info, (yyvsp[(2) - (4)].sval) ); }
     break;
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 167 "bison.y"
-    { (yyval.expr) = new CNotExpr( (yyvsp[(2) - (2)].expr) ); }
+#line 168 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.expr) = new CNotExpr( info, (yyvsp[(2) - (2)].expr) ); }
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 168 "bison.y"
-    { (yyval.expr) = new CBrExpr( (yyvsp[(2) - (3)].expr) ); }
+#line 169 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.expr) = new CBrExpr( info, (yyvsp[(2) - (3)].expr) ); }
     break;
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 172 "bison.y"
-    { (yyval.exprList) = new CExprList( (yyvsp[(1) - (2)].expr), (yyvsp[(2) - (2)].exprList) ); }
+#line 173 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yylsp[(2) - (2)]).last_line, (yylsp[(2) - (2)]).last_column ); (yyval.exprList) = new CExprList( info, (yyvsp[(1) - (2)].expr), (yyvsp[(2) - (2)].exprList) ); }
     break;
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 173 "bison.y"
+#line 174 "bison.y"
     { (yyval.exprList) = 0; }
     break;
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 177 "bison.y"
-    { (yyval.exprList) = new CExprList( (yyvsp[(2) - (3)].expr), (yyvsp[(3) - (3)].exprList) ); }
+#line 178 "bison.y"
+    { CCodeInfo info( (yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, (yylsp[(3) - (3)]).last_line, (yylsp[(3) - (3)]).last_column ); (yyval.exprList) = new CExprList( info, (yyvsp[(2) - (3)].expr), (yyvsp[(3) - (3)].exprList) ); }
     break;
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 178 "bison.y"
+#line 179 "bison.y"
     { (yyval.exprList) = 0; }
     break;
 
 
 /* Line 1792 of yacc.c  */
-#line 1828 "bison.tab.cpp"
+#line 1958 "bison.tab.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1845,6 +1975,7 @@ yyreduce:
   YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
+  *++yylsp = yyloc;
 
   /* Now `shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
@@ -1909,7 +2040,7 @@ yyerrlab:
 #endif
     }
 
-
+  yyerror_range[1] = yylloc;
 
   if (yyerrstatus == 3)
     {
@@ -1925,7 +2056,7 @@ yyerrlab:
       else
 	{
 	  yydestruct ("Error: discarding",
-		      yytoken, &yylval);
+		      yytoken, &yylval, &yylloc);
 	  yychar = YYEMPTY;
 	}
     }
@@ -1946,6 +2077,7 @@ yyerrorlab:
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
 
+  yyerror_range[1] = yylsp[1-yylen];
   /* Do not reclaim the symbols of the rule which action triggered
      this YYERROR.  */
   YYPOPSTACK (yylen);
@@ -1979,9 +2111,9 @@ yyerrlab1:
       if (yyssp == yyss)
 	YYABORT;
 
-
+      yyerror_range[1] = *yylsp;
       yydestruct ("Error: popping",
-		  yystos[yystate], yyvsp);
+		  yystos[yystate], yyvsp, yylsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -1991,6 +2123,11 @@ yyerrlab1:
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
+  yyerror_range[2] = yylloc;
+  /* Using YYLLOC is tempting, but would change the location of
+     the lookahead.  YYLOC is available though.  */
+  YYLLOC_DEFAULT (yyloc, yyerror_range, 2);
+  *++yylsp = yyloc;
 
   /* Shift the error token.  */
   YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
@@ -2030,7 +2167,7 @@ yyreturn:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval);
+                  yytoken, &yylval, &yylloc);
     }
   /* Do not reclaim the symbols of the rule which action triggered
      this YYABORT or YYACCEPT.  */
@@ -2039,7 +2176,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-		  yystos[*yyssp], yyvsp);
+		  yystos[*yyssp], yyvsp, yylsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -2056,4 +2193,4 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 181 "bison.y"
+#line 182 "bison.y"

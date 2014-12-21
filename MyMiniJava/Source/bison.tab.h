@@ -81,7 +81,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 62 "bison.y"
+#line 63 "bison.y"
 
 	int ival;
 	IProgram* program;
@@ -98,7 +98,7 @@ typedef union YYSTYPE
 	IStmt* stmt;
 	IExprList* exprList;
 	IExpr* expr;
-	char sval[100];
+	char* sval;
 
 
 /* Line 2058 of yacc.c  */
@@ -109,8 +109,21 @@ typedef union YYSTYPE
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-extern YYSTYPE yylval;
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+} YYLTYPE;
+# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
 
+extern YYSTYPE yylval;
+extern YYLTYPE yylloc;
 #ifdef YYPARSE_PARAM
 #if defined __STDC__ || defined __cplusplus
 int yyparse (void *YYPARSE_PARAM);

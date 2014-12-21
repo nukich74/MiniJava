@@ -3,11 +3,13 @@
 #include "grammar.h"
 
 namespace SymbolsTable {
-	class CSymbolsTable;
-	class CVariableInfo;
-	class CMethodInfo;
-	class CClassInfo;
 	
+
+	class CClassInfo;
+	class CMethodInfo;
+	class CSymbolsTable;
+
+
 	class CSTVisitor : public IVisitor {
 	public:
 		void Visit( const CProgram& p );
@@ -51,4 +53,84 @@ namespace SymbolsTable {
 		CMethodInfo* currentClass;
 		CSymbolsTable* currentVariable;
 	};
+
+
+	/*
+	class CVariableInf {
+	public:
+		CVariableInf( std::string  _c, std::string _name, CVariableInf* _next );
+		void addType( std::string _c );
+		void addName( std::string _name );
+		void addNext( CVariableInf* _next );
+		std::string getType( );
+		std::string getName( );
+		CVariableInf* getNext( );
+		void Print( );
+		int Length( ) const;
+
+	private:
+		std::string c;
+		std::string name;
+		CVariableInf* next;
+	};
+
+
+
+	class CMethodInfo {
+	public:
+		CMethodInfo( std::string _c, std::string  _name, CVariableInf* _par, CVariableInf* _loc, CMethodInfo* _next );
+		std::string getType( );
+		std::string getName( );
+		CVariableInf* getPar( );
+		CVariableInf* getLoc( );
+		CMethodInfo* getNext( );
+		void addType( std::string _c );
+		void addName( std::string _name );
+		void addPar( CVariableInf* _par );
+		void addLoc( CVariableInf* _loc );
+		void addNext( CMethodInfo* _next );
+		std::string findTVar( std::string id );
+		void Print( );
+		int FormalsCount( );
+
+	private:
+		std::string c;
+		std::string name;
+		CVariableInf* par;
+		CVariableInf* loc;
+		CMethodInfo* next;
+	};
+
+	class CClassInfo {
+	public:
+		CClassInfo( std::string _c, CVariableInf* _var, CMethodInfo* _meth, CClassInfo* _next, std::string _ext );
+		void addName( std::string _c );
+		void addVar( CVariableInf * _var );
+		void addMeth( CMethodInfo * _meth );
+		void addNext( CClassInfo * _next );
+		void addExt( std::string _ext );
+		std::string getName( );
+		CVariableInf* getVar( );
+		CMethodInfo* getMeth( );
+		CClassInfo* getNext( );
+		std::string getExt( );
+		std::string findTVar( std::string id, CSymbolsTable* table );
+		CMethodInfo* FindMethod( std::string id, CSymbolsTable* table );
+		void Print( );
+		bool lookUpVarOffset( std::string id, CSymbolsTable* table, int& offset );
+		int getCountVar( CSymbolsTable* table );
+		int findOffsetVar( std::string id, CSymbolsTable* table );
+	private:
+		std::string c;
+		CVariableInf* var;
+		CMethodInfo* meth;
+		CClassInfo* next;
+		std::string ext;
+	};
+
+	class CSymbolsTable {
+	};
+	*/
+
 }	
+

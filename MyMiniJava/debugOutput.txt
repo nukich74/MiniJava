@@ -1,0 +1,287 @@
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\factorial.java
+Symbol table size: 2
+-------------------------------
+Class name : Fac
+
+Class methods: 
+
+ComputeFac
+
+Class variables: 
+
+-------------------------------
+Class name : Factorial
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+!!!!-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\binarysearch.java
+Symbol table size: 2
+-------------------------------
+Class name : BS
+
+Class methods: 
+
+Init
+Print
+Compare
+Div
+Search
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : BinarySearch
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+!!!!-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\binarytree.java
+Symbol table size: 3
+-------------------------------
+Class name : BT
+
+Class methods: 
+
+Start
+
+Class variables: 
+
+-------------------------------
+Class name : BinaryTree
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+Class name : Tree
+
+Class methods: 
+
+RecPrint
+Print
+Search
+RemoveLeft
+RemoveRight
+Remove
+Delete
+Insert
+Compare
+SetHas_Right
+SetHas_Left
+GetHas_Left
+GetHas_Right
+SetKey
+GetKey
+GetLeft
+GetRight
+SetLeft
+SetRight
+Init
+
+Class variables: 
+
+my_null
+has_right
+has_left
+key
+right
+left
+!!!!-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\bubblesort.java
+Symbol table size: 2
+-------------------------------
+Class name : BBS
+
+Class methods: 
+
+Init
+Print
+Sort
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : BubbleSort
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+!!!!-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\linearsearch.java
+Symbol table size: 2
+-------------------------------
+Class name : LS
+
+Class methods: 
+
+Init
+Search
+Print
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : LinearSearch
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+!!!!-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\quicksort.java
+Symbol table size: 2
+-------------------------------
+Class name : QS
+
+Class methods: 
+
+Init
+Print
+Sort
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : QuickSort
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+!!!!-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\treevisitor.java
+Symbol table size: 5
+-------------------------------
+Class name : MyVisitor
+
+Class methods: 
+
+visit
+
+Class variables: 
+
+-------------------------------
+Class name : TV
+
+Class methods: 
+
+Start
+
+Class variables: 
+
+-------------------------------
+Class name : Tree
+
+Class methods: 
+
+accept
+RecPrint
+Print
+Search
+RemoveLeft
+RemoveRight
+Remove
+Delete
+Insert
+Compare
+SetHas_Right
+SetHas_Left
+GetHas_Left
+GetHas_Right
+SetKey
+GetKey
+GetLeft
+GetRight
+SetLeft
+SetRight
+Init
+
+Class variables: 
+
+my_null
+has_right
+has_left
+key
+right
+left
+-------------------------------
+Class name : TreeVisitor
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+Class name : Visitor
+
+Class methods: 
+
+visit
+
+Class variables: 
+
+r
+l
+!!!!-------------------------------
+-------------------------------
+Для продолжения нажмите любую клавишу . . . 
+
+

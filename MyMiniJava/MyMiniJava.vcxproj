@@ -17,25 +17,30 @@
     <Flex Include="Source\flex.l" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ErrorMessage.cpp" />
     <ClCompile Include="prettyPrintVisitor.cpp" />
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="StackFrame.cpp" />
-    <ClCompile Include="Temp.cpp" />
+    <ClCompile Include="SymVisitor.cpp" />
+    <ClCompile Include="TypeCheckVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConstantsAndComClasses.h" />
+    <ClInclude Include="ClassInfo.h" />
+    <ClInclude Include="CodeInfo.h" />
+    <ClInclude Include="ErrorMessage.h" />
     <ClInclude Include="grammar.h" />
-    <ClInclude Include="IntermidRepresent.h" />
-    <ClInclude Include="IRTreeVisitor.h" />
+    <ClInclude Include="MethodInfo.h" />
     <ClInclude Include="prettyPrintVisitor.h" />
     <ClInclude Include="iVisitor.h" />
     <ClInclude Include="Source\bison.tab.h" />
-    <ClInclude Include="StackFrame.h" />
-    <ClInclude Include="symtable.h" />
+    <ClInclude Include="TypeCheckVisitor.h" />
+    <ClInclude Include="VariableInfo.h" />
+    <ClInclude Include="SymVisitor.h" />
     <ClInclude Include="syntaxTree.h" />
-    <ClInclude Include="Temp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="debugOutput.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{11E6DD32-849C-47A0-B7EA-042B796F2117}</ProjectGuid>
@@ -67,7 +72,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Source;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -76,6 +81,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

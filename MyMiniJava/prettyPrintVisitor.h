@@ -32,6 +32,10 @@ public:
 	void Visit( const CNewIdExpr& p );
 	void Visit( const CNotExpr& p );
 	void Visit( const CBrExpr& p );
+	void Visit( const CIdExpr& p );
+	void Visit( const CLengthExpr& p );
+	void Visit( const CUnaryMinusExpr& p );
+
 
 	void Visit( const CTypeName& p );
 
@@ -41,10 +45,4 @@ public:
 	void Visit( const CVarDeclList& p );
 	void Visit( const CMethodDeclList& p );
 	void Visit( const CStmtList& p );
-
-
-	void Visit( const CIdExpr& p );
-	void Visit( const CLengthExpr& p );
-	void Visit( const CUnaryMinusExpr& p );
-
 };

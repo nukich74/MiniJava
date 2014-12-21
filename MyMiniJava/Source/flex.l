@@ -10,9 +10,29 @@
 #include <iostream>
 #include "syntaxTree.h"
 #include "bison.tab.h"
+#include <sstream>
+#include <unordered_set>
 
+static void updateLocation(){
+    yylloc.first_line = yylloc.last_line; 
+    yylloc.first_column = yylloc.last_column; 
+    for(int i = 0; yytext[i] != '\0'; i++) { 
+        if(yytext[i] == '\n') { 
+            yylloc.last_line++; 
+            yylloc.last_column = 0; 
+        } else { 
+            yylloc.last_column++; 
+        } 
+    }
+}
+
+
+#define YY_USER_ACTION updateLocation();
 #define YY_DECL extern "C" int yylex()
 #define yyterminate() return YY_NULL
+
+extern std::unordered_set< std::string > symbolStorage;
+char* data;
 
 /*extern "C" int yywrap() {
 	return 1;
@@ -20,7 +40,7 @@
 
 
 void printToken( const std::string& token ) {
-	std::cout << token;
+//	std::cout << token;
 }
 
 %}
@@ -72,28 +92,39 @@ Comment (/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)*
 
 Comment { printToken( yytext );  }
 
-[a-zA-Z_][a-zA-Z0-9_]* { std::cout << yytext; strcpy_s( yylval.sval, yytext ); return Id; }
+[a-zA-Z_][a-zA-Z0-9_]* { 
+	printToken( yytext ); 
+	//так нельзя наверное?
+	data = new char[strlen( yytext ) + 1];
+	strcpy_s( data, strlen( yytext ) + 1, yytext );
+	auto insertRes = symbolStorage.insert( data );
+	if( insertRes.second == false ) {
+		delete[] data;
+	}
+	yylval.sval = const_cast<char*>( ( insertRes.first )->c_str() );
+	return Id; 
+}
 
 "<" { return OperatorLess; }
 ">" { return OperatorMore; }
 "&&" { return OperatorAnd; }
-"=" { std::cout << "="; return OperatorEq; }
+"=" { printToken( "=" ); return OperatorEq; }
 
 [\+\-\*/] return yytext[0];
 
-[\[\]\)\(\{\}\;\.,!] {  std::cout << yytext[0]; return yytext[0]; }
+[\[\]\)\(\{\}\;\.,!] {  printToken( yytext ); return yytext[0]; }
 
 
 ({NUMBER}) {  printToken( yytext ); yylval.ival = atoi( yytext ); return IntNum; }
 
 " "	{ printToken( " " ); }
-"\n" 	{ std::cout << "\n" << yylineno << ": "; }
-"\t"	{ std::cout << "\t"; }
+"\n" 	{ printToken( "\n" + std::to_string( yylineno ) + ": " ); }
+"\t"	{ printToken( "\t" ); }
 
 
 
 <<EOF>>	{
-	std::cout << "EOF" << std::endl;
+	printToken( "EOF\n" );
 	yyterminate();
 }
 

@@ -17,7 +17,7 @@ void PrettyPrintVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 
 void PrettyPrintVisitor::Visit( const CMainClass& p ) //class id { public static void main ( String [] id ) { Statement }}
 {
-	printf( "class %s { \n%spublic static Void main ( String [] %s ) { \n", p.GetNameFirst().c_str(), identt.c_str( ), p.GetArgsName( ).c_str( ) );
+	printf( "class %s { \n%spublic static Void main ( String [] %s ) { \n", p.GetName().c_str(), identt.c_str( ), p.GetArgsName( ).c_str( ) );
 	identt += "    ";
 	p.GetStmt()->Accept( this );
 	identt = identt.substr( 0, identt.length( ) - 4 );
@@ -250,7 +250,7 @@ void PrettyPrintVisitor::Visit( const CExprList& p )//Exp , ExpList
 {
 	p.GetCurrent()->Accept( this );
 	std::cout << " ";
-	if( ! p.GetList() ) {
+	if( p.GetList() ) {
 		std::cout << ", ";
 		p.GetList( )->Accept( this );
 	}
@@ -300,7 +300,6 @@ void PrettyPrintVisitor::Visit( const CStmtList& p )
 	}
 }
 
-//
 
 void PrettyPrintVisitor::Visit( const CIdExpr& p )
 {
@@ -308,14 +307,14 @@ void PrettyPrintVisitor::Visit( const CIdExpr& p )
 }
 
 
-void PrettyPrintVisitor::Visit( const CLengthExpr& p )
+void PrettyPrintVisitor::Visit( const CLengthExpr& p ) // Expr . length
 {
 	p.GetExp()->Accept( this );
 	std::cout << ". length";
 
 }
 
-void PrettyPrintVisitor::Visit( const CUnaryMinusExpr& p )
+void PrettyPrintVisitor::Visit( const CUnaryMinusExpr& p ) // - Expr
 {
 	std::cout << "-";
 	p.GetExpr()->Accept( this );
