@@ -63,6 +63,15 @@
     <ClCompile Include="Temp.cpp">
       <Filter>IRTree</Filter>
     </ClCompile>
+    <ClCompile Include="StatementWrapper.cpp">
+      <Filter>IRTree</Filter>
+    </ClCompile>
+    <ClCompile Include="IRPrinter.cpp">
+      <Filter>IRTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SubtreeWrapper.cpp">
+      <Filter>IRTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iVisitor.h">
@@ -114,6 +123,18 @@
       <Filter>IRTree</Filter>
     </ClInclude>
     <ClInclude Include="Temp.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SubtreeWrapper.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="StatementWrapper.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="IRHelpers.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="IRPrint.h">
       <Filter>IRTree</Filter>
     </ClInclude>
   </ItemGroup>

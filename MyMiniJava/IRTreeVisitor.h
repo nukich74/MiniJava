@@ -1,4 +1,12 @@
-#include "iVisitor.h"
+//Борин, Столбов
+#pragma once
+#include "iVisitor.h" 
+#include"IntermidRepresent.h"
+#include"grammar.h"
+#include "IRHelpers.h"
+#include <list>
+//#include <SymbolsTable.h>
+#include "StackFrame.h"
 
 namespace IRTranslate {
 
@@ -45,6 +53,17 @@ public:
 	virtual void Visit( const CVarDeclList& p );
 	virtual void Visit( const CMethodDeclList& p );
 	virtual void Visit( const CStmtList& p );
-};
 
-}
+private:
+
+	StackFrame::CFrame* currentFrame;
+
+	//const SymbolsTable::CSymbolsTable& symbolsTable;
+
+	std::string className;
+
+	const IExpr* lastReturnedExp;
+	const IStmt* lastReturnedStm;
+	const StackFrame::IAccess* lastReturnedAccess;
+
+};

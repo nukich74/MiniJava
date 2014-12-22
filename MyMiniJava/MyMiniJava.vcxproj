@@ -18,11 +18,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrorMessage.cpp" />
+    <ClCompile Include="IRPrinter.cpp" />
     <ClCompile Include="prettyPrintVisitor.cpp" />
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="StackFrame.cpp" />
+    <ClCompile Include="StatementWrapper.cpp" />
+    <ClCompile Include="SubtreeWrapper.cpp" />
     <ClCompile Include="SymVisitor.cpp" />
     <ClCompile Include="Temp.cpp" />
     <ClCompile Include="TypeCheckVisitor.cpp" />
@@ -34,12 +37,16 @@
     <ClInclude Include="ErrorMessage.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="IntermidRepresent.h" />
+    <ClInclude Include="IRHelpers.h" />
+    <ClInclude Include="IRPrint.h" />
     <ClInclude Include="IRTreeVisitor.h" />
     <ClInclude Include="MethodInfo.h" />
     <ClInclude Include="prettyPrintVisitor.h" />
     <ClInclude Include="iVisitor.h" />
     <ClInclude Include="Source\bison.tab.h" />
     <ClInclude Include="StackFrame.h" />
+    <ClInclude Include="StatementWrapper.h" />
+    <ClInclude Include="SubtreeWrapper.h" />
     <ClInclude Include="Temp.h" />
     <ClInclude Include="TypeCheckVisitor.h" />
     <ClInclude Include="VariableInfo.h" />
@@ -57,7 +64,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
