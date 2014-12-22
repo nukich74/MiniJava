@@ -173,6 +173,7 @@ void CTCVisitor::Visit( const CGroupStmt& p ) //{ Statement* }
 void CTCVisitor::Visit( const CIfStmt& p ) //if ( Exp ) Statement else Statement
 {
 	p.GetExp( )->Accept( this );
+
 	p.GetStmFirst( )->Accept( this );
 	p.GetStmSecond()->Accept( this );
 }
@@ -285,7 +286,7 @@ void CTCVisitor::Visit( const CExprList& p )//Exp , ExpList
 
 void CTCVisitor::Visit( const CIdExpr& p ) // id
 {
-	if( !haveIdInScope( p.GetId() ) ) {
+	if( !findVarInScope( p.GetId() ) ) {
 		errorsStack.push( new CNoSuchVariable( p.GetId(), p.GetLocation() ) );
 	}
 }
@@ -342,12 +343,21 @@ CClassInfo* CTCVisitor::findClass( const std::string& id ) {
 	return ( iter == table.end() ) ? 0 : iter->second;
 }
 
-bool CTCVisitor::haveIdInScope( const std::string& id ) {
+CVariableInfo* CTCVisitor::findVarInScope( const std::string& id ) {
 	//простая проверка есть ли переменная с таким id
-	if( currentClass->HaveVariable( id ) || currentMethod->HaveInArgs( id ) || 
-		currentMethod->HaveLocalVar( id ) ) { 
-			return true;
+	CVariableInfo* info = currentMethod->FindVarAmongArgs( id );
+	if( info != 0 ) {
+		return info;
 	}
+	info = currentMethod->FindVarAmongLocals( id );
+	if( info != 0 ) {
+		return info;
+	}
+	info = currentClass->FindVariable( id );
+	if( info != 0 ) {
+		return info;	
+	}
+
 	//на самом деле переменная могла быть определена в родительском классе
 	if( !isCyclicInheritance( currentClass->GetName() ) ) {
 		CClassInfo* root = currentClass;
@@ -357,7 +367,7 @@ bool CTCVisitor::haveIdInScope( const std::string& id ) {
 				return false; // скорее все произошла ошибка, класс не был найден.							
 			} else {
 				if( parent->HaveVariable( id ) ) {
-					return true;	//нашли			
+					return parent->FindVariable( id );	//нашли			
 				} else {
 					root = parent; 	//поробуем поискать у родителя			
 				}

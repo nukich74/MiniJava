@@ -55,13 +55,14 @@ namespace SymbolsTable {
 		std::queue< CSemanticError* > errorsStack;
 
 	private:
+		std::string lastType;
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
 		const std::map < std::string, CClassInfo* >& table;
 
 		bool isCyclicInheritance( const std::string& id );
 		CMethodInfo* findMethodInClass( const std::string& methodName, const CClassInfo* clazz );
-		bool haveIdInScope( const std::string& id );
+		CVariableInfo* findVarInScope( const std::string& id );
 		CClassInfo* findClass( const std::string& id );
 		bool haveClass( const std::string& id );
 	};
