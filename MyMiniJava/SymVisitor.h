@@ -56,11 +56,12 @@ namespace SymbolsTable {
 		
 		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
 		bool isSuccessfull() { return errorsStack.size() == 0; }
+		const std::vector< CSemanticError* >& GetErrors() const { return errorsStack; }
 	private:
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
 		std::map < std::string, CClassInfo* > table;
-		std::queue< CSemanticError* > errorsStack;
+		std::vector< CSemanticError* > errorsStack;
 	};
 
 }	

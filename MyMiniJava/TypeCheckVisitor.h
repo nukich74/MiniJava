@@ -52,11 +52,12 @@ namespace SymbolsTable {
 
 		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
 		bool isSuccessfull() { return errorsStack.size() == 0; }
+		const std::vector< CSemanticError* >& GetErrors() const { return errorsStack; }
 	private:
 		std::string lastType;
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
-		std::queue< CSemanticError* > errorsStack;
+		std::vector< CSemanticError* > errorsStack;
 		const std::map < std::string, CClassInfo* >& table;
 		std::vector< CVariableInfo* > currentArgs;
 		int currentArgsCount;

@@ -55,6 +55,12 @@ void SymbolTablePrint(const SymbolTable* symbolTable) {
 	std::cout << "\n\n";
 }
 
+void printErrors( const std::vector< CSemanticError* >& errors ) {
+	for( auto& item: errors ) {
+		std::cout << item->What() << '\n';
+	}
+}
+
 
 int main( int argc, char* argv[] )
 {
@@ -95,13 +101,13 @@ int main( int argc, char* argv[] )
 				yyprogram->Accept( &typeCheckVisitor );
 
 				if( !symbolTableVisitor.isSuccessfull() ) {
-					assert( false );
+					printErrors( symbolTableVisitor.GetErrors() );
 				}
 				if( !typeCheckVisitor.isSuccessfull() ) {
-					assert( false );
+					printErrors( typeCheckVisitor.GetErrors() );
 				}
 
-				SymbolTablePrint(symbolTable);
+//				SymbolTablePrint(symbolTable);
 
 			} while( !feof( yyin ) );
 			
