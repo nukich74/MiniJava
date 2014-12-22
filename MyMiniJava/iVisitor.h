@@ -72,7 +72,6 @@ public:
 	virtual void Visit( const CNewIdExpr& p ) = 0;
 	virtual void Visit( const CNotExpr& p ) = 0;
 	virtual void Visit( const CBrExpr& p ) = 0;
-	virtual void Visit( const CNameExpr& p ) = 0;
 	virtual void Visit( const CIdExpr& p ) = 0;
 	virtual void Visit( const CLengthExpr& p ) = 0; 
 	virtual void Visit( const CUnaryMinusExpr& p ) = 0;

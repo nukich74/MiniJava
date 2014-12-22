@@ -128,7 +128,7 @@ FormalRestList
 
 Type
 	:	Int { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTypeName( info, "int" ); }
-	|	Int '[' ']' { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new CTypeName( info, "array" ); }
+	|	Int '[' ']' { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new CTypeName( info, "int[]" ); }
     |	Bool { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTypeName( info, "bool" ); }
     |	Id { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTypeName( info, $1 ); }
 	;
@@ -148,16 +148,16 @@ Statement
 	;
 
 Expr
-	:	Expr '*' Expr { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_Mult, $3 ); }
-	|   Expr '+' Expr { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_Plus, $3 ); }
-	|	Expr '/' Expr { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_Div, $3 ); }
-	|	Expr '-' Expr { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_Minus, $3 ); }
-	|	'-' Expr %prec UMINUS { CCodeInfo info( @1.first_line, @1.first_column, @2.last_line, @2.last_column ); $$ = new CUnaryMinusExpr( info, $2 ); }
+	:	Expr '*' Expr { CCodeInfo info( @2.first_line, @2.first_column, @2.last_line, @2.last_column ); $$ = new COpExpr( info, $1, BO_Mult, $3 ); }
+	|   Expr '+' Expr { CCodeInfo info( @2.first_line, @2.first_column, @2.last_line, @2.last_column ); $$ = new COpExpr( info, $1, BO_Plus, $3 ); }
+	|	Expr '/' Expr { CCodeInfo info( @2.first_line, @2.first_column, @2.last_line, @2.last_column ); $$ = new COpExpr( info, $1, BO_Div, $3 ); }
+	|	Expr '-' Expr { CCodeInfo info( @2.first_line, @2.first_column, @2.last_line, @2.last_column ); $$ = new COpExpr( info, $1, BO_Minus, $3 ); }
+	|	'-' Expr %prec UMINUS { CCodeInfo info( @2.first_line, @2.first_column, @2.last_line, @2.last_column ); $$ = new CUnaryMinusExpr( info, $2 ); }
 	|	Expr '[' Expr ']' { CCodeInfo info( @1.first_line, @1.first_column, @4.last_line, @4.last_column ); $$ = new CExExpr( info,$1, $3);  }
-	|	Expr '.' Length { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new CLengthExpr( info, $1 ); }
-	|	Expr '.' Id '(' ExprList ')' { CCodeInfo info( @1.first_line, @1.first_column, @6.last_line, @6.last_column ); $$ = new CMethodCallExpr( info, $1, $3, $5 ); }
-	|	Expr OperatorLess Expr { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_Less, $3 ); }
-	|	Expr OperatorAnd Expr { CCodeInfo info( @1.first_line, @1.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_And, $3 ); }
+	|	Expr '.' Length { CCodeInfo info( @2.first_line, @2.first_column, @3.last_line, @3.last_column ); $$ = new CLengthExpr( info, $1 ); }
+	|	Expr '.' Id '(' ExprList ')' { CCodeInfo info( @2.first_line, @2.first_column, @6.last_line, @6.last_column ); $$ = new CMethodCallExpr( info, $1, $3, $5 ); }
+	|	Expr OperatorLess Expr { CCodeInfo info( @2.first_line, @2.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_Less, $3 ); }
+	|	Expr OperatorAnd Expr { CCodeInfo info( @2.first_line, @2.first_column, @3.last_line, @3.last_column ); $$ = new COpExpr( info, $1, BO_And, $3 ); }
 	|	IntNum { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CIntExpr( info, $1 ); }
 	|	True { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CTrueExpr( info ); }
 	|	False { CCodeInfo info( @1.first_line, @1.first_column, @1.last_line, @1.last_column ); $$ = new CFalseExpr( info ); }

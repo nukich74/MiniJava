@@ -173,7 +173,9 @@ void CTCVisitor::Visit( const CGroupStmt& p ) //{ Statement* }
 void CTCVisitor::Visit( const CIfStmt& p ) //if ( Exp ) Statement else Statement
 {
 	p.GetExp( )->Accept( this );
-
+	if( lastType != "bool" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "bool", p.GetLocation() ) ); 
+	}
 	p.GetStmFirst( )->Accept( this );
 	p.GetStmSecond()->Accept( this );
 }
@@ -181,81 +183,157 @@ void CTCVisitor::Visit( const CIfStmt& p ) //if ( Exp ) Statement else Statement
 void CTCVisitor::Visit( const CWhileStmt& p )//while ( Exp ) Statement
 {
 	p.GetExpr()->Accept( this );
+	if( lastType != "bool" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "bool", p.GetLocation() ) ); 
+	}
+
 	p.GetStmt()->Accept( this );
 }
 
 void CTCVisitor::Visit( const CSOPStmt& p )//System.out.println ( Exp ) ;
 {
 	p.GetExpr()->Accept( this );
+	if( lastType != "int" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int", p.GetLocation() ) ); 
+	}
 }
 
 void CTCVisitor::Visit( const CAssignStmt& p )//id = Exp ;
 {
 	p.GetExpr()->Accept( this );
+	CVariableInfo* info = findVarInScope( p.GetName() );
+	if( lastType != info->GetType() ) {
+		errorsStack.push( new CUnexpectedType( lastType, info->GetType(), p.GetLocation() ) ); 
+	}
 }
 
 void CTCVisitor::Visit( const CAssignExprStmt& p )//id [ Exp ] = Exp;
 {	
 	p.GetExprId()->Accept( this );
+	if( lastType != "int" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int", p.GetLocation() ) ); 
+	}
 	p.GetExprValue()->Accept( this );
+	if( lastType != "int" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int", p.GetLocation() ) ); 
+	}
 }
 
 void CTCVisitor::Visit( const COpExpr& p )//Exp op Exp
 {
 	p.GetExprFirst()->Accept( this );
+	std::string leftType = lastType;
 	p.GetExprSecond()->Accept( this );
+	std::string rightType = lastType;
+	if( leftType != rightType ) {
+		errorsStack.push( new CIncompatibleTypes( leftType, rightType, p.GetLocation() ) );
+	} else {
+		switch (p.GetOp()) {
+			case BO_Plus:
+			case BO_Minus:
+			case BO_Mult:
+			case BO_Div:
+				if( leftType != "int" ) {
+					errorsStack.push( new CUnexpectedType( leftType, "int", p.GetLocation() ) );				
+				}
+			case BO_And:
+				if( leftType != "bool" ) {
+					errorsStack.push( new CUnexpectedType( leftType, "bool", p.GetLocation() ) );					
+				}
+			case BO_Less:
+				if( leftType != "int" ) {
+					errorsStack.push( new CUnexpectedType( leftType, "int", p.GetLocation() ) );
+				} else {
+					lastType = "bool";
+				}
+			default:
+				assert( false );
+				break;
+		}
+	}
 }
 
 void CTCVisitor::Visit( const CExExpr& p )//Exp [ Exp ]
 {
 	p.GetExpId()->Accept( this );
+	if( lastType != "int[]" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int[]", p.GetLocation() ) );
+	}
 	p.GetExp()->Accept( this );
+	if( lastType != "int" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int", p.GetLocation() ) );
+	}
 }
 
 void CTCVisitor::Visit( const CMethodCallExpr& p )//Exp . id ( ExpList )
 {
 	p.GetExp( )->Accept( this );
-	if( p.GetExprList() ) {
-		p.GetExprList( )->Accept( this );
+	if( lastType == "" ) {
+		assert( false );
 	}
-
-	//CMethodInfo* info = findMethodInClass( p.GetName(), currentClass );
-	//assert( info != 0 );
+	if( lastType == "int" || lastType == "int[]" || lastType == "bool" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "ComplexType", p.GetLocation() ) );
+	} else {
+		CClassInfo* cInfo = findClass( lastType );
+		if( cInfo != 0 ) {
+			CMethodInfo* mInfo = cInfo->FindMethod( p.GetName() );
+			if( mInfo != 0 ) {
+				currentArgsCount = 0;
+				currentArgs = mInfo->GetArgumentList();
+				if( p.GetExprList() ) {
+					p.GetExprList( )->Accept( this );
+				}
+				lastType = mInfo->GetReturnType();
+			} else {
+				errorsStack.push( new CNoSuchMethod( p.GetName(), p.GetLocation() ) );
+			}
+		} else {
+			errorsStack.push( new CNoSuchType( lastType, p.GetLocation() ) );
+		}
+	}
 }
 
 void CTCVisitor::Visit( const CIntExpr& p )//num
 {
+	lastType = "int";
 }
 
 void CTCVisitor::Visit( const CTrueExpr& p )//true
 {
+	lastType = "bool";
 }
 
 void CTCVisitor::Visit( const CFalseExpr& p )//false
 {
-}
-
-void CTCVisitor::Visit( const CNameExpr& p )//id
-{
+	lastType = "bool";
 }
 
 void CTCVisitor::Visit( const CThisExpr& p )//this
 {
+	assert( currentClass != 0 ); //TODO спросить кидаться ли тут ошибками
+	lastType = currentClass->GetName();
 }
 
 void CTCVisitor::Visit( const CNewIntExpr& p )//new int [ Exp ]
 {
 	p.GetExpr( )->Accept( this );
+	if( lastType != "int" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int", p.GetLocation() ) );
+	}
+	lastType = "int[]";
 }
 
 void CTCVisitor::Visit( const CNewIdExpr& p )//new id ()
 {
-
+	lastType = p.GetName();
 }
 
 void CTCVisitor::Visit( const CNotExpr& p )//! Exp
 {
 	p.GetExpr( )->Accept( this );
+	if( lastType != "int" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int", p.GetLocation() ) );
+	}
 }
 
 void CTCVisitor::Visit( const CBrExpr& p )//( Exp )
@@ -263,27 +341,23 @@ void CTCVisitor::Visit( const CBrExpr& p )//( Exp )
 	p.GetExpr( )->Accept( this );
 }
 
-void CTCVisitor::Visit( const CTypeName& p )// id
+void CTCVisitor::Visit( const CTypeName& p )//класс обертка вокруг типа создаваемого объекта
 {
-	if( !currentMethod->HaveInArgs( p.GetName() ) && !currentMethod->HaveLocalVar( p.GetName() ) )
-	{
-		if( !currentClass->HaveVariable( p.GetName() ) ) {
-			errorsStack.push( new CNoSuchVariable( p.GetName(), p.GetLocation() ) );
-		}
-	}
 }
-
 
 void CTCVisitor::Visit( const CExprList& p )//Exp , ExpList
 {
 	// выражения записанные через запятую (,)
 	p.GetCurrent()->Accept( this );
+	if( lastType != currentArgs[currentArgsCount]->GetType() ) {
+		errorsStack.push( new CUnexpectedType( lastType, currentArgs[currentArgsCount]->GetType(), p.GetLocation() ) );
+	}
+	currentArgsCount++;
 	if( p.GetList() ) {
 		p.GetList( )->Accept( this );
 	}
 }
  
-
 void CTCVisitor::Visit( const CIdExpr& p ) // id
 {
 	if( !findVarInScope( p.GetId() ) ) {
@@ -291,15 +365,21 @@ void CTCVisitor::Visit( const CIdExpr& p ) // id
 	}
 }
 
-
 void CTCVisitor::Visit( const CLengthExpr& p ) // Expr . length
 {
 	p.GetExp()->Accept( this );
+	if( lastType != "int[]" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int[]", p.GetLocation() ) );
+	}
+	lastType = "int";
 }
 
 void CTCVisitor::Visit( const CUnaryMinusExpr& p ) // - Expr
 {
 	p.GetExpr()->Accept( this );
+	if( lastType != "int" ) {
+		errorsStack.push( new CUnexpectedType( lastType, "int", p.GetLocation() ) );
+	}
 }
 
 bool CTCVisitor::isCyclicInheritance( const std::string& id ) {

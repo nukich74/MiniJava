@@ -94,10 +94,10 @@ int main( int argc, char* argv[] )
 
 				yyprogram->Accept( &typeCheckVisitor );
 
-				if( symbolTableVisitor.errorsStack.size() != 0 ) {
+				if( !symbolTableVisitor.isSuccessfull() ) {
 					assert( false );
 				}
-				if( typeCheckVisitor.errorsStack.size() != 0 ) {
+				if( !typeCheckVisitor.isSuccessfull() ) {
 					assert( false );
 				}
 

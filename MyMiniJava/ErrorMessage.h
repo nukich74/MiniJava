@@ -25,10 +25,17 @@ public:
 
 class CIncompatibleTypes : public CSemanticError {
 public:
-	CIncompatibleTypes::CIncompatibleTypes( const std::string& type1, const std::string& type2, const CCodeInfo& place1, 
-		const CCodeInfo& place2 ) 
+	CIncompatibleTypes::CIncompatibleTypes( const std::string& type1, const std::string& type2, const CCodeInfo& place ) 
 	{
-		message = "Incompatible types " + type1 + " " + type2 + " at " + place1.ToString() + " and " + place2.ToString();
+		message = "Incompatible types " + type1 + " " + type2 + " at " + place.ToString();
+	}
+};
+
+class CUnexpectedType : public CSemanticError {
+public:
+	CUnexpectedType::CUnexpectedType( const std::string& have, const std::string& need, const CCodeInfo& place ) 
+	{
+		message = "Unexpected type " + have + " instead of " + need + " at " + place.ToString();
 	}
 };
 
@@ -47,6 +54,15 @@ public:
 		message = "Undefined type at <" + name + "> at" + place.ToString();
 	}
 };
+
+class CNoSuchMethod : public CSemanticError {
+public:
+	CNoSuchMethod::CNoSuchMethod( const std::string& name, const CCodeInfo& place )
+	{
+		message = "Undefined method at <" + name + "> at" + place.ToString();
+	}
+};
+
 
 class CCyclicInheritance : public CSemanticError {
 public:

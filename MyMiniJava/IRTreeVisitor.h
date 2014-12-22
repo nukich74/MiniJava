@@ -43,7 +43,7 @@ namespace IRTranslate {
 		virtual void Visit( const CBrExpr& p );
 		virtual void Visit( const CNameExpr& p );
 		virtual void Visit( const CIdExpr& p );
-		virtual void Visit( const CLengthExpr& p );
+s		virtual void Visit( const CLengthExpr& p );
 		virtual void Visit( const CUnaryMinusExpr& p );
 
 		virtual void Visit( const CTypeName& p );

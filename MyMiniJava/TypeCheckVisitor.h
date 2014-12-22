@@ -51,15 +51,15 @@ namespace SymbolsTable {
 		void Visit( const CStmtList& p );
 
 		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
-		bool isSuccessfull() { return errorsStack.size() > 0; }
-		std::queue< CSemanticError* > errorsStack;
-
+		bool isSuccessfull() { return errorsStack.size() == 0; }
 	private:
 		std::string lastType;
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
+		std::queue< CSemanticError* > errorsStack;
 		const std::map < std::string, CClassInfo* >& table;
-
+		std::vector< CVariableInfo* > currentArgs;
+		int currentArgsCount;
 		bool isCyclicInheritance( const std::string& id );
 		CMethodInfo* findMethodInClass( const std::string& methodName, const CClassInfo* clazz );
 		CVariableInfo* findVarInScope( const std::string& id );

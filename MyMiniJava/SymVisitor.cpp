@@ -222,10 +222,6 @@ void CSTVisitor::Visit( const CFalseExpr& p )//false
 {
 }
 
-void CSTVisitor::Visit( const CNameExpr& p )//id
-{
-}
-
 void CSTVisitor::Visit( const CThisExpr& p )//this
 {
 }
