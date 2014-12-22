@@ -52,15 +52,18 @@ namespace SymbolsTable {
 
 		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
 		bool isSuccessfull() { return errorsStack.size() > 0; }
+		std::queue< CSemanticError* > errorsStack;
 
 	private:
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
 		const std::map < std::string, CClassInfo* >& table;
-		std::queue< CSemanticError* > errorsStack;
 
 		bool isCyclicInheritance( const std::string& id );
 		CMethodInfo* findMethodInClass( const std::string& methodName, const CClassInfo* clazz );
+		bool haveIdInScope( const std::string& id );
+		CClassInfo* findClass( const std::string& id );
+		bool haveClass( const std::string& id );
 	};
 }	
 

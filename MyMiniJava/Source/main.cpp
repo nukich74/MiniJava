@@ -94,6 +94,13 @@ int main( int argc, char* argv[] )
 
 				yyprogram->Accept( &typeCheckVisitor );
 
+				if( symbolTableVisitor.errorsStack.size() != 0 ) {
+					assert( false );
+				}
+				if( typeCheckVisitor.errorsStack.size() != 0 ) {
+					assert( false );
+				}
+
 				SymbolTablePrint(symbolTable);
 
 			} while( !feof( yyin ) );
