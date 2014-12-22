@@ -82,7 +82,6 @@ void CTCVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 	currentClass = 0;
 }
 
-
 void CTCVisitor::Visit( const CVarDecl& p ) //Type id
 { 
 	
@@ -115,7 +114,7 @@ void CTCVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) {
 	}
 
 	const CTypeName* retType = static_cast<const CTypeName*>( p.GetType() );
-	if( !retType->isPOD() && table.find( p.GetType()->GetName() ) == table.end() ) {
+	if( !retType->isPOD() && !haveClass( p.GetType()->GetName() ) ) {
 		errorsStack.push( new CNoSuchType( retType->GetName(), retType->GetLocation() ) );
 	}
 
@@ -125,15 +124,23 @@ void CTCVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) {
 void CTCVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 {
 	assert( currentMethod != 0 ); 
+	const CTypeName* type = static_cast<const CTypeName*>( p.GetType() );
+	if( !type->isPOD() && !haveClass( type->GetName() ) ) {
+		errorsStack.push( new CNoSuchType( type->GetName(), type->GetLocation() ) );
+	}
 
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}	
 }
 
-
 void CTCVisitor::Visit( const CVarDeclList& p )
 {
+	const CTypeName* type = static_cast<const CTypeName*>( static_cast< const CVarDecl* >( p.GetCurrent() )->GetType() );
+	if( !type->isPOD() && !haveClass( type->GetName() ) ) {
+		errorsStack.push( new CNoSuchType( type->GetName(), type->GetLocation() ) );
+	}
+
 	p.GetCurrent()->Accept( this );
 	if( p.GetList() ) {
 		p.GetList()->Accept( this );
@@ -148,7 +155,6 @@ void CTCVisitor::Visit( const CMethodDeclList& p )
 	}
 }
 
-
 void CTCVisitor::Visit( const CStmtList& p )
 {
 	p.GetStmt()->Accept( this );
@@ -156,7 +162,6 @@ void CTCVisitor::Visit( const CStmtList& p )
 		p.GetList()->Accept( this );
 	}
 }
-
 
 void CTCVisitor::Visit( const CGroupStmt& p ) //{ Statement* }
 {
