@@ -88,9 +88,9 @@ int main( int argc, char* argv[] )
 					std::cout << "Error code: " << rCode << std::endl;
 					break;
 				}
-
-				//PrettyPrintVisitor prittyPrint;
-				//yyprogram->Accept( &prittyPrint );
+//"$(SolutionDir)samples\binarysearch.java" "$(SolutionDir)samples\binarytree.java" "$(SolutionDir)samples\bubblesort.java" "$(SolutionDir)samples\linearsearch.java" "$(SolutionDir)samples\quicksort.java" "$(SolutionDir)samples\treevisitor.java" "$(SolutionDir)errorSamples\cycle.java"
+				PrettyPrintVisitor prittyPrint;
+				yyprogram->Accept( &prittyPrint );
 
 				SymbolsTable::CSTVisitor symbolTableVisitor;
 				yyprogram->Accept( &symbolTableVisitor );

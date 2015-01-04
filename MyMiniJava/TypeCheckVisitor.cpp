@@ -117,6 +117,9 @@ void CTCVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) {
 	if( !retType->isPOD() && !haveClass( p.GetType()->GetName() ) ) {
 		errorsStack.push_back( new CNoSuchType( retType->GetName(), retType->GetLocation() ) );
 	}
+	if( p.GetStmList( ) ) {
+			p.GetStmList( )->Accept( this );
+	}
 
 	currentMethod = 0;	
 }
@@ -236,16 +239,19 @@ void CTCVisitor::Visit( const COpExpr& p )//Exp op Exp
 				if( leftType != "int" ) {
 					errorsStack.push_back( new CUnexpectedType( leftType, "int", p.GetLocation() ) );				
 				}
+				break;
 			case BO_And:
 				if( leftType != "bool" ) {
 					errorsStack.push_back( new CUnexpectedType( leftType, "bool", p.GetLocation() ) );					
 				}
+				break;
 			case BO_Less:
 				if( leftType != "int" ) {
 					errorsStack.push_back( new CUnexpectedType( leftType, "int", p.GetLocation() ) );
 				} else {
 					lastType = "bool";
 				}
+				break;
 			default:
 				assert( false );
 				break;
@@ -278,6 +284,7 @@ void CTCVisitor::Visit( const CMethodCallExpr& p )//Exp . id ( ExpList )
 		if( cInfo != 0 ) {
 			CMethodInfo* mInfo = cInfo->FindMethod( p.GetName() );
 			if( mInfo != 0 ) {
+				//TODO засовывать в стек т.к. аргумент возвращает функция
 				currentArgsCount = 0;
 				currentArgs = mInfo->GetArgumentList();
 				if( p.GetExprList() ) {
