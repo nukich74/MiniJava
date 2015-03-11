@@ -368,22 +368,6 @@ private:
 	CCodeInfo info;
 };
 
-
-//name (имя переменной/метода/класса/...)
-class CNameExpr : public IExpr {
-public:
-	CNameExpr( const CCodeInfo& _info, const std::string& _name ) : name( _name ), info( _info ) {}
-	
-	std::string GetName() const { return name; }
-
-	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
-	CCodeInfo GetLocation() const { return info; }
-private:
-	CCodeInfo info;
-	std::string name;
-};
-
-
 //this
 class CThisExpr : public IExpr {
 public:
@@ -499,7 +483,7 @@ class CTypeName : public IType {
 public:
 	CTypeName( const CCodeInfo& _info, const std::string& _name ) : name( _name ), info( _info ) {}
 	std::string GetName() const { return name; }
-	bool isPOD() const { return ( ( name != "bool" ) && ( name == "int" ) && ( name == "array" ) ); } 
+	bool isPOD() const { return ( ( name == "bool" ) || ( name == "int" ) || ( name == "int[]" ) ); } 
 	void Accept( IVisitor* visitor ) const { visitor->Visit( *this ); }
 	CCodeInfo GetLocation() const { return info; }
 private:

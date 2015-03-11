@@ -34,7 +34,6 @@ namespace SymbolsTable {
 		void Visit( const CIntExpr& p );
 		void Visit( const CTrueExpr& p );
 		void Visit( const CFalseExpr& p );
-		void Visit( const CNameExpr& p );
 		void Visit( const CThisExpr& p );
 		void Visit( const CNewIntExpr& p );
 		void Visit( const CNewIdExpr& p );
@@ -56,13 +55,13 @@ namespace SymbolsTable {
 
 		
 		const std::map< std::string, CClassInfo* >* GetTable() const { return &table; }
-		bool isSuccessfull() { return errorsStack.size() > 0; }
-
+		bool isSuccessfull() { return errorsStack.size() == 0; }
+		const std::vector< CSemanticError* >& GetErrors() const { return errorsStack; }
 	private:
 		CMethodInfo* currentMethod;
 		CClassInfo* currentClass;
 		std::map < std::string, CClassInfo* > table;
-		std::queue< CSemanticError* > errorsStack;
+		std::vector< CSemanticError* > errorsStack;
 	};
 
 }	

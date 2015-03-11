@@ -58,6 +58,12 @@ void SymbolTablePrint(const SymbolTable* symbolTable) {
 	std::cout << "\n\n";
 }
 
+void printErrors( const std::vector< CSemanticError* >& errors ) {
+	for( auto& item: errors ) {
+		std::cout << item->What() << '\n';
+	}
+}
+
 
 int main( int argc, char* argv[] )
 {
@@ -85,9 +91,9 @@ int main( int argc, char* argv[] )
 					std::cout << "Error code: " << rCode << std::endl;
 					break;
 				}
-
-				//PrettyPrintVisitor prittyPrint;
-				//yyprogram->Accept( &prittyPrint );
+//"$(SolutionDir)samples\binarysearch.java" "$(SolutionDir)samples\binarytree.java" "$(SolutionDir)samples\bubblesort.java" "$(SolutionDir)samples\linearsearch.java" "$(SolutionDir)samples\quicksort.java" "$(SolutionDir)samples\treevisitor.java" "$(SolutionDir)errorSamples\cycle.java"
+				PrettyPrintVisitor prittyPrint;
+				yyprogram->Accept( &prittyPrint );
 
 				SymbolsTable::CSTVisitor symbolTableVisitor;
 				yyprogram->Accept( &symbolTableVisitor );
@@ -97,7 +103,14 @@ int main( int argc, char* argv[] )
 
 				yyprogram->Accept( &typeCheckVisitor );
 
-				SymbolTablePrint(symbolTable);
+				if( !symbolTableVisitor.isSuccessfull() ) {
+					printErrors( symbolTableVisitor.GetErrors() );
+				}
+				if( !typeCheckVisitor.isSuccessfull() ) {
+					printErrors( typeCheckVisitor.GetErrors() );
+				}
+
+//				SymbolTablePrint(symbolTable);
 
 				Translate::CIRTreeVisitor cIrTreeVis;
 				yyprogram->Accept( &cIrTreeVis );

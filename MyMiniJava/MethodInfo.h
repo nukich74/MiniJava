@@ -18,17 +18,22 @@ namespace SymbolsTable {
 		void AddLocalVar( CVariableInfo* var ) { localVariables.push_back( var ); }
 		void AddArgument( CVariableInfo* arg ) { arguments.push_back( arg ); }
 
-		CVariableInfo* FindVarAmongArgs( const std::string& id );
-		CVariableInfo* FindVarAmongLocals( const std::string& id );
-
-		bool HaveLocalVar( const std::string& id ) {
-			return std::find_if( localVariables.begin(), localVariables.end(), [&id]( const CVariableInfo* info ) 
-				{ return info->GetName() == id; } ) != localVariables.end();
+		CVariableInfo* FindVarAmongArgs( const std::string& id ) {
+			auto iter = std::find_if( arguments.begin(), arguments.end(), [&id]( const CVariableInfo* info ) 
+				{ return info->GetName() == id; } );
+			return iter == arguments.end() ? 0 : *iter;
+		}
+		CVariableInfo* FindVarAmongLocals( const std::string& id ) {
+			auto iter = std::find_if( localVariables.begin(), localVariables.end(), [&id]( const CVariableInfo* info ) 
+				{ return info->GetName() == id; } );
+			return iter == localVariables.end() ? 0 : *iter;
 		}
 
+		bool HaveLocalVar( const std::string& id ) {
+			return FindVarAmongLocals( id ) != 0;
+		}
 		bool HaveInArgs( const std::string& id ) {
-			return std::find_if( arguments.begin(), arguments.end(), [&id]( const CVariableInfo* info ) 
-				{ return info->GetName() == id; } ) != arguments.end();
+			return FindVarAmongArgs( id ) != 0;
 		}
 	private:
 

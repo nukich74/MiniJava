@@ -205,11 +205,6 @@ void PrettyPrintVisitor::Visit( const CFalseExpr& p )//false
 	printf( "false" );
 }
 
-void PrettyPrintVisitor::Visit( const CNameExpr& p )//id
-{
-	printf( "%s", p.GetName( ).c_str( ) );
-}
-
 void PrettyPrintVisitor::Visit( const CThisExpr& p )//this
 {
 	printf( "this" );

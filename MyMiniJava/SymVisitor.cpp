@@ -65,7 +65,7 @@ void CSTVisitor::Visit( const CClassDecl& p ) //class id { VarDeclList MethodDec
 	if( table.find( p.GetName() ) == table.end() ) {
 		table.insert( std::make_pair( p.GetName(), clazz ) );
 	} else {
-		errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
+		errorsStack.push_back( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 	}
 	currentClass = 0;
 }
@@ -87,7 +87,7 @@ void CSTVisitor::Visit( const CExtendClassDecl& p ) //class id extends id { VarD
 	if( table.find( p.GetClassName() ) == table.end() ) {
 		table.insert( std::make_pair( p.GetClassName(), clazz ) );
 	} else {
-		errorsStack.push( new CNameRedefinition( p.GetClassName(), p.GetLocation() ) );
+		errorsStack.push_back( new CNameRedefinition( p.GetClassName(), p.GetLocation() ) );
 	}
 	currentClass = 0;
 }
@@ -99,13 +99,13 @@ void CSTVisitor::Visit( const CVarDecl& p ) //Type id
 
 	if( currentMethod == 0 ) {
 		if( currentClass->HaveVariable( p.GetName() ) ) {
-			errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
+			errorsStack.push_back( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 		} else {
 			currentClass->AddLocalVar( variable );
 		}
 	} else {
 		if( currentMethod->HaveInArgs( p.GetName() ) || currentMethod->HaveLocalVar( p.GetName() ) )  {
-			errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
+			errorsStack.push_back( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 		} else {
 			currentMethod->AddLocalVar( variable );			
 		}
@@ -125,7 +125,7 @@ void CSTVisitor::Visit( const CMethodDecl& p ) //public Type id ( FormalList ) {
 		p.GetVarDeclList()->Accept( this );
 	}
 	if( currentClass->HaveMethod( p.GetName() ) )  {
-		errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
+		errorsStack.push_back( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 	} else {
 		currentClass->AddMethod( method );
 	}
@@ -137,7 +137,7 @@ void CSTVisitor::Visit( const CFormalList& p )//Type Id FormalRestList
 	assert( currentMethod != 0 ); 
 	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
 	if( currentMethod->HaveInArgs( p.GetName() ) ) {
-		errorsStack.push( new CNameRedefinition( p.GetName(), p.GetLocation() ) ); 
+		errorsStack.push_back( new CNameRedefinition( p.GetName(), p.GetLocation() ) ); 
 	} else {
 		currentMethod->AddArgument( variable );
 	}
@@ -219,10 +219,6 @@ void CSTVisitor::Visit( const CTrueExpr& p )//true
 }
 
 void CSTVisitor::Visit( const CFalseExpr& p )//false
-{
-}
-
-void CSTVisitor::Visit( const CNameExpr& p )//id
 {
 }
 

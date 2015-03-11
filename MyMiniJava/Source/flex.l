@@ -14,16 +14,23 @@
 #include <unordered_set>
 
 static void updateLocation(){
-    yylloc.first_line = yylloc.last_line; 
-    yylloc.first_column = yylloc.last_column; 
-    for(int i = 0; yytext[i] != '\0'; i++) { 
-        if(yytext[i] == '\n') { 
-            yylloc.last_line++; 
-            yylloc.last_column = 0; 
-        } else { 
-            yylloc.last_column++; 
-        } 
-    }
+	static int curr_line = 1;
+	static int curr_col  = 1;
+
+	yylloc.first_line   = curr_line;
+	yylloc.first_column = curr_col;
+
+	for( char* s = yytext; *s != '\0'; s++ ){
+		if( *s == '\n' ) {
+			curr_line++;
+			curr_col = 1;
+		} else {
+			curr_col++;
+		}
+	}
+
+	yylloc.last_line   = curr_line;
+	yylloc.last_column = curr_col - 1;
 }
 
 
