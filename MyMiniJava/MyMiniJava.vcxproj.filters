@@ -63,6 +63,12 @@
     <ClCompile Include="Temp.cpp">
       <Filter>IRTree</Filter>
     </ClCompile>
+    <ClCompile Include="SubtreeRealisation.cpp">
+      <Filter>IRTree</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTreeVisitor.cpp">
+      <Filter>IRTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iVisitor.h">
@@ -114,6 +120,12 @@
       <Filter>IRTree</Filter>
     </ClInclude>
     <ClInclude Include="Temp.h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="ISubtreeWrapper .h">
+      <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SubtreeRealisation.h">
       <Filter>IRTree</Filter>
     </ClInclude>
   </ItemGroup>
