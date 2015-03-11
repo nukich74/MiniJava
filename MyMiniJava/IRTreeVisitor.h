@@ -1,9 +1,18 @@
 #include "iVisitor.h"
+#include <vector>
+#include <list>
+#include "StackFrame.h"
+#include <map>
+#include <vector>
 
-namespace IRTranslate {
+
+namespace Translate {
 
 class CIRTreeVisitor: public IVisitor {
 public:
+	//нужно передавать таблицу символов
+	CIRTreeVisitor(): currentFrame( 0 ), lastReturnedExp( 0 ), 
+		lastReturnedStm( 0 ), lastReturnedAccess( 0 ), lastReturnedExpList( 0 ) {}
 
 	//IVisitor
 	virtual void Visit( const CProgram& p );
@@ -45,6 +54,26 @@ public:
 	virtual void Visit( const CVarDeclList& p );
 	virtual void Visit( const CMethodDeclList& p );
 	virtual void Visit( const CStmtList& p );
+
+	// Каждой функции соответствует фрейм, его мы используем для поиска аргументов, типов и тд
+	std::list< StackFrame::CFrame* > functions;
+private:
+
+	// Фрейм функции конструируемой в данный момент
+	StackFrame::CFrame* currentFrame;
+	
+	// Таблица символов для программы. Ее используем для конструирования фрейма при входе в функци
+
+	// Нужно для того чтобы в CFrame записать правильно декорированное имя
+	std::string className;
+
+	std::map<const std::string, const IType*> typesAndVariables;
+	const IExpr* lastReturnedExp;
+	const IStmt* lastReturnedStm;
+	const IExprList* lastReturnedExpList;
+	const IStmtList* lastReturnedStmtList;
+	const StackFrame::IAccess* lastReturnedAccess;
+
 };
 
 }

@@ -15,7 +15,8 @@ class CTemp {
 public:
 	//returns a new CTemporary from an infinite set of CTemps
 	CTemp();
-	explicit CTemp( const std::string _name ): name(_name) {};
+	CTemp( const CTemp& temp ) : name( temp.ToString() ) {};
+	explicit CTemp( const std::string _name ) : name(_name) {};
 	~CTemp() {};
 
 	const std::string& ToString() const { return name; };

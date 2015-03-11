@@ -1,3 +1,5 @@
+#pragma once
+
 #include "prettyPrintVisitor.h"
 #include <utility>
 #include <cstdio>
@@ -7,6 +9,7 @@
 #include <cassert>
 #include "SymVisitor.h"
 #include "TypeCheckVisitor.h"
+#include <IRTreeVisitor.h>
 
 //#define DEBUG_TO_FILE
 
@@ -96,6 +99,9 @@ int main( int argc, char* argv[] )
 
 				SymbolTablePrint(symbolTable);
 
+				Translate::CIRTreeVisitor cIrTreeVis;
+				yyprogram->Accept( &cIrTreeVis );
+				
 			} while( !feof( yyin ) );
 			
 		}

@@ -7,52 +7,41 @@
 #include <vector>
 #include "Temp.h"
 #include "grammar.h"
+#include <map>
+#include <unordered_map>
 
-using namespace Temp;
 
 namespace StackFrame {
+
+class CFrame;
 
 //интерфейс для переменной из фрейма
 class IAccess {
 public:
 	virtual ~IAccess() = 0 {};
-
-	virtual const IExpr* getVar() const = 0;
-private:
-};
-
-//Его нужно переписать к нужному виду
-class CAccessList {
-public:
-	CAccessList() {};
-	~CAccessList() {};
-
-	void AddElement( IAccess* elem ) { listOfAccess.push_back(elem); };
-	std::list<IAccess*>::iterator GetFirstElement() { return listOfAccess.begin(); };
-private:
-	std::list<IAccess*> listOfAccess;
+	virtual const IExpr* GetExp( const CFrame* frame ) const = 0;
 };
 
 //Соотв переменная в фрэйме
-class InFrame: public IAccess {
+///НЕ понятно что этим хотели сказать
+class CInFrame : public IAccess {
 public:
-	InFrame( CTemp* _var ): var(_var) {};
-	~InFrame() {};
+	CInFrame( int _address ): address( _address ) {};
 
-	const IExpr* getVar() const;
+	const IExpr* GetExp( const CFrame* frame ) const;
+
 private:
-	CTemp* var;
+	int address;
 };
 
-//в регистре
-class InReg: public IAccess {
+//в регистре, не исользуется???
+class CInReg: public IAccess {
 public:
-	InReg( CTemp* _var ): var(_var) {};
-	~InReg() {};
+	CInReg( int _address ): address( _address ) {};
 
-	const IExpr* getVar() const;
+	const IExpr* GetExp( const CFrame* frame ) const {};
 private:
-	CTemp* var;
+	int address;
 };
 
 
@@ -62,24 +51,36 @@ private:
 //Не делаем интрефейс, так как реализация строго на 1 машине
 class CFrame {
 public:
-	CFrame( CLabel _name ): name(_name) {};
+	CFrame( const std::string _name, IStmt* _funcRoot ) : name( _name ),
+		wordSize(4), funcRoot(_funcRoot),
+		framePointer( new Temp::CTemp( _name + "_FP" ) ),
+		stackPointer( new Temp::CTemp( _name + "_SP" ) ),
+		returnValue( new Temp::CTemp( _name + "_RV" ) )
+		{};
 
-	//static CFrame* NewFrame( CLabel name );
+	int WordSize() const { return wordSize; };
+	
+	const Temp::CTemp* GetReturnValuePointer() const { return returnValue; };
+	const Temp::CTemp* GetStackPointer() const { return stackPointer; };
+	const Temp::CTemp* GetFramePointer() const { return framePointer; };
 
-	//This returns an InFrame access with an offset from the frame pointer.
-	IAccess* AllocLocal();
-	const std::string& ToString() const { name.ToString(); };
-	const CAccessList* GetFormals() const { return formals; };
-	const CAccessList* GetLocals() const { return locals; };
-	CTemp* GetStackPointer() { return stackPointer; };
-	CTemp* GetFramePointer() { return framePointer; };
+	const IAccess* GetFormal( const std::string& name ) const;
+	const IAccess* GetLocal( const std::string& name ) const;
+	void AddFormal( const std::string& temp, const IAccess* accs ) { formals[temp] = accs; };
+	void AddLocal( const std::string& temp, const IAccess* accs ) { locals[temp] = accs; };
+
+	const IAccess* GetAccess( const std::string& name ) const;
+
+	const IStmt* funcRoot;
+	int wordSize;
+	const std::string name;
 
 private:
-	CLabel name;
-	CAccessList* formals;
-	CAccessList* locals;
-	CTemp* stackPointer;
-	CTemp* framePointer;
+	std::map<const std::string, const IAccess* > formals;
+	std::map<const std::string, const IAccess* > locals;
+	const Temp::CTemp* returnValue;
+	const Temp::CTemp* stackPointer;
+	const Temp::CTemp* framePointer;
 };
 
 }

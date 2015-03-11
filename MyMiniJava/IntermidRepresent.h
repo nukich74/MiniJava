@@ -12,48 +12,53 @@ namespace IRTree
 
 class CConst: public IExpr {
 public:
-	CConst( int _value ): value(_value) {};
-
+	CConst( const int _value ): value(_value) {};
+	virtual void Accept( IVisitor* ) const {};
 	const int value;
 };
 
 class CName: public IExpr {
 public:
-	CName( Temp::CLabel* _label ): label(_label) {};
+	CName( const Temp::CLabel* _label ): label(_label) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;	
 };
 
 class CTemp: public IExpr {
 public:
-	CTemp( Temp::CTemp* _temp ): temp(_temp) {};
+	CTemp( const Temp::CTemp* _temp ): temp(_temp) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const Temp::CTemp* temp;
 };
 
 class CBinop: public IExpr {
 public:
-	CBinop( BinOp _oper, IExpr* _left, IExpr* _right ):
+	CBinop( const BinOp _oper, const IExpr* _left, const IExpr* _right ):
 		oper(_oper),
 		left(_left),
 		right(_right) 
 	{};
 
+	virtual void Accept( IVisitor* ) const {};
 	const BinOp oper;
 	const IExpr *left, *right;
 };
 
 class CMem: public IExpr {
 public:
-	CMem( IExpr* _expr ): expr(_expr) {};
+	CMem( const IExpr* _expr ): expr(_expr) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const IExpr* expr;
 };
 
 class CCall: public IExpr {
 public:
-	CCall( IExpr* _func, IExprList* _args ): func(_func), args(_args) {}; 
+	CCall( const IExpr* _func, const IExprList* _args ): func(_func), args(_args) {}; 
 
+	virtual void Accept( IVisitor* ) const {};
 	const IExpr* func;
 	const IExprList* args;
 
@@ -61,64 +66,101 @@ public:
 
 class CEseq: public IExpr {
 public:
-	CEseq( IStmt* _stm, IExpr* _expr ): stm(_stm), expr(_expr) {};
+	CEseq( const IStmt* _stm, const IExpr* _expr ): stm(_stm), expr(_expr) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const IStmt* stm;
 	const IExpr* expr;
 };
 
 class CMove: public IStmt {
 public:
-	CMove( IExpr* _dst, IExpr* _src ): dst(_dst), src(_src) {};
+	CMove( const IExpr* _dst, const IExpr* _src ): dst(_dst), src(_src) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const IExpr *dst, *src;
 };
 
 class CExp: public IStmt {
 public:
-	CExp( IExpr* _exp ): exp(_exp) {};
+	CExp( const IExpr* _exp ): exp(_exp) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const IExpr* exp;
 };
 
 
 class CJump: public IStmt {
 public:
-	CJump( Temp::CLabel* _label ): label(_label) {};
+	CJump( const Temp::CLabel* _label ): label(_label) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;
 };
 
 
 class CCJump: public IStmt {
 public:
-	CCJump( BinOp _relop, IExpr* _left, IExpr* _right,
-		Temp::CLabel* _ifTrue, Temp::CLabel* _ifFalse ):
+	CCJump( const TEJump _relop, const IExpr* const _left, const IExpr* const _right, const
+		Temp::CLabel* _ifTrue, const Temp::CLabel* _ifFalse ):
 			relop(_relop),
 			left(_left),
 			right(_right),
 			ifTrue(_ifTrue),
 			ifFalse(_ifFalse) {};
 
-	const BinOp relop;
+	virtual void Accept( IVisitor* ) const {};
+	const TEJump relop;
 	const IExpr* left, *right;
 	const Temp::CLabel *ifTrue, *ifFalse;
 };
 
 class CSeq: public IStmt {
 public:
-	CSeq( IStmt* _left, IStmt* _right ):
+	CSeq( const IStmt* _left, const IStmt* _right, const IStmt* _last = 0 ):
 		left(_left),
-		right(_right) {};
+		right(_right), last( _last ) {};
 
-	const IStmt *left, *right;
+	virtual void Accept( IVisitor* ) const {};
+	const IStmt *left, *right, *last;
 };
 
 class CLabel: public IStmt {
 public:
-	CLabel( Temp::CLabel* _label ): label(_label) {};
+	CLabel( const Temp::CLabel* _label ): label(_label) {};
 
+	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;
 };
 
-}
+class CExprList : public IExprList {
+public:
+	CExprList( const IExpr* expr, const IExprList* expList ) : 
+		curExpr( expr ), nextExprs( expList )
+		{};
+
+	virtual void Accept( IVisitor* ) const {};
+	const IExpr* GetCurrent() const { return curExpr; };
+	const IExprList* GetNextExprs() const { return nextExprs; };
+
+private:
+	const IExpr* curExpr;
+	const IExprList* nextExprs;
+};
+
+class CStmtList : public IStmtList {
+public:
+	CStmtList( const IStmt* stmt, const IStmtList* stmtList ) : 
+		curStmt( stmt ), nextStmts( stmtList )
+		{};
+
+	virtual void Accept( IVisitor* ) const {};
+	const IStmt* GetCurrent() const { return curStmt; };
+	const IStmtList* GetNextStmts() const { return nextStmts; };
+private:
+	const IStmt* curStmt;
+	const IStmtList* nextStmts;
+};
+
+
+};
