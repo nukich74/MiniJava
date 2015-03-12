@@ -4,6 +4,7 @@
 #include "ErrorMessage.h"
 #include <queue>
 #include <hash_set>
+#include <stack>
 
 namespace SymbolsTable {
 
@@ -59,7 +60,8 @@ namespace SymbolsTable {
 		CClassInfo* currentClass;
 		std::vector< CSemanticError* > errorsStack;
 		const std::map < std::string, CClassInfo* >& table;
-		std::vector< CVariableInfo* > currentArgs;
+		std::stack< std::vector< CVariableInfo* > > currentArgsStack;
+		std::stack< std::string > lastTypesStorage;
 		int currentArgsCount;
 		bool isCyclicInheritance( const std::string& id );
 		CMethodInfo* findMethodInClass( const std::string& methodName, const CClassInfo* clazz );
