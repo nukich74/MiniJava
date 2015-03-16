@@ -2,6 +2,7 @@
 //IR classes
 
 #pragma once
+#include <assert.h>
 #include "Temp.h"
 #include "ConstantsAndComClasses.h"
 
@@ -47,9 +48,11 @@ public:
 
 	virtual const CExprList* Kids() const
 	{
+		return 0;
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
+		return this;
 	}
 	const int value;
 };
@@ -59,9 +62,11 @@ public:
 	CName( const Temp::CLabel* _label ): label(_label) {};
 	virtual const CExprList* Kids() const
 	{
+		return 0;
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
+		return this;
 	}
 //	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;	
@@ -72,9 +77,11 @@ public:
 	CTemp( const Temp::CTemp* _temp ): temp(_temp) {};
 	virtual const CExprList* Kids() const
 	{
+		return 0;
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
+		return this;
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -90,9 +97,11 @@ public:
 	{};
 	virtual const CExprList* Kids() const
 	{
+		return new CExprList( left, new CExprList( right, 0 ) );
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
+		return new CBinop( oper, kids->GetCurrent(), static_cast<const IRTree::CExprList*>( kids->GetNextExprs() )->GetCurrent() );
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -105,9 +114,11 @@ public:
 	CMem( const IExpr* _expr ): expr(_expr) {};
 	virtual const CExprList* Kids() const
 	{
+		return new CExprList( expr, 0 );
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
+		return new CMem( kids->GetCurrent() );
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -119,9 +130,11 @@ public:
 	CCall( const IExpr* _func, const IExprList* _args ): func(_func), args(_args) {}; 
 	virtual const CExprList* Kids() const
 	{
+		return new CExprList( func, args );
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
+		return new CCall( kids->GetCurrent(), kids->GetNextExprs() );
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -134,9 +147,11 @@ public:
 	CEseq( const IStmt* _stm, const IExpr* _expr ): stm(_stm), expr(_expr) {};
 	virtual const CExprList* Kids() const
 	{
+		assert( false );
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
+		assert( false );
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -149,9 +164,11 @@ public:
 	CMove( const IExpr* _dst, const IExpr* _src ): dst(_dst), src(_src) {};
 	virtual const CExprList* Kids() const
 	{
+		return new CExprList( dst, new CExprList( src, 0 ) );
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
+		return new CMove( kids->GetCurrent(), static_cast<const CExprList*>( kids->GetNextExprs() )->GetCurrent() );
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -163,9 +180,11 @@ public:
 	CExp( const IExpr* _exp ): exp(_exp) {};
 	virtual const CExprList* Kids() const
 	{
+		return new CExprList( exp, 0 );
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
+		return new CExp( kids->GetCurrent() );
 	}
 //	virtual void Accept( IVisitor* ) const {};
 	const IExpr* exp;
@@ -177,9 +196,11 @@ public:
 	CJump( const Temp::CLabel* _label ): label(_label) {};
 	virtual const CExprList* Kids() const
 	{
+		return 0;
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
+		return new CJump( label );
 	}
 //	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;
@@ -197,10 +218,13 @@ public:
 			ifFalse(_ifFalse) {};
 	virtual const CExprList* Kids() const
 	{
+		return new CExprList( left, new CExprList( right, 0) );
 	}
 
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
+		return new CCJump( relop, kids->GetCurrent(), 
+			static_cast<const CExprList*>( kids->GetNextExprs() )->GetCurrent(), ifTrue, ifFalse );
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -216,10 +240,13 @@ public:
 		right(_right), last( _last ) {};
 	virtual const CExprList* Kids() const
 	{
+		assert( false );
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
+		assert( false );
 	}
+
 //	virtual void Accept( IVisitor* ) const {};
 	const IStmt *left, *right, *last;
 };
@@ -229,9 +256,11 @@ public:
 	CLabel( const Temp::CLabel* _label ): label(_label) {};
 	virtual const CExprList* Kids() const
 	{
+		return 0;
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
+		return new CLabel( label );
 	}
 //	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;
