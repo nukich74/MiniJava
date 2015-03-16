@@ -369,7 +369,7 @@ void CIRTreeVisitor::Visit( const CBrExpr& p )
 void CIRTreeVisitor::Visit( const CNameExpr& p )
 {
 	throw new std::exception( "CNAMEEXPR DOESN'T USED" );
-	lastReturnedStm = new IRTree::CLabel( new Temp::CLabel( p.GetName() ) );
+	//lastReturnedStm = new IRTree::CLabel( new Temp::CLabel( p.GetName() ) );
 }
 
 void CIRTreeVisitor::Visit( const CIdExpr& p )
