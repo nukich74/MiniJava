@@ -1,19 +1,14 @@
 #include "IntermidRepresent.h"
+#include <map>
+#include <vector>
 
 namespace Canon {
 
 class Tracer {
 public:
-	void Rebuild( const IRTree::IStmt* stmt );
+	void Rebuild( const IRTree::CStmtList* stmt );
 private:
-	bool isStart( const IRTree::IStmt* stmt ) {
-		return ( dynamic_cast<const IRTree::CLabel*>( stmt ) != 0 );
-	}
-	bool isLeaf( const IRTree::IStmt* stmt ) {
-		return ( ( dynamic_cast<const IRTree::CJump*>( stmt ) != 0 ) || 
-			( dynamic_cast<const IRTree::CCJump*>( stmt ) != 0 ) );
-	}
-	IRTree::CStmtList list;
+	std::vector< std::pair< IRTree::CLabel, IRTree::CStmtList > > blockTable;
 };
 
 }
