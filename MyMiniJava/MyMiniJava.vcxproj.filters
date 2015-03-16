@@ -34,6 +34,9 @@
     <Filter Include="IRTree">
       <UniqueIdentifier>{ebb76716-06e3-415e-9b55-d8eb30dcde8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IRTreeTransform">
+      <UniqueIdentifier>{c43a81f1-7e49-4db8-9ae7-1fb43803b17c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -68,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="IRTreeVisitor.cpp">
       <Filter>IRTree</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTransformer.cpp">
+      <Filter>IRTreeTransform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="SubtreeRealisation.h">
       <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTransformer.h">
+      <Filter>IRTreeTransform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

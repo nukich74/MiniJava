@@ -3,33 +3,81 @@
 
 #pragma once
 #include "Temp.h"
-#include "grammar.h"
 #include "ConstantsAndComClasses.h"
 
 //Для вывовда дерева нужно будет ещё Print добавить
 namespace IRTree 
 {
 
+class CExprList;
+class CStmtList;
+
+class IExprList {
+public:
+	virtual ~IExprList() {}
+//	virtual void Accept( IVisitor* ) const = 0;
+};
+
+class IStmtList {
+public:
+	virtual ~IStmtList() {}
+//	virtual void Accept( IVisitor* ) const = 0;
+};
+
+class IStmt {
+public:
+	virtual ~IStmt() {}
+//	virtual void Accept( IVisitor* ) const = 0;
+	virtual const CExprList* Kids() const = 0;
+	virtual const IStmt* Build( const CExprList* ) const = 0;
+};
+
+class IExpr {
+public:
+	virtual ~IExpr() {}
+//	virtual void Accept( IVisitor* ) const = 0;
+	virtual const CExprList* Kids() const = 0;
+	virtual const IExpr* Build( const CExprList* ) const = 0;
+};
+
 class CConst: public IExpr {
 public:
 	CConst( const int _value ): value(_value) {};
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
+
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IExpr* Build( const CExprList* kids ) const
+	{
+	}
 	const int value;
 };
 
 class CName: public IExpr {
 public:
 	CName( const Temp::CLabel* _label ): label(_label) {};
-
-	virtual void Accept( IVisitor* ) const {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IExpr* Build( const CExprList* kids ) const
+	{
+	}
+//	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;	
 };
 
 class CTemp: public IExpr {
 public:
 	CTemp( const Temp::CTemp* _temp ): temp(_temp) {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IExpr* Build( const CExprList* kids ) const
+	{
+	}
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const Temp::CTemp* temp;
 };
 
@@ -40,8 +88,14 @@ public:
 		left(_left),
 		right(_right) 
 	{};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IExpr* Build( const CExprList* kids ) const
+	{
+	}
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const BinOp oper;
 	const IExpr *left, *right;
 };
@@ -49,26 +103,43 @@ public:
 class CMem: public IExpr {
 public:
 	CMem( const IExpr* _expr ): expr(_expr) {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IExpr* Build( const CExprList* kids ) const
+	{
+	}
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const IExpr* expr;
 };
 
 class CCall: public IExpr {
 public:
 	CCall( const IExpr* _func, const IExprList* _args ): func(_func), args(_args) {}; 
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IExpr* Build( const CExprList* kids ) const
+	{
+	}
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const IExpr* func;
 	const IExprList* args;
-
 };
 
 class CEseq: public IExpr {
 public:
 	CEseq( const IStmt* _stm, const IExpr* _expr ): stm(_stm), expr(_expr) {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IExpr* Build( const CExprList* kids ) const
+	{
+	}
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const IStmt* stm;
 	const IExpr* expr;
 };
@@ -76,16 +147,27 @@ public:
 class CMove: public IStmt {
 public:
 	CMove( const IExpr* _dst, const IExpr* _src ): dst(_dst), src(_src) {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IStmt* Build( const CExprList* kids ) const
+	{
+	}
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const IExpr *dst, *src;
 };
 
 class CExp: public IStmt {
 public:
 	CExp( const IExpr* _exp ): exp(_exp) {};
-
-	virtual void Accept( IVisitor* ) const {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IStmt* Build( const CExprList* kids ) const
+	{
+	}
+//	virtual void Accept( IVisitor* ) const {};
 	const IExpr* exp;
 };
 
@@ -93,8 +175,13 @@ public:
 class CJump: public IStmt {
 public:
 	CJump( const Temp::CLabel* _label ): label(_label) {};
-
-	virtual void Accept( IVisitor* ) const {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IStmt* Build( const CExprList* kids ) const
+	{
+	}
+//	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;
 };
 
@@ -108,8 +195,15 @@ public:
 			right(_right),
 			ifTrue(_ifTrue),
 			ifFalse(_ifFalse) {};
+	virtual const CExprList* Kids() const
+	{
+	}
 
-	virtual void Accept( IVisitor* ) const {};
+	virtual const IStmt* Build( const CExprList* kids ) const
+	{
+	}
+
+//	virtual void Accept( IVisitor* ) const {};
 	const TEJump relop;
 	const IExpr* left, *right;
 	const Temp::CLabel *ifTrue, *ifFalse;
@@ -120,16 +214,26 @@ public:
 	CSeq( const IStmt* _left, const IStmt* _right, const IStmt* _last = 0 ):
 		left(_left),
 		right(_right), last( _last ) {};
-
-	virtual void Accept( IVisitor* ) const {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IStmt* Build( const CExprList* kids ) const
+	{
+	}
+//	virtual void Accept( IVisitor* ) const {};
 	const IStmt *left, *right, *last;
 };
 
 class CLabel: public IStmt {
 public:
 	CLabel( const Temp::CLabel* _label ): label(_label) {};
-
-	virtual void Accept( IVisitor* ) const {};
+	virtual const CExprList* Kids() const
+	{
+	}
+	virtual const IStmt* Build( const CExprList* kids ) const
+	{
+	}
+//	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;
 };
 
@@ -139,7 +243,7 @@ public:
 		curExpr( expr ), nextExprs( expList )
 		{};
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const IExpr* GetCurrent() const { return curExpr; };
 	const IExprList* GetNextExprs() const { return nextExprs; };
 
@@ -154,13 +258,12 @@ public:
 		curStmt( stmt ), nextStmts( stmtList )
 		{};
 
-	virtual void Accept( IVisitor* ) const {};
+//	virtual void Accept( IVisitor* ) const {};
 	const IStmt* GetCurrent() const { return curStmt; };
 	const IStmtList* GetNextStmts() const { return nextStmts; };
 private:
 	const IStmt* curStmt;
 	const IStmtList* nextStmts;
 };
-
 
 };

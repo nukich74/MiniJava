@@ -284,12 +284,12 @@ void CTCVisitor::Visit( const CMethodCallExpr& p )//Exp . id ( ExpList )
 		if( cInfo != 0 ) {
 			CMethodInfo* mInfo = cInfo->FindMethod( p.GetName() );
 			if( mInfo != 0 ) {
-				//TODO засовывать в стек т.к. аргумент возвращает функция
 				currentArgsCount = 0;
-				currentArgs = mInfo->GetArgumentList();
+				currentArgsStack.push( mInfo->GetArgumentList() );
 				if( p.GetExprList() ) {
 					p.GetExprList( )->Accept( this );
 				}
+				currentArgsStack.pop();
 				lastType = mInfo->GetReturnType();
 			} else {
 				errorsStack.push_back( new CNoSuchMethod( p.GetName(), p.GetLocation() ) );
@@ -338,8 +338,8 @@ void CTCVisitor::Visit( const CNewIdExpr& p )//new id ()
 void CTCVisitor::Visit( const CNotExpr& p )//! Exp
 {
 	p.GetExpr( )->Accept( this );
-	if( lastType != "int" ) {
-		errorsStack.push_back( new CUnexpectedType( lastType, "int", p.GetLocation() ) );
+	if( lastType != "bool" ) {
+		errorsStack.push_back( new CUnexpectedType( lastType, "bool", p.GetLocation() ) );
 	}
 }
 
@@ -356,8 +356,8 @@ void CTCVisitor::Visit( const CExprList& p )//Exp , ExpList
 {
 	// выражения записанные через запятую (,)
 	p.GetCurrent()->Accept( this );
-	if( lastType != currentArgs[currentArgsCount]->GetType() ) {
-		errorsStack.push_back( new CUnexpectedType( lastType, currentArgs[currentArgsCount]->GetType(), p.GetLocation() ) );
+	if( lastType != currentArgsStack.top()[currentArgsCount]->GetType() ) {
+		errorsStack.push_back( new CUnexpectedType( lastType, currentArgsStack.top()[currentArgsCount]->GetType(), p.GetLocation() ) );
 	}
 	currentArgsCount++;
 	if( p.GetList() ) {
@@ -370,6 +370,8 @@ void CTCVisitor::Visit( const CIdExpr& p ) // id
 	if( !findVarInScope( p.GetId() ) ) {
 		errorsStack.push_back( new CNoSuchVariable( p.GetId(), p.GetLocation() ) );
 	}
+	
+	lastType = findVarInScope( p.GetId() )->GetType();
 }
 
 void CTCVisitor::Visit( const CLengthExpr& p ) // Expr . length

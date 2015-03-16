@@ -11,12 +11,10 @@
 #include "TypeCheckVisitor.h"
 #include <IRTreeVisitor.h>
 
-//#define DEBUG_TO_FILE
+#define DEBUG_TO_FILE
 
 
 using namespace SymbolsTable;
-
-//extern std::map< std::string, CClassInfo* > table;
 
 typedef std::map< std::string,  CClassInfo* > SymbolTable;
 
@@ -82,7 +80,10 @@ int main( int argc, char* argv[] )
 		} else {
 			yylineno = 0;
 			yyin = program;
-
+			extern int curr_line;
+			extern int curr_col;
+			curr_line = 1;
+			curr_col = 1;
 			
 			do {
 				int rCode = yyparse(); // парсим на лексемы
@@ -91,9 +92,9 @@ int main( int argc, char* argv[] )
 					std::cout << "Error code: " << rCode << std::endl;
 					break;
 				}
-//"$(SolutionDir)samples\binarysearch.java" "$(SolutionDir)samples\binarytree.java" "$(SolutionDir)samples\bubblesort.java" "$(SolutionDir)samples\linearsearch.java" "$(SolutionDir)samples\quicksort.java" "$(SolutionDir)samples\treevisitor.java" "$(SolutionDir)errorSamples\cycle.java"
-				PrettyPrintVisitor prittyPrint;
-				yyprogram->Accept( &prittyPrint );
+
+				//PrettyPrintVisitor prittyPrint;
+				//yyprogram->Accept( &prittyPrint );
 
 				SymbolsTable::CSTVisitor symbolTableVisitor;
 				yyprogram->Accept( &symbolTableVisitor );
