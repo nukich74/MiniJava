@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrorMessage.cpp" />
+    <ClCompile Include="IRTransformer.cpp" />
     <ClCompile Include="IRTreeVisitor.cpp" />
     <ClCompile Include="prettyPrintVisitor.cpp" />
     <ClCompile Include="Source\bison.tab.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="ErrorMessage.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="IntermidRepresent.h" />
+    <ClInclude Include="IRTransformer.h" />
     <ClInclude Include="IRTreeVisitor.h" />
     <ClInclude Include="ISubtreeWrapper .h" />
     <ClInclude Include="MethodInfo.h" />
