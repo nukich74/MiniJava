@@ -122,7 +122,7 @@ int main( int argc, char* argv[] )
 				for( const auto& item : cIrTreeVis.functions ) {
 					const IRTree::IStmt* root = item->funcRoot;
 					Canon::CCanon cc;
-					cc.DoStm( root );
+					const IRTree::IStmt* result = cc.DoStm( root );
 				}
 
 			} while( !feof( yyin ) );

@@ -35,8 +35,7 @@ void CIRTreeVisitor::Visit( const Tree::CMainClass& p )
 	if( ( smt = p.GetStmt() ) != 0 ) {
 		smt->Accept( this );
 	}
-	//!!!!
-	//currentFrame->funcRoot = smt;
+	currentFrame->funcRoot = lastReturnedStm;
 	lastReturnedExp = 0;
 	lastReturnedStm = 0;
 	lastReturnedExpList = 0;
