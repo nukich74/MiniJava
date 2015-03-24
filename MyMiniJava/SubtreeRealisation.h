@@ -7,50 +7,49 @@ namespace Translate {
 class CExpConverter : public ISubtreeWrapper {
 public:
 
-	CExpConverter( const IExpr* e ) : expr(e) {}
-	const IExpr* ToExp() const { return expr; }
-	const IStmt* ToStm() const { return new IRTree::CExp( expr ); }
-	const IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f ) const;
+	CExpConverter( const IRTree::IExpr* e ) : expr(e) {}
+	const IRTree::IExpr* ToExp() const { return expr; }
+	const IRTree::IStmt* ToStm() const { return new IRTree::CExp( expr ); }
+	const IRTree::IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f ) const;
 private:
-	const IExpr* expr;
+	const IRTree::IExpr* expr;
 };
 
 
 class CStmConverter : public ISubtreeWrapper {
 public:
-	CStmConverter( IStmt* e) : expr( e ) {}
-	IExpr* ToExp() const { assert( false ); }
-	IStmt* ToStm() const { return expr; }
-	IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f ) const { 
+	CStmConverter( IRTree::IStmt* e) : expr( e ) {}
+	IRTree::IExpr* ToExp() const { assert( false ); }
+	IRTree::IStmt* ToStm() const { return expr; }
+	IRTree::IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f ) const { 
 		assert( false );
 	}
 private:
-	IStmt* expr;
+	IRTree::IStmt* expr;
 };
 
 //По словам семинариста, у нас только && и < 
 class CConditionalWrapper : public ISubtreeWrapper {
-	const IExpr* ToExp() const;
-	const IStmt* ToStm() const;
+	const IRTree::IExpr* ToExp() const;
+	const IRTree::IStmt* ToStm() const;
 };
 
 class CAndWrapper : public CConditionalWrapper {
 public:
-	CAndWrapper( const IExpr* _left, const IExpr* _right ): left(_left), right(_right) {};
-	const IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f);
+	CAndWrapper( const IRTree::IExpr* _left, const IRTree::IExpr* _right ): left(_left), right(_right) {};
+	const IRTree::IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f);
 private:
-	const IExpr* left;
-	const IExpr* right;
+	const IRTree::IExpr* left;
+	const IRTree::IExpr* right;
 };
 
 class CLessWrapper : public CConditionalWrapper {
 public:
-	CLessWrapper( const IExpr* _left, const IExpr* _right ): left(_left), right(_right) {};
-	const IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f );
+	CLessWrapper( const IRTree::IExpr* _left, const IRTree::IExpr* _right ): left(_left), right(_right) {};
+	const IRTree::IStmt* ToConditional( const Temp::CLabel* t, const Temp::CLabel* f );
 private:
-	const IExpr* left;
-	const IExpr* right;
+	const IRTree::IExpr* left;
+	const IRTree::IExpr* right;
 };
-
 
 }

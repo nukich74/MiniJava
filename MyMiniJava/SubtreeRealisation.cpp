@@ -1,6 +1,9 @@
 #include "SubtreeRealisation.h"
 
 namespace Translate {
+
+	using namespace IRTree;
+
 	const IStmt* CExpConverter::ToConditional( const Temp::CLabel* t, const Temp::CLabel* f ) const 
 	{
 		return new IRTree::CCJump( IRTree::TEJump::CJ_NE, expr, new IRTree::CConst( 0 ), t, f );

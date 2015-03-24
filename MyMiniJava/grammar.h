@@ -1,4 +1,7 @@
 #pragma once
+
+namespace Tree {
+
 class IVisitor;
 
 // Корневой интерфейс программы
@@ -99,3 +102,5 @@ public:
 	virtual ~IExpr() {}
 	virtual void Accept( IVisitor* ) const = 0;
 };
+
+}

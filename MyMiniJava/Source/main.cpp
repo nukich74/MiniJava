@@ -10,6 +10,7 @@
 #include "SymVisitor.h"
 #include "TypeCheckVisitor.h"
 #include <IRTreeVisitor.h>
+#include "IRTransformer.h"
 
 #define DEBUG_TO_FILE
 
@@ -21,7 +22,7 @@ typedef std::map< std::string,  CClassInfo* > SymbolTable;
 extern "C" int yyparse();
 extern FILE* yyin;
 extern int yylineno;
-extern IProgram* yyprogram;
+extern Tree::IProgram* yyprogram;
 std::unordered_set< std::string > symbolStorage;
 
 void yyerror( const char* s ) {
@@ -93,8 +94,8 @@ int main( int argc, char* argv[] )
 					break;
 				}
 
-				//PrettyPrintVisitor prittyPrint;
-				//yyprogram->Accept( &prittyPrint );
+				PrettyPrintVisitor prittyPrint;
+				yyprogram->Accept( &prittyPrint );
 
 				SymbolsTable::CSTVisitor symbolTableVisitor;
 				yyprogram->Accept( &symbolTableVisitor );
@@ -106,16 +107,24 @@ int main( int argc, char* argv[] )
 
 				if( !symbolTableVisitor.isSuccessfull() ) {
 					printErrors( symbolTableVisitor.GetErrors() );
+					continue;
 				}
 				if( !typeCheckVisitor.isSuccessfull() ) {
 					printErrors( typeCheckVisitor.GetErrors() );
+					continue;
 				}
 
-//				SymbolTablePrint(symbolTable);
+				SymbolTablePrint(symbolTable);
 
 				Translate::CIRTreeVisitor cIrTreeVis;
 				yyprogram->Accept( &cIrTreeVis );
 				
+				for( const auto& item : cIrTreeVis.functions ) {
+					const IRTree::IStmt* root = item->funcRoot;
+					Canon::CCanon cc;
+					cc.DoStm( root );
+				}
+
 			} while( !feof( yyin ) );
 			
 		}

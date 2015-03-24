@@ -75,6 +75,9 @@
     <ClCompile Include="IRTransformer.cpp">
       <Filter>IRTreeTransform</Filter>
     </ClCompile>
+    <ClCompile Include="BlockTracing.cpp">
+      <Filter>IRTreeTransform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iVisitor.h">
@@ -137,6 +140,9 @@
     <ClInclude Include="IRTransformer.h">
       <Filter>IRTreeTransform</Filter>
     </ClInclude>
+    <ClInclude Include="BlockTracing.h">
+      <Filter>IRTreeTransform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Bison Include="Source\bison.y">
@@ -144,11 +150,11 @@
     </Bison>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="debugOutput.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <Flex Include="Source\flex.l">
       <Filter>Grammar</Filter>
     </Flex>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="debugOutput.txt" />
   </ItemGroup>
 </Project>

@@ -10,8 +10,8 @@
 namespace IRTree 
 {
 
-class CExprList;
-class CStmtList;
+class IExpr;
+class IStmt;
 
 class IExprList {
 public:
@@ -23,6 +23,36 @@ class IStmtList {
 public:
 	virtual ~IStmtList() {}
 //	virtual void Accept( IVisitor* ) const = 0;
+};
+
+
+class CExprList : public IExprList {
+public:
+	CExprList( const IExpr* expr, const IExprList* expList ) : 
+		curExpr( expr ), nextExprs( expList )
+		{};
+
+//	virtual void Accept( IVisitor* ) const {};
+	const IExpr* GetCurrent() const { return curExpr; };
+	const IExprList* GetNextExprs() const { return nextExprs; };
+
+private:
+	const IExpr* curExpr;
+	const IExprList* nextExprs;
+};
+
+class CStmtList : public IStmtList {
+public:
+	CStmtList( const IStmt* stmt, const IStmtList* stmtList ) : 
+		curStmt( stmt ), nextStmts( stmtList )
+		{};
+
+//	virtual void Accept( IVisitor* ) const {};
+	const IStmt* GetCurrent() const { return curStmt; };
+	const IStmtList* GetNextStmts() const { return nextStmts; };
+private:
+	const IStmt* curStmt;
+	const IStmtList* nextStmts;
 };
 
 class IStmt {
@@ -148,10 +178,12 @@ public:
 	virtual const CExprList* Kids() const
 	{
 		assert( false );
+		return 0;
 	}
 	virtual const IExpr* Build( const CExprList* kids ) const
 	{
 		assert( false );
+		return 0;
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -241,10 +273,12 @@ public:
 	virtual const CExprList* Kids() const
 	{
 		assert( false );
+		return 0;
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
 		assert( false );
+		return 0;
 	}
 
 //	virtual void Accept( IVisitor* ) const {};
@@ -264,35 +298,6 @@ public:
 	}
 //	virtual void Accept( IVisitor* ) const {};
 	const Temp::CLabel* label;
-};
-
-class CExprList : public IExprList {
-public:
-	CExprList( const IExpr* expr, const IExprList* expList ) : 
-		curExpr( expr ), nextExprs( expList )
-		{};
-
-//	virtual void Accept( IVisitor* ) const {};
-	const IExpr* GetCurrent() const { return curExpr; };
-	const IExprList* GetNextExprs() const { return nextExprs; };
-
-private:
-	const IExpr* curExpr;
-	const IExprList* nextExprs;
-};
-
-class CStmtList : public IStmtList {
-public:
-	CStmtList( const IStmt* stmt, const IStmtList* stmtList ) : 
-		curStmt( stmt ), nextStmts( stmtList )
-		{};
-
-//	virtual void Accept( IVisitor* ) const {};
-	const IStmt* GetCurrent() const { return curStmt; };
-	const IStmtList* GetNextStmts() const { return nextStmts; };
-private:
-	const IStmt* curStmt;
-	const IStmtList* nextStmts;
 };
 
 };

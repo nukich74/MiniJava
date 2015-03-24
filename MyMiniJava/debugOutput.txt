@@ -1,1 +1,1370 @@
 Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\treevisitor.java
+class TreeVisitor { 
+   public static Void main ( String [] a ) { 
+       System.out.println ( new TV (). Start (  ) ) ;
+   }
+}
+
+class TV { 
+    public int Start ( ) { 
+        MyVisitor v ;
+        int nti ;
+        bool ntb ;
+        Tree root ;
+        root = new Tree ();
+        ntb =  root . Init ( 16  );
+        ntb =  root . Print (  );
+        System.out.println ( 100000000 ) ;
+        ntb =  root . Insert ( 8  );
+        ntb =  root . Insert ( 24  );
+        ntb =  root . Insert ( 4  );
+        ntb =  root . Insert ( 12  );
+        ntb =  root . Insert ( 20  );
+        ntb =  root . Insert ( 28  );
+        ntb =  root . Insert ( 14  );
+        ntb =  root . Print (  );
+        System.out.println ( 100000000 ) ;
+        v = new MyVisitor ();
+        System.out.println ( 50000000 ) ;
+        nti =  root . accept (  v   );
+        System.out.println ( 100000000 ) ;
+        System.out.println (  root . Search ( 24  ) ) ;
+        System.out.println (  root . Search ( 12  ) ) ;
+        System.out.println (  root . Search ( 16  ) ) ;
+        System.out.println (  root . Search ( 50  ) ) ;
+        System.out.println (  root . Search ( 12  ) ) ;
+        ntb =  root . Delete ( 12  );
+        ntb =  root . Print (  );
+        System.out.println (  root . Search ( 12  ) ) ;
+
+        return 0;
+    }
+
+}
+
+class Tree { 
+    Tree my_null ;
+    bool has_right ;
+    bool has_left ;
+    int key ;
+    Tree right ;
+    Tree left ;
+    public int accept ( Visitor v ) { 
+        int nti ;
+        System.out.println ( 333 ) ;
+        nti =  v . visit ( this  );
+
+        return 0;
+    }
+    public bool RecPrint ( Tree node ) { 
+        bool ntb ;
+        if (  node . GetHas_Left (  ) )
+            {
+                ntb = this. RecPrint (  node . GetLeft (  )  );
+            }
+        else
+            ntb = true;
+        System.out.println (  node . GetKey (  ) ) ;
+        if (  node . GetHas_Right (  ) )
+            {
+                ntb = this. RecPrint (  node . GetRight (  )  );
+            }
+        else
+            ntb = true;
+
+        return true;
+    }
+    public bool Print ( ) { 
+        Tree current_node ;
+        bool ntb ;
+        current_node = this;
+        ntb = this. RecPrint (  current_node   );
+
+        return true;
+    }
+    public int Search ( int v_key ) { 
+        int key_aux ;
+        bool cont ;
+        int ifound ;
+        Tree current_node ;
+        current_node = this;
+        cont = true;
+        ifound = 0;
+        while (  cont  )
+            {
+                key_aux =  current_node . GetKey (  );
+                if (  v_key  <  key_aux  )
+                    if (  current_node . GetHas_Left (  ) )
+                        current_node =  current_node . GetLeft (  );
+                    else
+                        cont = false;
+                else
+                    if (  key_aux  <  v_key  )
+                        if (  current_node . GetHas_Right (  ) )
+                            current_node =  current_node . GetRight (  );
+                        else
+                            cont = false;
+                    else
+                        {
+                            ifound = 1;
+                            cont = false;
+                        }
+        }
+
+    return  ifound ;
+}
+public bool RemoveLeft ( Tree p_node , Tree c_node ) { 
+    bool ntb ;
+    while (  c_node . GetHas_Left (  ) )
+        {
+            ntb =  c_node . SetKey ( (  c_node . GetLeft (  ) ). GetKey (  )  );
+            p_node =  c_node ;
+            c_node =  c_node . GetLeft (  );
+        }
+    ntb =  p_node . SetLeft (  my_null   );
+    ntb =  p_node . SetHas_Left ( false  );
+
+    return true;
+}
+public bool RemoveRight ( Tree p_node , Tree c_node ) { 
+    bool ntb ;
+    while (  c_node . GetHas_Right (  ) )
+        {
+            ntb =  c_node . SetKey ( (  c_node . GetRight (  ) ). GetKey (  )  );
+            p_node =  c_node ;
+            c_node =  c_node . GetRight (  );
+        }
+    ntb =  p_node . SetRight (  my_null   );
+    ntb =  p_node . SetHas_Right ( false  );
+
+    return true;
+}
+public bool Remove ( Tree p_node , Tree c_node ) { 
+    int auxkey2 ;
+    int auxkey1 ;
+    bool ntb ;
+    if (  c_node . GetHas_Left (  ) )
+        ntb = this. RemoveLeft (  p_node  ,  c_node   );
+    else
+        if (  c_node . GetHas_Right (  ) )
+            ntb = this. RemoveRight (  p_node  ,  c_node   );
+        else
+            {
+                auxkey1 =  c_node . GetKey (  );
+                auxkey2 = (  p_node . GetLeft (  ) ). GetKey (  );
+                if ( this. Compare (  auxkey1  ,  auxkey2   ) )
+                    {
+                        ntb =  p_node . SetLeft (  my_null   );
+                        ntb =  p_node . SetHas_Left ( false  );
+                    }
+                else
+                    {
+                        ntb =  p_node . SetRight (  my_null   );
+                        ntb =  p_node . SetHas_Right ( false  );
+                    }
+        }
+
+return true;
+}
+public bool Delete ( int v_key ) { 
+    int key_aux ;
+    bool is_root ;
+    bool ntb ;
+    bool found ;
+    bool cont ;
+    Tree parent_node ;
+    Tree current_node ;
+    current_node = this;
+    parent_node = this;
+    cont = true;
+    found = false;
+    is_root = true;
+    while (  cont  )
+        {
+            key_aux =  current_node . GetKey (  );
+            if (  v_key  <  key_aux  )
+                if (  current_node . GetHas_Left (  ) )
+                    {
+                        parent_node =  current_node ;
+                        current_node =  current_node . GetLeft (  );
+                    }
+                else
+                    cont = false;
+            else
+                if (  key_aux  <  v_key  )
+                    if (  current_node . GetHas_Right (  ) )
+                        {
+                            parent_node =  current_node ;
+                            current_node =  current_node . GetRight (  );
+                        }
+                    else
+                        cont = false;
+                else
+                    {
+                        if (  is_root  )
+                            if ( !  current_node . GetHas_Right (  ) && !  current_node . GetHas_Left (  ) )
+                                ntb = true;
+                            else
+                                ntb = this. Remove (  parent_node  ,  current_node   );
+                        else
+                            ntb = this. Remove (  parent_node  ,  current_node   );
+                        found = true;
+                        cont = false;
+                    }
+        is_root = false;
+    }
+
+return  found ;
+}
+public bool Insert ( int v_key ) { 
+    int key_aux ;
+    bool cont ;
+    Tree current_node ;
+    bool ntb ;
+    Tree new_node ;
+    new_node = new Tree ();
+    ntb =  new_node . Init (  v_key   );
+    current_node = this;
+    cont = true;
+    while (  cont  )
+        {
+            key_aux =  current_node . GetKey (  );
+            if (  v_key  <  key_aux  )
+                {
+                    if (  current_node . GetHas_Left (  ) )
+                        current_node =  current_node . GetLeft (  );
+                    else
+                        {
+                            cont = false;
+                            ntb =  current_node . SetHas_Left ( true  );
+                            ntb =  current_node . SetLeft (  new_node   );
+                        }
+            }
+            else
+                {
+                    if (  current_node . GetHas_Right (  ) )
+                        current_node =  current_node . GetRight (  );
+                    else
+                        {
+                            cont = false;
+                            ntb =  current_node . SetHas_Right ( true  );
+                            ntb =  current_node . SetRight (  new_node   );
+                        }
+            }
+}
+
+return true;
+}
+public bool Compare ( int num1 , int num2 ) { 
+    int nti ;
+    bool ntb ;
+    ntb = false;
+    nti =  num2  + 1;
+    if (  num1  <  num2  )
+        ntb = false;
+    else
+        if ( ! (  num1  <  nti  ) )
+            ntb = false;
+        else
+            ntb = true;
+
+    return  ntb ;
+}
+public bool SetHas_Right ( bool val ) { 
+    has_right =  val ;
+
+    return true;
+}
+public bool SetHas_Left ( bool val ) { 
+    has_left =  val ;
+
+    return true;
+}
+public bool GetHas_Left ( ) { 
+
+    return  has_left ;
+}
+public bool GetHas_Right ( ) { 
+
+    return  has_right ;
+}
+public bool SetKey ( int v_key ) { 
+    key =  v_key ;
+
+    return true;
+}
+public int GetKey ( ) { 
+
+    return  key ;
+}
+public Tree GetLeft ( ) { 
+
+    return  left ;
+}
+public Tree GetRight ( ) { 
+
+    return  right ;
+}
+public bool SetLeft ( Tree ln ) { 
+    left =  ln ;
+
+    return true;
+}
+public bool SetRight ( Tree rn ) { 
+    right =  rn ;
+
+    return true;
+}
+public bool Init ( int v_key ) { 
+    key =  v_key ;
+    has_left = false;
+    has_right = false;
+
+    return true;
+}
+
+}
+
+class Visitor { 
+    Tree r ;
+    Tree l ;
+    public int visit ( Tree n ) { 
+        int nti ;
+        if (  n . GetHas_Right (  ) )
+            {
+                r =  n . GetRight (  );
+                nti =  r . accept ( this  );
+            }
+        else
+            nti = 0;
+        if (  n . GetHas_Left (  ) )
+            {
+                l =  n . GetLeft (  );
+                nti =  l . accept ( this  );
+            }
+        else
+            nti = 0;
+
+        return 0;
+    }
+
+}
+
+class MyVisitor extends Visitor { 
+    public int visit ( Tree n ) { 
+        int nti ;
+        if (  n . GetHas_Right (  ) )
+            {
+                r =  n . GetRight (  );
+                nti =  r . accept ( this  );
+            }
+        else
+            nti = 0;
+        System.out.println (  n . GetKey (  ) ) ;
+        if (  n . GetHas_Left (  ) )
+            {
+                l =  n . GetLeft (  );
+                nti =  l . accept ( this  );
+            }
+        else
+            nti = 0;
+
+        return 0;
+    }
+
+}
+Error at 34:20: Unexpected type MyVisitor instead of Visitor
+Error at 361:21: Unexpected type MyVisitor instead of Visitor
+Error at 368:20: Unexpected type MyVisitor instead of Visitor
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\factorial.java
+class Factorial { 
+    public static Void main ( String [] a ) { 
+        System.out.println ( new Fac (). ComputeFac ( 10  ) ) ;
+    }
+}
+
+class Fac { 
+    public int ComputeFac ( int num ) { 
+        int num_aux ;
+        if (  num  < 1 )
+            num_aux = 1;
+        else
+            num_aux =  num  * ( this. ComputeFac (  num  - 1  ) );
+
+        return  num_aux ;
+    }
+
+}
+Symbol table size: 2
+-------------------------------
+Class name : Fac
+
+Class methods: 
+
+ComputeFac
+
+Class variables: 
+
+-------------------------------
+Class name : Factorial
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\binarysearch.java
+class BinarySearch { 
+    public static Void main ( String [] a ) { 
+        System.out.println ( new BS (). Start ( 20  ) ) ;
+    }
+}
+
+class BS { 
+    int size ;
+    int[] number ;
+    public int Init ( int sz ) { 
+        int aux01 ;
+        int aux02 ;
+        int k ;
+        int j ;
+        size =  sz ;
+        number = new int [  sz  ];
+        j = 1;
+        k =  size  + 1;
+        while (  j  < (  size  ) )
+            {
+                aux01 = 2 *  j ;
+                aux02 =  k  - 3;
+                number [  j  ] =  aux01  +  aux02 ;
+                j =  j  + 1;
+                k =  k  - 1;
+            }
+
+        return 0;
+    }
+    public int Print ( ) { 
+        int j ;
+        j = 1;
+        while (  j  < (  size  ) )
+            {
+                System.out.println (  number [  j  ]  ) ;
+                j =  j  + 1;
+            }
+        System.out.println ( 99999 ) ;
+
+        return 0;
+    }
+    public bool Compare ( int num1 , int num2 ) { 
+        int aux02 ;
+        bool retval ;
+        retval = false;
+        aux02 =  num2  + 1;
+        if (  num1  <  num2  )
+            retval = false;
+        else
+            if ( ! (  num1  <  aux02  ) )
+                retval = false;
+            else
+                retval = true;
+
+        return  retval ;
+    }
+    public int Div ( int num ) { 
+        int aux03 ;
+        int count02 ;
+        int count01 ;
+        count01 = 0;
+        count02 = 0;
+        aux03 =  num  - 1;
+        while (  count02  <  aux03  )
+            {
+                count01 =  count01  + 1;
+                count02 =  count02  + 2;
+            }
+
+        return  count01 ;
+    }
+    public bool Search ( int num ) { 
+        int nt ;
+        int aux01 ;
+        int medium ;
+        bool var_cont ;
+        int left ;
+        int right ;
+        bool bs01 ;
+        aux01 = 0;
+        bs01 = false;
+        right =  number . length;
+        right =  right  - 1;
+        left = 0;
+        var_cont = true;
+        while (  var_cont  )
+            {
+                medium =  left  +  right ;
+                medium = this. Div (  medium   );
+                aux01 =  number [  medium  ] ;
+                if (  num  <  aux01  )
+                    right =  medium  - 1;
+                else
+                    left =  medium  + 1;
+                if ( this. Compare (  aux01  ,  num   ) )
+                    var_cont = false;
+                else
+                    var_cont = true;
+                if (  right  <  left  )
+                    var_cont = false;
+                else
+                    nt = 0;
+            }
+        if ( this. Compare (  aux01  ,  num   ) )
+            bs01 = true;
+        else
+            bs01 = false;
+
+        return  bs01 ;
+    }
+    public int Start ( int sz ) { 
+        int aux02 ;
+        int aux01 ;
+        aux01 = this. Init (  sz   );
+        aux02 = this. Print (  );
+        if ( this. Search ( 8  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+        if ( this. Search ( 19  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+        if ( this. Search ( 20  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+        if ( this. Search ( 21  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+        if ( this. Search ( 37  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+        if ( this. Search ( 38  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+        if ( this. Search ( 39  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+        if ( this. Search ( 50  ) )
+            System.out.println ( 1 ) ;
+        else
+            System.out.println ( 0 ) ;
+
+        return 999;
+    }
+
+}
+Symbol table size: 2
+-------------------------------
+Class name : BS
+
+Class methods: 
+
+Init
+Print
+Compare
+Div
+Search
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : BinarySearch
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\binarytree.java
+class BinaryTree { 
+    public static Void main ( String [] a ) { 
+        System.out.println ( new BT (). Start (  ) ) ;
+    }
+}
+
+class BT { 
+    public int Start ( ) { 
+        int nti ;
+        bool ntb ;
+        Tree root ;
+        root = new Tree ();
+        ntb =  root . Init ( 16  );
+        ntb =  root . Print (  );
+        System.out.println ( 100000000 ) ;
+        ntb =  root . Insert ( 8  );
+        ntb =  root . Print (  );
+        ntb =  root . Insert ( 24  );
+        ntb =  root . Insert ( 4  );
+        ntb =  root . Insert ( 12  );
+        ntb =  root . Insert ( 20  );
+        ntb =  root . Insert ( 28  );
+        ntb =  root . Insert ( 14  );
+        ntb =  root . Print (  );
+        System.out.println (  root . Search ( 24  ) ) ;
+        System.out.println (  root . Search ( 12  ) ) ;
+        System.out.println (  root . Search ( 16  ) ) ;
+        System.out.println (  root . Search ( 50  ) ) ;
+        System.out.println (  root . Search ( 12  ) ) ;
+        ntb =  root . Delete ( 12  );
+        ntb =  root . Print (  );
+        System.out.println (  root . Search ( 12  ) ) ;
+
+        return 0;
+    }
+
+}
+
+class Tree { 
+    Tree my_null ;
+    bool has_right ;
+    bool has_left ;
+    int key ;
+    Tree right ;
+    Tree left ;
+    public bool RecPrint ( Tree node ) { 
+        bool ntb ;
+        if (  node . GetHas_Left (  ) )
+            {
+                ntb = this. RecPrint (  node . GetLeft (  )  );
+            }
+        else
+            ntb = true;
+        System.out.println (  node . GetKey (  ) ) ;
+        if (  node . GetHas_Right (  ) )
+            {
+                ntb = this. RecPrint (  node . GetRight (  )  );
+            }
+        else
+            ntb = true;
+
+        return true;
+    }
+    public bool Print ( ) { 
+        bool ntb ;
+        Tree current_node ;
+        current_node = this;
+        ntb = this. RecPrint (  current_node   );
+
+        return true;
+    }
+    public int Search ( int v_key ) { 
+        int key_aux ;
+        Tree current_node ;
+        int ifound ;
+        bool cont ;
+        current_node = this;
+        cont = true;
+        ifound = 0;
+        while (  cont  )
+            {
+                key_aux =  current_node . GetKey (  );
+                if (  v_key  <  key_aux  )
+                    if (  current_node . GetHas_Left (  ) )
+                        current_node =  current_node . GetLeft (  );
+                    else
+                        cont = false;
+                else
+                    if (  key_aux  <  v_key  )
+                        if (  current_node . GetHas_Right (  ) )
+                            current_node =  current_node . GetRight (  );
+                        else
+                            cont = false;
+                    else
+                        {
+                            ifound = 1;
+                            cont = false;
+                        }
+        }
+
+    return  ifound ;
+}
+public bool RemoveLeft ( Tree p_node , Tree c_node ) { 
+    bool ntb ;
+    while (  c_node . GetHas_Left (  ) )
+        {
+            ntb =  c_node . SetKey ( (  c_node . GetLeft (  ) ). GetKey (  )  );
+            p_node =  c_node ;
+            c_node =  c_node . GetLeft (  );
+        }
+    ntb =  p_node . SetLeft (  my_null   );
+    ntb =  p_node . SetHas_Left ( false  );
+
+    return true;
+}
+public bool RemoveRight ( Tree p_node , Tree c_node ) { 
+    bool ntb ;
+    while (  c_node . GetHas_Right (  ) )
+        {
+            ntb =  c_node . SetKey ( (  c_node . GetRight (  ) ). GetKey (  )  );
+            p_node =  c_node ;
+            c_node =  c_node . GetRight (  );
+        }
+    ntb =  p_node . SetRight (  my_null   );
+    ntb =  p_node . SetHas_Right ( false  );
+
+    return true;
+}
+public bool Remove ( Tree p_node , Tree c_node ) { 
+    int auxkey2 ;
+    int auxkey1 ;
+    bool ntb ;
+    if (  c_node . GetHas_Left (  ) )
+        ntb = this. RemoveLeft (  p_node  ,  c_node   );
+    else
+        if (  c_node . GetHas_Right (  ) )
+            ntb = this. RemoveRight (  p_node  ,  c_node   );
+        else
+            {
+                auxkey1 =  c_node . GetKey (  );
+                auxkey2 = (  p_node . GetLeft (  ) ). GetKey (  );
+                if ( this. Compare (  auxkey1  ,  auxkey2   ) )
+                    {
+                        ntb =  p_node . SetLeft (  my_null   );
+                        ntb =  p_node . SetHas_Left ( false  );
+                    }
+                else
+                    {
+                        ntb =  p_node . SetRight (  my_null   );
+                        ntb =  p_node . SetHas_Right ( false  );
+                    }
+        }
+
+return true;
+}
+public bool Delete ( int v_key ) { 
+    bool ntb ;
+    int key_aux ;
+    bool is_root ;
+    bool found ;
+    bool cont ;
+    Tree parent_node ;
+    Tree current_node ;
+    current_node = this;
+    parent_node = this;
+    cont = true;
+    found = false;
+    is_root = true;
+    while (  cont  )
+        {
+            key_aux =  current_node . GetKey (  );
+            if (  v_key  <  key_aux  )
+                if (  current_node . GetHas_Left (  ) )
+                    {
+                        parent_node =  current_node ;
+                        current_node =  current_node . GetLeft (  );
+                    }
+                else
+                    cont = false;
+            else
+                if (  key_aux  <  v_key  )
+                    if (  current_node . GetHas_Right (  ) )
+                        {
+                            parent_node =  current_node ;
+                            current_node =  current_node . GetRight (  );
+                        }
+                    else
+                        cont = false;
+                else
+                    {
+                        if (  is_root  )
+                            if ( ( !  current_node . GetHas_Right (  ) ) && ( !  current_node . GetHas_Left (  ) ) )
+                                ntb = true;
+                            else
+                                ntb = this. Remove (  parent_node  ,  current_node   );
+                        else
+                            ntb = this. Remove (  parent_node  ,  current_node   );
+                        found = true;
+                        cont = false;
+                    }
+        is_root = false;
+    }
+
+return  found ;
+}
+public bool Insert ( int v_key ) { 
+    Tree current_node ;
+    int key_aux ;
+    bool cont ;
+    bool ntb ;
+    Tree new_node ;
+    new_node = new Tree ();
+    ntb =  new_node . Init (  v_key   );
+    current_node = this;
+    cont = true;
+    while (  cont  )
+        {
+            key_aux =  current_node . GetKey (  );
+            if (  v_key  <  key_aux  )
+                {
+                    if (  current_node . GetHas_Left (  ) )
+                        current_node =  current_node . GetLeft (  );
+                    else
+                        {
+                            cont = false;
+                            ntb =  current_node . SetHas_Left ( true  );
+                            ntb =  current_node . SetLeft (  new_node   );
+                        }
+            }
+            else
+                {
+                    if (  current_node . GetHas_Right (  ) )
+                        current_node =  current_node . GetRight (  );
+                    else
+                        {
+                            cont = false;
+                            ntb =  current_node . SetHas_Right ( true  );
+                            ntb =  current_node . SetRight (  new_node   );
+                        }
+            }
+}
+
+return true;
+}
+public bool Compare ( int num1 , int num2 ) { 
+    int nti ;
+    bool ntb ;
+    ntb = false;
+    nti =  num2  + 1;
+    if (  num1  <  num2  )
+        ntb = false;
+    else
+        if ( ! (  num1  <  nti  ) )
+            ntb = false;
+        else
+            ntb = true;
+
+    return  ntb ;
+}
+public bool SetHas_Right ( bool val ) { 
+    has_right =  val ;
+
+    return true;
+}
+public bool SetHas_Left ( bool val ) { 
+    has_left =  val ;
+
+    return true;
+}
+public bool GetHas_Left ( ) { 
+
+    return  has_left ;
+}
+public bool GetHas_Right ( ) { 
+
+    return  has_right ;
+}
+public bool SetKey ( int v_key ) { 
+    key =  v_key ;
+
+    return true;
+}
+public int GetKey ( ) { 
+
+    return  key ;
+}
+public Tree GetLeft ( ) { 
+
+    return  left ;
+}
+public Tree GetRight ( ) { 
+
+    return  right ;
+}
+public bool SetLeft ( Tree ln ) { 
+    left =  ln ;
+
+    return true;
+}
+public bool SetRight ( Tree rn ) { 
+    right =  rn ;
+
+    return true;
+}
+public bool Init ( int v_key ) { 
+    key =  v_key ;
+    has_left = false;
+    has_right = false;
+
+    return true;
+}
+
+}
+Symbol table size: 3
+-------------------------------
+Class name : BT
+
+Class methods: 
+
+Start
+
+Class variables: 
+
+-------------------------------
+Class name : BinaryTree
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+Class name : Tree
+
+Class methods: 
+
+RecPrint
+Print
+Search
+RemoveLeft
+RemoveRight
+Remove
+Delete
+Insert
+Compare
+SetHas_Right
+SetHas_Left
+GetHas_Left
+GetHas_Right
+SetKey
+GetKey
+GetLeft
+GetRight
+SetLeft
+SetRight
+Init
+
+Class variables: 
+
+my_null
+has_right
+has_left
+key
+right
+left
+-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\bubblesort.java
+class BubbleSort { 
+public static Void main ( String [] a ) { 
+    System.out.println ( new BBS (). Start ( 10  ) ) ;
+}
+}
+
+class BBS { 
+    int size ;
+    int[] number ;
+    public int Init ( int sz ) { 
+        size =  sz ;
+        number = new int [  sz  ];
+        number [ 0 ] = 20;
+        number [ 1 ] = 7;
+        number [ 2 ] = 12;
+        number [ 3 ] = 18;
+        number [ 4 ] = 2;
+        number [ 5 ] = 11;
+        number [ 6 ] = 6;
+        number [ 7 ] = 9;
+        number [ 8 ] = 19;
+        number [ 9 ] = 5;
+
+        return 0;
+    }
+    public int Print ( ) { 
+        int j ;
+        j = 0;
+        while (  j  < (  size  ) )
+            {
+                System.out.println (  number [  j  ]  ) ;
+                j =  j  + 1;
+            }
+
+        return 0;
+    }
+    public int Sort ( ) { 
+        int t ;
+        int j ;
+        int aux07 ;
+        int aux06 ;
+        int aux05 ;
+        int aux04 ;
+        int aux02 ;
+        int i ;
+        int nt ;
+        i =  size  - 1;
+        aux02 = 0 - 1;
+        while (  aux02  <  i  )
+            {
+                j = 1;
+                while (  j  < (  i  + 1 ) )
+                    {
+                        aux07 =  j  - 1;
+                        aux04 =  number [  aux07  ] ;
+                        aux05 =  number [  j  ] ;
+                        if (  aux05  <  aux04  )
+                            {
+                                aux06 =  j  - 1;
+                                t =  number [  aux06  ] ;
+                                number [  aux06  ] =  number [  j  ] ;
+                                number [  j  ] =  t ;
+                            }
+                        else
+                            nt = 0;
+                        j =  j  + 1;
+                    }
+                i =  i  - 1;
+            }
+
+        return 0;
+    }
+    public int Start ( int sz ) { 
+        int aux01 ;
+        aux01 = this. Init (  sz   );
+        aux01 = this. Print (  );
+        System.out.println ( 99999 ) ;
+        aux01 = this. Sort (  );
+        aux01 = this. Print (  );
+
+        return 0;
+    }
+
+}
+Symbol table size: 2
+-------------------------------
+Class name : BBS
+
+Class methods: 
+
+Init
+Print
+Sort
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : BubbleSort
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\linearsearch.java
+class LinearSearch { 
+    public static Void main ( String [] a ) { 
+        System.out.println ( new LS (). Start ( 10  ) ) ;
+    }
+}
+
+class LS { 
+    int size ;
+    int[] number ;
+    public int Init ( int sz ) { 
+        int aux02 ;
+        int aux01 ;
+        int k ;
+        int j ;
+        size =  sz ;
+        number = new int [  sz  ];
+        j = 1;
+        k =  size  + 1;
+        while (  j  < (  size  ) )
+            {
+                aux01 = 2 *  j ;
+                aux02 =  k  - 3;
+                number [  j  ] =  aux01  +  aux02 ;
+                j =  j  + 1;
+                k =  k  - 1;
+            }
+
+        return 0;
+    }
+    public int Search ( int num ) { 
+        int nt ;
+        int aux02 ;
+        int aux01 ;
+        int ifound ;
+        bool ls01 ;
+        int j ;
+        j = 1;
+        ls01 = false;
+        ifound = 0;
+        while (  j  < (  size  ) )
+            {
+                aux01 =  number [  j  ] ;
+                aux02 =  num  + 1;
+                if (  aux01  <  num  )
+                    nt = 0;
+                else
+                    if ( ! (  aux01  <  aux02  ) )
+                        nt = 0;
+                    else
+                        {
+                            ls01 = true;
+                            ifound = 1;
+                            j =  size ;
+                        }
+            j =  j  + 1;
+        }
+
+    return  ifound ;
+}
+public int Print ( ) { 
+    int j ;
+    j = 1;
+    while (  j  < (  size  ) )
+        {
+            System.out.println (  number [  j  ]  ) ;
+            j =  j  + 1;
+        }
+
+    return 0;
+}
+public int Start ( int sz ) { 
+    int aux02 ;
+    int aux01 ;
+    aux01 = this. Init (  sz   );
+    aux02 = this. Print (  );
+    System.out.println ( 9999 ) ;
+    System.out.println ( this. Search ( 8  ) ) ;
+    System.out.println ( this. Search ( 12  ) ) ;
+    System.out.println ( this. Search ( 17  ) ) ;
+    System.out.println ( this. Search ( 50  ) ) ;
+
+    return 55;
+}
+
+}
+Symbol table size: 2
+-------------------------------
+Class name : LS
+
+Class methods: 
+
+Init
+Search
+Print
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : LinearSearch
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\quicksort.java
+class QuickSort { 
+public static Void main ( String [] a ) { 
+    System.out.println ( new QS (). Start ( 10  ) ) ;
+}
+}
+
+class QS { 
+    int size ;
+    int[] number ;
+    public int Init ( int sz ) { 
+        size =  sz ;
+        number = new int [  sz  ];
+        number [ 0 ] = 20;
+        number [ 1 ] = 7;
+        number [ 2 ] = 12;
+        number [ 3 ] = 18;
+        number [ 4 ] = 2;
+        number [ 5 ] = 11;
+        number [ 6 ] = 6;
+        number [ 7 ] = 9;
+        number [ 8 ] = 19;
+        number [ 9 ] = 5;
+
+        return 0;
+    }
+    public int Print ( ) { 
+        int j ;
+        j = 0;
+        while (  j  < (  size  ) )
+            {
+                System.out.println (  number [  j  ]  ) ;
+                j =  j  + 1;
+            }
+
+        return 0;
+    }
+    public int Sort ( int left , int right ) { 
+        int aux03 ;
+        bool cont02 ;
+        bool cont01 ;
+        int t ;
+        int nt ;
+        int j ;
+        int i ;
+        int v ;
+        t = 0;
+        if (  left  <  right  )
+            {
+                v =  number [  right  ] ;
+                i =  left  - 1;
+                j =  right ;
+                cont01 = true;
+                while (  cont01  )
+                    {
+                        cont02 = true;
+                        while (  cont02  )
+                            {
+                                i =  i  + 1;
+                                aux03 =  number [  i  ] ;
+                                if ( ! (  aux03  <  v  ) )
+                                    cont02 = false;
+                                else
+                                    cont02 = true;
+                            }
+                        cont02 = true;
+                        while (  cont02  )
+                            {
+                                j =  j  - 1;
+                                aux03 =  number [  j  ] ;
+                                if ( ! (  v  <  aux03  ) )
+                                    cont02 = false;
+                                else
+                                    cont02 = true;
+                            }
+                        t =  number [  i  ] ;
+                        number [  i  ] =  number [  j  ] ;
+                        number [  j  ] =  t ;
+                        if (  j  < (  i  + 1 ) )
+                            cont01 = false;
+                        else
+                            cont01 = true;
+                    }
+                number [  j  ] =  number [  i  ] ;
+                number [  i  ] =  number [  right  ] ;
+                number [  right  ] =  t ;
+                nt = this. Sort (  left  ,  i  - 1  );
+                nt = this. Sort (  i  + 1 ,  right   );
+            }
+        else
+            nt = 0;
+
+        return 0;
+    }
+    public int Start ( int sz ) { 
+        int aux01 ;
+        aux01 = this. Init (  sz   );
+        aux01 = this. Print (  );
+        System.out.println ( 9999 ) ;
+        aux01 =  size  - 1;
+        aux01 = this. Sort ( 0 ,  aux01   );
+        aux01 = this. Print (  );
+
+        return 0;
+    }
+
+}
+Symbol table size: 2
+-------------------------------
+Class name : QS
+
+Class methods: 
+
+Init
+Print
+Sort
+Start
+
+Class variables: 
+
+size
+number
+-------------------------------
+Class name : QuickSort
+
+Class methods: 
+
+main
+
+Class variables: 
+
+a
+-------------------------------
+-------------------------------
+
+
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\errorSamples\cycle.java
+class TreeVisitor { 
+    public static Void main ( String [] a ) { 
+        System.out.println ( new TV (). Start (  ) ) ;
+    }
+}
+
+class TV extends MyVisitor { 
+
+}
+
+class Tree extends TV { 
+
+}
+
+class Visitor extends Tree { 
+
+}
+
+class MyVisitor extends Visitor { 
+
+}
+Error at 7:29: Undefined method at <Start>
+Error at 7:2: Unexpected type TV instead of int
+Error at 11:1: TV has cyclic inheritance
+Error at 16:1: Tree has cyclic inheritance
+Error at 22:1: Visitor has cyclic inheritance
+Error at 27:1: MyVisitor has cyclic inheritance

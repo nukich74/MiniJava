@@ -8,31 +8,35 @@
 #include <ConstantsAndComClasses.h>
 
 namespace Translate {
+
+using namespace IRTree;
+
 //IVisitor
-void CIRTreeVisitor::Visit( const CProgram& p )
+void CIRTreeVisitor::Visit( const Tree::CProgram& p )
 {
-	const IMainClass* mc;
+	const Tree::IMainClass* mc;
 	if( ( mc = p.GetMainClass() ) != 0 ) {
 		mc->Accept( this );
 	} else {
 		throw new std::exception( "no main class???" );
 	}
-	const IClassDeclList* cdl;
+	const Tree::IClassDeclList* cdl;
 	if( ( cdl = p.GetClassDeclList() ) != 0 ) {
 		cdl->Accept( this );
 	}
 }
 
-void CIRTreeVisitor::Visit( const CMainClass& p )
+void CIRTreeVisitor::Visit( const Tree::CMainClass& p )
 {
 	//«апомниаем им€ класса, чтобы потом имена методов нормально можно было
 	className = p.GetName();
 	currentFrame = new StackFrame::CFrame( className + "_MainClass", 0 );
-	const IStmt* smt;
+	const Tree::IStmt* smt;
 	if( ( smt = p.GetStmt() ) != 0 ) {
 		smt->Accept( this );
 	}
-	currentFrame->funcRoot = smt;
+	//!!!!
+	//currentFrame->funcRoot = smt;
 	lastReturnedExp = 0;
 	lastReturnedStm = 0;
 	lastReturnedExpList = 0;
@@ -41,11 +45,11 @@ void CIRTreeVisitor::Visit( const CMainClass& p )
 	className = "";
 }
 
-void CIRTreeVisitor::Visit( const CClassDecl& p )
+void CIRTreeVisitor::Visit( const Tree::CClassDecl& p )
 {
 	className = p.GetName();
-	const IVarDeclList* vdl; 
-	const IMethodDeclList* mdl;
+	const Tree::IVarDeclList* vdl; 
+	const Tree::IMethodDeclList* mdl;
 	if( ( vdl = p.GetVarDeclList() ) != 0 ) {
 		vdl->Accept( this );
 	}
@@ -57,11 +61,11 @@ void CIRTreeVisitor::Visit( const CClassDecl& p )
 
 }
 
-void CIRTreeVisitor::Visit( const CClassDeclList& p )
+void CIRTreeVisitor::Visit( const Tree::CClassDeclList& p )
 {
 	//обход списка
-	const IClassDecl* cd;
-	const IClassDeclList* cdl;
+	const Tree::IClassDecl* cd;
+	const Tree::IClassDeclList* cdl;
 	if( ( cd = p.GetCurrent() ) != 0 ) {
 		cd->Accept( this );
 	}
@@ -71,14 +75,14 @@ void CIRTreeVisitor::Visit( const CClassDeclList& p )
 }
 
 
-void CIRTreeVisitor::Visit( const CExtendClassDecl& p )
+void CIRTreeVisitor::Visit( const Tree::CExtendClassDecl& p )
 {
 	//–еализовать поиск по базовому классу
 	className = p.GetClassName();
 	std::string baseClassName = p.GetBaseClassName();
 	className = baseClassName + "." + className;
-	const IVarDeclList* vdl;
-	const IMethodDeclList* mdl;
+	const Tree::IVarDeclList* vdl;
+	const Tree::IMethodDeclList* mdl;
 	if( ( vdl = p.GetVarDeclList() ) != 0 ) {
 		vdl->Accept( this );
 	}
@@ -88,13 +92,13 @@ void CIRTreeVisitor::Visit( const CExtendClassDecl& p )
 	className = "";
 }
 
-void CIRTreeVisitor::Visit( const CVarDecl& p )
+void CIRTreeVisitor::Visit( const Tree::CVarDecl& p )
 {
 	//смысла нет заходить, там все-равно не обрабатываем типы, дл€ ир дерева не нужна инфа
 	p.GetType()->Accept( this );
 }
 
-void CIRTreeVisitor::Visit( const CMethodDecl& p )
+void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 {
 	IStmt* newFuncRoot;
 	StackFrame::CFrame* newFrame = new StackFrame::CFrame( p.GetName(), 0 );
@@ -132,14 +136,14 @@ void CIRTreeVisitor::Visit( const CMethodDecl& p )
 	lastReturnedStm = 0;
 }
 
-void CIRTreeVisitor::Visit( const CGroupStmt& p ) 
+void CIRTreeVisitor::Visit( const Tree::CGroupStmt& p ) 
 {
 	if( p.GetStmtList() != 0 ) {
 		p.GetStmtList()->Accept( this );
 	}
 }
 	
-void CIRTreeVisitor::Visit( const CIfStmt& p )
+void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 {
 	if( p.GetExp() != 0 ) {
 		p.GetExp()->Accept( this );
@@ -166,7 +170,7 @@ void CIRTreeVisitor::Visit( const CIfStmt& p )
 	lastReturnedStm = new IRTree::CSeq( conv.ToConditional( trueTempLabel, falseTempLabel ), trueStm, falseStm );
 }
 
-void CIRTreeVisitor::Visit( const CWhileStmt& p )
+void CIRTreeVisitor::Visit( const Tree::CWhileStmt& p )
 {
 	Temp::CLabel* beforeConditionLabelTemp = new Temp::CLabel();
 	Temp::CLabel* inLoopLabelTemp = new Temp::CLabel();
@@ -186,7 +190,7 @@ void CIRTreeVisitor::Visit( const CWhileStmt& p )
 	lastReturnedExp = 0;
 }
 
-void CIRTreeVisitor::Visit( const CSOPStmt& p )
+void CIRTreeVisitor::Visit( const Tree::CSOPStmt& p )
 {
 	p.GetExpr()->Accept( this );
 	//в lastReturnedExp будет то, что нужно распечатать
@@ -201,7 +205,7 @@ void CIRTreeVisitor::Visit( const CSOPStmt& p )
 	lastReturnedStm = new IRTree::CExp( funcCall );
 }
 
-void CIRTreeVisitor::Visit( const CAssignStmt& p )
+void CIRTreeVisitor::Visit( const Tree::CAssignStmt& p )
 {
 	const IExpr* leftExp = currentFrame->GetAccess( p.GetName() )->GetExp( currentFrame );
 	assert( p.GetExpr() != 0 );
@@ -211,7 +215,7 @@ void CIRTreeVisitor::Visit( const CAssignStmt& p )
 	lastReturnedStm = new IRTree::CMove( leftExp, rightExp );
 }
 
-void CIRTreeVisitor::Visit( const CAssignExprStmt& p )
+void CIRTreeVisitor::Visit( const Tree::CAssignExprStmt& p )
 {
 	const IExpr* leftExp = currentFrame->GetAccess( p.GetName() )->GetExp( currentFrame );
 	assert( p.GetExprId() != 0 );
@@ -225,7 +229,7 @@ void CIRTreeVisitor::Visit( const CAssignExprStmt& p )
 	lastReturnedStm = new IRTree::CMove( leftExp, rightExp );
 }
 
-void CIRTreeVisitor::Visit( const COpExpr& p )
+void CIRTreeVisitor::Visit( const Tree::COpExpr& p )
 {
 	p.GetExprFirst()->Accept( this );
 	const IExpr* first = lastReturnedExp;
@@ -257,7 +261,7 @@ void CIRTreeVisitor::Visit( const COpExpr& p )
 	lastReturnedExp = new IRTree::CMem( new IRTree::CBinop( binOp, first, second ) ) ;
 }
 
-void CIRTreeVisitor::Visit( const CExExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CExExpr& p )
 {
 	assert( p.GetExp() != 0 && p.GetExpId() != 0 );
 	p.GetExp()->Accept( this );
@@ -271,7 +275,7 @@ void CIRTreeVisitor::Visit( const CExExpr& p )
 	//WTF????
 }
 
-void CIRTreeVisitor::Visit( const CMethodCallExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CMethodCallExpr& p )
 {
 	p.GetExp()->Accept( this );
 	const IExpr* exprToBeCalled = lastReturnedExp;
@@ -293,30 +297,30 @@ void CIRTreeVisitor::Visit( const CMethodCallExpr& p )
 	lastReturnedExpList = 0;
 }
 
-void CIRTreeVisitor::Visit( const CIntExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CIntExpr& p )
 {
 	lastReturnedExp = new IRTree::CConst( p.GetNum() );
 }
 
-void CIRTreeVisitor::Visit( const CTrueExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CTrueExpr& p )
 {
 	//у нас низкий уровень => нет никаких булов
 	lastReturnedExp = new IRTree::CConst( 1 );
 }
 
-void CIRTreeVisitor::Visit( const CFalseExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CFalseExpr& p )
 {
 	//низкий уровень => нет булов
 	lastReturnedExp = new IRTree::CConst( 0 ); 
 }
 
-void CIRTreeVisitor::Visit( const CThisExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CThisExpr& p )
 {
 	//???????????????????????????????????????//
 	lastReturnedExp = new IRTree::CTemp( currentFrame->GetStackPointer() );
 }
 
-void CIRTreeVisitor::Visit( const CNewIntExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CNewIntExpr& p )
 {
 	//получаем размер
 	assert( p.GetExpr() != 0 );
@@ -335,7 +339,7 @@ void CIRTreeVisitor::Visit( const CNewIntExpr& p )
 	lastReturnedExp = new IRTree::CEseq( mallocMoveMemset, tempTemp );
 }
 
-void CIRTreeVisitor::Visit( const CNewIdExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CNewIdExpr& p )
 {
 	Temp::CLabel* mallocLabel = new Temp::CLabel( "malloc" );
 	// ѕо хорошему здесь надо посчитать сколько всего полей у класса и выделить столько машинных слов
@@ -349,7 +353,7 @@ void CIRTreeVisitor::Visit( const CNewIdExpr& p )
 	lastReturnedExp = new IRTree::CEseq( mallocMoveMemset, tempTemp );
 }
 
-void CIRTreeVisitor::Visit( const CNotExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CNotExpr& p )
 {
 	//-(exp - 1)
 	p.GetExpr()->Accept( this );
@@ -358,7 +362,7 @@ void CIRTreeVisitor::Visit( const CNotExpr& p )
 		new IRTree::CBinop( IRTree::BinOp::BO_Minus, lastReturnedExp, new IRTree::CConst( 1 ) )  );
 }
 
-void CIRTreeVisitor::Visit( const CBrExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CBrExpr& p )
 {
 	p.GetExpr()->Accept( this );
 	//теперь в lastReturnedExp записан результат выполнени€ операции экспр в скобке, полагаю его не вижу подход€щего класса дл€ оборачивани€ и есть ли в нем смысл?
@@ -366,19 +370,19 @@ void CIRTreeVisitor::Visit( const CBrExpr& p )
 
 
 //не используетс€
-void CIRTreeVisitor::Visit( const CNameExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CNameExpr& p )
 {
 	throw new std::exception( "CNAMEEXPR DOESN'T USED" );
 	//lastReturnedStm = new IRTree::CLabel( new Temp::CLabel( p.GetName() ) );
 }
 
-void CIRTreeVisitor::Visit( const CIdExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CIdExpr& p )
 {
 	//получить по имени переменную из фрэйма
 	lastReturnedStm = new IRTree::CLabel( new Temp::CLabel( p.GetId() ) );
 }
 
-void CIRTreeVisitor::Visit( const CLengthExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CLengthExpr& p )
 {
 	p.GetExp()->Accept( this );
 	const IExpr* varExp = lastReturnedExp;
@@ -393,19 +397,19 @@ void CIRTreeVisitor::Visit( const CLengthExpr& p )
 	lastReturnedExp = new IRTree::CEseq( movingCommand, tempVar );
 }
 
-void CIRTreeVisitor::Visit( const CUnaryMinusExpr& p )
+void CIRTreeVisitor::Visit( const Tree::CUnaryMinusExpr& p )
 {
 	p.GetExpr()->Accept( this );
 	//0-expr
 	lastReturnedExp = new IRTree::CBinop( IRTree::BinOp::BO_Minus, new IRTree::CConst(0), lastReturnedExp );
 }
 
-void CIRTreeVisitor::Visit( const CTypeName& p )
+void CIRTreeVisitor::Visit( const Tree::CTypeName& p )
 {
 	//нет мыслей
 }
 
-void CIRTreeVisitor::Visit( const CExprList& p )
+void CIRTreeVisitor::Visit( const Tree::CExprList& p )
 {	
 	p.GetCurrent()->Accept( this );
 
@@ -416,7 +420,7 @@ void CIRTreeVisitor::Visit( const CExprList& p )
 	lastReturnedExpList = new IRTree::CExprList( lastReturnedExp, lastReturnedExpList );
 }
 
-void CIRTreeVisitor::Visit( const CFormalList& p )
+void CIRTreeVisitor::Visit( const Tree::CFormalList& p )
 {
 	p.GetType()->Accept( this );
 	typesAndVariables[p.GetName()] = p.GetType();
@@ -426,7 +430,7 @@ void CIRTreeVisitor::Visit( const CFormalList& p )
 	
 }
 
-void CIRTreeVisitor::Visit( const CVarDeclList& p )
+void CIRTreeVisitor::Visit( const Tree::CVarDeclList& p )
 {
 	assert( p.GetCurrent() != 0 );
 	p.GetCurrent()->Accept( this );
@@ -435,7 +439,7 @@ void CIRTreeVisitor::Visit( const CVarDeclList& p )
 	}
 }
 
-void CIRTreeVisitor::Visit( const CMethodDeclList& p )
+void CIRTreeVisitor::Visit( const Tree::CMethodDeclList& p )
 {
 	assert( p.GetCurrent() != 0 );
 	p.Accept( this );
@@ -444,7 +448,7 @@ void CIRTreeVisitor::Visit( const CMethodDeclList& p )
 	}
 }
 
-void CIRTreeVisitor::Visit( const CStmtList& p )
+void CIRTreeVisitor::Visit( const Tree::CStmtList& p )
 {
 	//ну тут просто все приводим к Stmt и по очереди Accept
 	const IStmt* addToList = 0;

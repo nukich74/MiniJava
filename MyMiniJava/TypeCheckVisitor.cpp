@@ -10,6 +10,8 @@
 
 using namespace SymbolsTable;
 
+using namespace Tree;
+
 void CTCVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 {
 	p.GetMainClass()->Accept( this );

@@ -7,6 +7,7 @@
 #include <cassert>
 
 using namespace SymbolsTable;
+using namespace Tree;
 
 void CSTVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList
 {
