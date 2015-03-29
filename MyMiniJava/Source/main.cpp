@@ -11,6 +11,8 @@
 #include "TypeCheckVisitor.h"
 #include <IRTreeVisitor.h>
 #include "IRTransformer.h"
+#include <cstdlib>
+#include <ctime>
 
 #define DEBUG_TO_FILE
 
@@ -66,7 +68,7 @@ void printErrors( const std::vector< CSemanticError* >& errors ) {
 
 int main( int argc, char* argv[] )
 {
-
+	std::srand( std::time(0) );
 #ifdef DEBUG_TO_FILE
 	freopen( "debugOutput.txt", "w", stdout);
 #endif

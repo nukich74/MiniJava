@@ -1,19 +1,30 @@
 #include "IntermidRepresent.h"
 #include <map>
 #include <vector>
+#include <string>
 
 namespace Canon {
 
-class Splitter {
-public:
-	
-};
+	struct CBlock {
+		std::vector<const IRTree::IStmt*> stms;
+		std::string targetLabel;
+		std::string rootLabel;
+		bool isCJump;
 
-class Tracer {
-public:
-	void Rebuild( const IRTree::CStmtList& stmt );
-private:
-	std::vector< std::pair< IRTree::CLabel, IRTree::CStmtList > > blockTable;
-};
+		CBlock() : isCJump( false ), targetLabel( "emptyLabel" ), rootLabel("emptyRootLabel") {}
+	};
+
+	class Tracer {
+	public:
+		void doCJump();
+
+	private:
+		Temp::CLabel* doneLabel;
+		std::map<std::string, int> labelMap;
+		std::vector<CBlock> blockSequence;
+
+		void findBlocks( const IRTree::CStmtList* list );
+		void sortBlocks();
+	};
 
 }
