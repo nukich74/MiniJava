@@ -7,24 +7,25 @@ namespace Canon {
 
 	struct CBlock {
 		std::vector<const IRTree::IStmt*> stms;
-		std::string targetLabel;
 		std::string rootLabel;
-		bool isCJump;
-
-		CBlock() : isCJump( false ), targetLabel( "emptyLabel" ), rootLabel("emptyRootLabel") {}
+		bool isInverted; //нужно ли инвертировать условие, при сборке.
+		bool isNoConditions; //нужно ли делать левую метку и т.д.
+		CBlock() : isNoConditions( false ), isInverted( false ), rootLabel("emptyRootLabel") {}
 	};
 
 	class Tracer {
 	public:
-		void doCJump();
-
+		Tracer();
+		IRTree::CStmtList* Transform( const IRTree::CStmtList* list );
 	private:
 		Temp::CLabel* doneLabel;
-		std::map<std::string, int> labelMap;
+		std::map<const Temp::CLabel*, int> labelMap;
 		std::vector<CBlock> blockSequence;
+		std::vector<int> resultVector;
 
 		void findBlocks( const IRTree::CStmtList* list );
 		void sortBlocks();
+		void dfs( int blockId, std::vector<int>& used );
 	};
 
 }

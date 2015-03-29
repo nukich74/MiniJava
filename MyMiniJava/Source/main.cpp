@@ -13,6 +13,7 @@
 #include "IRTransformer.h"
 #include <cstdlib>
 #include <ctime>
+#include "BlockTracing.h"
 
 #define DEBUG_TO_FILE
 

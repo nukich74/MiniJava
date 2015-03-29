@@ -248,6 +248,24 @@ public:
 			right(_right),
 			ifTrue(_ifTrue),
 			ifFalse(_ifFalse) {};
+	
+	static TEJump BuildNotCondition( TEJump relop ) {
+		switch( relop ) {
+			case CJ_EQ:  return CJ_NE;
+			case CJ_NE:  return CJ_EQ;
+			case CJ_LT:  return CJ_GE;
+			case CJ_GE:  return CJ_LT;
+			case CJ_GT:  return CJ_LE;
+			case CJ_LE:  return CJ_GT;
+			case CJ_ULT: return CJ_UGE;
+			case CJ_UGE: return CJ_ULT;
+			case CJ_UGT: return CJ_ULE;
+			case CJ_ULE: return CJ_UGT;
+			default:
+				assert( false );
+		}
+	}
+
 	virtual const CExprList* Kids() const
 	{
 		return new CExprList( left, new CExprList( right, 0) );
