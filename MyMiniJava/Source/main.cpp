@@ -95,7 +95,9 @@ int main( int argc, char* argv[] )
 
 				//PrettyPrintVisitor prittyPrint;
 				//yyprogram->Accept( &prittyPrint );
-
+				//"$(SolutionDir)samples\binarysearch.java" "$(SolutionDir)samples\binarytree.java" 
+				//"$(SolutionDir)samples\bubblesort.java" "$(SolutionDir)samples\linearsearch.java" 
+				//"$(SolutionDir)samples\quicksort.java" "$(SolutionDir)samples\treevisitor.java" "$(SolutionDir)errorSamples\cycle.java"
 				SymbolsTable::CSTVisitor symbolTableVisitor;
 				yyprogram->Accept( &symbolTableVisitor );
 

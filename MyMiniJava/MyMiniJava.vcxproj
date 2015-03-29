@@ -31,13 +31,17 @@
     <ClCompile Include="TypeCheckVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssamblerTree.h" />
     <ClInclude Include="ClassInfo.h" />
     <ClInclude Include="CodeInfo.h" />
     <ClInclude Include="ConstantsAndComClasses.h" />
     <ClInclude Include="ErrorMessage.h" />
     <ClInclude Include="grammar.h" />
+    <ClInclude Include="IIRTreeVisitor.h" />
     <ClInclude Include="IntermidRepresent.h" />
     <ClInclude Include="IRTransformer.h" />
+    <ClInclude Include="IRTreePrinter.h" />
+    <ClInclude Include="IRTreeToAssambler.h" />
     <ClInclude Include="IRTreeVisitor.h" />
     <ClInclude Include="ISubtreeWrapper .h" />
     <ClInclude Include="MethodInfo.h" />

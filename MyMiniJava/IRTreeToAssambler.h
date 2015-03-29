@@ -1,12 +1,13 @@
-// Pavel Borin
-// Printer to IRTree
+//Borin Pavel
+
+#pragma once
 
 #include <IIRTreeVisitor.h>
-#include <string>
 
 namespace IRTree {
 
-class IRTreePrinter : public IIRVisitor {
+class IRTreeToAssambler : public IIRVisitor {
+
 public:
 	virtual void Visit( const CConst& p );
 	virtual void Visit( const CName& p );
@@ -27,15 +28,6 @@ public:
 	virtual void Visit( const CExprList& p );
 	virtual void Visit( const CStmtList& p );
 
-	void AddEdge( std::string from, std::string to, std::string style );
-	void AddVertex( std::string name );
-	void PrintTree();
-
-private:
-	std::string textToGraphVis;
-	std::string fileName;
-	std::string lastVisitedName;
-
 };
 
-};
+}; // IRTree
