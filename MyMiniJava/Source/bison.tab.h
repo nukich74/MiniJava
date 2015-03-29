@@ -81,23 +81,23 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 63 "bison.y"
+#line 65 "bison.y"
 
 	int ival;
-	IProgram* program;
-	IMainClass* mainClass;
-	IClassDeclList* classDeclList;
-	IClassDecl* classDecl;
-	IVarDeclList* varDeclList;
-	IVarDecl* varDecl;
-	IMethodDeclList* methodDeclList;
-	IMethodDecl* methodDecl;
-	IFormalList* formalList;
-	IType* type;
-	IStmtList* stmtList;
-	IStmt* stmt;
-	IExprList* exprList;
-	IExpr* expr;
+	Tree::IProgram* program;
+	Tree::IMainClass* mainClass;
+	Tree::IClassDeclList* classDeclList;
+	Tree::IClassDecl* classDecl;
+	Tree::IVarDeclList* varDeclList;
+	Tree::IVarDecl* varDecl;
+	Tree::IMethodDeclList* methodDeclList;
+	Tree::IMethodDecl* methodDecl;
+	Tree::IFormalList* formalList;
+	Tree::IType* type;
+	Tree::IStmtList* stmtList;
+	Tree::IStmt* stmt;
+	Tree::IExprList* exprList;
+	Tree::IExpr* expr;
 	char* sval;
 
 

@@ -41,7 +41,7 @@ const IAccess* CFrame::GetAccess( const std::string& name ) const
 	return GetFormal( name );
 }
 
-const IExpr* CInFrame::GetExp( const CFrame* frame ) const
+const IRTree::IExpr* CInFrame::GetExp( const CFrame* frame ) const
 {
 	//адресс по смещению
 	return new IRTree::CMem( new IRTree::CBinop(

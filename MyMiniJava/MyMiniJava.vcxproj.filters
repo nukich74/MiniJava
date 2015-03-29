@@ -37,9 +37,6 @@
     <Filter Include="IRTreeTransform">
       <UniqueIdentifier>{c43a81f1-7e49-4db8-9ae7-1fb43803b17c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AssamblerTree">
-      <UniqueIdentifier>{0e566ae4-edc9-4aa4-b9d4-103e03bfd2a9}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -76,6 +73,9 @@
       <Filter>IRTree</Filter>
     </ClCompile>
     <ClCompile Include="IRTransformer.cpp">
+      <Filter>IRTreeTransform</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockTracing.cpp">
       <Filter>IRTreeTransform</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,17 +140,8 @@
     <ClInclude Include="IRTransformer.h">
       <Filter>IRTreeTransform</Filter>
     </ClInclude>
-    <ClInclude Include="IIRTreeVisitor.h">
-      <Filter>IRTree</Filter>
-    </ClInclude>
-    <ClInclude Include="IRTreePrinter.h">
-      <Filter>IRTree</Filter>
-    </ClInclude>
-    <ClInclude Include="AssamblerTree.h">
-      <Filter>AssamblerTree</Filter>
-    </ClInclude>
-    <ClInclude Include="IRTreeToAssambler.h">
-      <Filter>AssamblerTree</Filter>
+    <ClInclude Include="BlockTracing.h">
+      <Filter>IRTreeTransform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,11 +150,11 @@
     </Bison>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="debugOutput.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <Flex Include="Source\flex.l">
       <Filter>Grammar</Filter>
     </Flex>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="debugOutput.txt" />
   </ItemGroup>
 </Project>

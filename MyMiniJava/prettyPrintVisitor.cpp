@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <iostream>
 
+using namespace Tree;
+
 std::string identt( "   " );
 
 void PrettyPrintVisitor::Visit( const CProgram& p ) //MainClass ClassDeclList

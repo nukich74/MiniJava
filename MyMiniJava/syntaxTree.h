@@ -6,6 +6,8 @@
 #include "grammar.h"
 #include "CodeInfo.h"
 
+namespace Tree {
+
 class CProgram : public IProgram {
 public:
 	CProgram( const CCodeInfo& _info, const IMainClass *_mainClass, const IClassDeclList *_classDeclList) : 
@@ -588,3 +590,5 @@ private:
 	const IStmt* curStmt;
 	const IStmtList* stmtList;
 };
+
+}

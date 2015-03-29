@@ -6,7 +6,7 @@
 #include <list>
 #include <vector>
 #include "Temp.h"
-#include "grammar.h"
+#include "IntermidRepresent.h"
 #include <map>
 #include <unordered_map>
 
@@ -19,7 +19,7 @@ class CFrame;
 class IAccess {
 public:
 	virtual ~IAccess() = 0 {};
-	virtual const IExpr* GetExp( const CFrame* frame ) const = 0;
+	virtual const IRTree::IExpr* GetExp( const CFrame* frame ) const = 0;
 };
 
 //Соотв переменная в фрэйме
@@ -28,7 +28,7 @@ class CInFrame : public IAccess {
 public:
 	CInFrame( int _address ): address( _address ) {};
 
-	const IExpr* GetExp( const CFrame* frame ) const;
+	const IRTree::IExpr* GetExp( const CFrame* frame ) const;
 
 private:
 	int address;
@@ -39,7 +39,7 @@ class CInReg: public IAccess {
 public:
 	CInReg( int _address ): address( _address ) {};
 
-	const IExpr* GetExp( const CFrame* frame ) const {};
+	const IRTree::IExpr* GetExp( const CFrame* frame ) const {};
 private:
 	int address;
 };
@@ -51,7 +51,7 @@ private:
 //Не делаем интрефейс, так как реализация строго на 1 машине
 class CFrame {
 public:
-	CFrame( const std::string _name, IStmt* _funcRoot ) : name( _name ),
+	CFrame( const std::string _name, IRTree::IStmt* _funcRoot ) : name( _name ),
 		wordSize(4), funcRoot(_funcRoot),
 		framePointer( new Temp::CTemp( _name + "_FP" ) ),
 		stackPointer( new Temp::CTemp( _name + "_SP" ) ),
@@ -71,7 +71,7 @@ public:
 
 	const IAccess* GetAccess( const std::string& name ) const;
 
-	const IStmt* funcRoot;
+	const IRTree::IStmt* funcRoot;
 	int wordSize;
 	const std::string name;
 

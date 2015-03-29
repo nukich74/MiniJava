@@ -5,11 +5,13 @@
 #include "syntaxTree.h"
 #include "grammar.h"
 
+using namespace Tree;
+
 extern "C" int yylex();
 extern "C" int yyparse();
 extern "C" FILE *yyin;
 void yyerror(const char *s);
-extern IProgram* yyprogram = 0;
+extern Tree::IProgram* yyprogram = 0;
 extern int yylineno;
 %} 
 
@@ -62,20 +64,20 @@ extern int yylineno;
 
 %union {
 	int ival;
-	IProgram* program;
-	IMainClass* mainClass;
-	IClassDeclList* classDeclList;
-	IClassDecl* classDecl;
-	IVarDeclList* varDeclList;
-	IVarDecl* varDecl;
-	IMethodDeclList* methodDeclList;
-	IMethodDecl* methodDecl;
-	IFormalList* formalList;
-	IType* type;
-	IStmtList* stmtList;
-	IStmt* stmt;
-	IExprList* exprList;
-	IExpr* expr;
+	Tree::IProgram* program;
+	Tree::IMainClass* mainClass;
+	Tree::IClassDeclList* classDeclList;
+	Tree::IClassDecl* classDecl;
+	Tree::IVarDeclList* varDeclList;
+	Tree::IVarDecl* varDecl;
+	Tree::IMethodDeclList* methodDeclList;
+	Tree::IMethodDecl* methodDecl;
+	Tree::IFormalList* formalList;
+	Tree::IType* type;
+	Tree::IStmtList* stmtList;
+	Tree::IStmt* stmt;
+	Tree::IExprList* exprList;
+	Tree::IExpr* expr;
 	char* sval;
 }
 

@@ -191,7 +191,7 @@ namespace Canon {
 	{
 		return Linear( s->left, Linear( s->right, l ) );
 	}
-	//
+	//два seq переподвешиваем, чтобы получить все seq на одной ветке
 	const CStmtList* CCanon::Linear( const IStmt* s, const CStmtList* l )
 	{
 		if( dynamic_cast<const CSeq*>( s ) != 0 ) {
@@ -200,7 +200,7 @@ namespace Canon {
 			return new CStmtList( s, l );
 		}
 	}
-	//
+	//основная функция
 	const CStmtList* CCanon::Linearize( const IStmt* s )
 	{
 		if( s == 0 ) {
