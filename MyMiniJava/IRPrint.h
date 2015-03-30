@@ -28,7 +28,8 @@ class CMem;
 
 class IRGraph {
 public:
-	std::string ToString();
+	std::string ToString() const;
+	void AddEdge( const std::string& from, const std::string& to );
 private:
 	std::vector< std::pair< std::string, std::string > > edgeList;
 };
@@ -54,7 +55,8 @@ public:
 	void Visit( const Canon::CMoveCall& p );
 	void Visit( const Canon::CExpCall& p );
 private:
-	std::string result;
+	IRGraph graph;
+	std::string lastName;
 };
 
 }
