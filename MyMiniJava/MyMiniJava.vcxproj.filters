@@ -78,6 +78,9 @@
     <ClCompile Include="BlockTracing.cpp">
       <Filter>IRTreeTransform</Filter>
     </ClCompile>
+    <ClCompile Include="IRPrinter.cpp">
+      <Filter>IRTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iVisitor.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="BlockTracing.h">
       <Filter>IRTreeTransform</Filter>
+    </ClInclude>
+    <ClInclude Include="IRPrint.h">
+      <Filter>IRTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

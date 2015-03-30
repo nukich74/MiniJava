@@ -1,61 +1,79 @@
-#include <IRPrint.h>
-#include<IntermidRepresent.h>
-#include <iostream>
+#include "IRPrint.h"
+#include "IntermidRepresent.h"
 
 namespace IRTree {
 
-	int CPrinter::minId = 0;
+	std::string IRTreePrinter::GetResult() const
+	{
+		return "";
+	}
 
-	void CPrinter::Print( const CMove* node )
+	void IRTreePrinter::Visit( const CLabel& p ) 
+	{
+	}
+	
+	void IRTreePrinter::Visit( const CBinop& p )
 	{
 	}
 
-	void CPrinter::Print( const CExp* node )
+	void IRTreePrinter::Visit( const CCall& p )
+	{
+	}
+	
+	void IRTreePrinter::Visit( const CCJump& p )
+	{
+	}	
+
+	void IRTreePrinter::Visit( const CConst& p ) 
+	{
+	}
+	
+	void IRTreePrinter::Visit( const CEseq& p )
+	{
+	}
+	
+	void IRTreePrinter::Visit( const CExp& p )
+	{
+	}
+	
+	void IRTreePrinter::Visit( const CExprList& p )
+	{		
+	}
+
+	void IRTreePrinter::Visit( const CJump& p )
 	{
 	}
 
-	void CPrinter::Print( const CJump* node )
-	{
+	void IRTreePrinter::Visit( const CStmtList& p )
+	{	
 	}
 
-	void CPrinter::Print( const CCjump* node )
-	{
+	void IRTreePrinter::Visit( const CName& p )
+	{	
 	}
 
-	void CPrinter::Print( const CSeq* node )
-	{
+	void IRTreePrinter::Visit( const CTemp& p )
+	{	
 	}
 
-	void CPrinter::Print( const CConst* node )
-	{
+	void IRTreePrinter::Visit( const CMove& p )
+	{	
 	}
 
-	void CPrinter::Print( const CName* node )
-	{
+	void IRTreePrinter::Visit( const CMem& p )
+	{	
 	}
 
-	void CPrinter::Print( const CTemp* node )
-	{
+	void IRTreePrinter::Visit( const CSeq& p )
+	{	
 	}
 
-	void CPrinter::Print( const CBinop* node )
-	{
+	void IRTreePrinter::Visit( const Canon::CMoveCall& p )
+	{	
 	}
 
-	void CPrinter::Print( const CCall* node )
-	{
+	void IRTreePrinter::Visit( const Canon::CExpCall& p )
+	{	
 	}
 
-	void CPrinter::Print( const CMem* node )
-	{
-	}
-
-	void CPrinter::Print( const CEseq* node )
-	{
-	}
-
-	void CPrinter::Print( const CExpList* node )
-	{
-	}
-
-}
+};
