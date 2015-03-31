@@ -236,22 +236,22 @@ void CIRTreeVisitor::Visit( const Tree::COpExpr& p )
 	const IExpr* second = lastReturnedExp;
 	IRTree::BinOp binOp;
 	switch( p.GetOp() ) {
-		case '+':
+	    case Tree::BinOp::BO_Plus:
 			binOp = IRTree::BinOp::BO_Plus;
 			break;
-		case '-':
+		case Tree::BinOp::BO_Minus:
 			binOp = IRTree::BinOp::BO_Minus;
 			break;
-		case '*':
+		case Tree::BinOp::BO_Mult:
 			binOp = IRTree::BinOp::BO_Mult;
 			break;
-		case '/':
+		case Tree::BinOp::BO_Div:
 			binOp = IRTree::BinOp::BO_Div;
 			break;
-		case '<':
+		case Tree::BinOp::BO_Less:
 			binOp = IRTree::BinOp::BO_Less;
 			break;
-		case '&':
+		case Tree::BinOp::BO_And:
 			binOp = IRTree::BinOp::BO_And;
 			break;
 		default:
@@ -441,7 +441,7 @@ void CIRTreeVisitor::Visit( const Tree::CVarDeclList& p )
 void CIRTreeVisitor::Visit( const Tree::CMethodDeclList& p )
 {
 	assert( p.GetCurrent() != 0 );
-	p.Accept( this );
+	p.GetCurrent()->Accept( this );
 	if( p.GetList() != 0 ) {
 		p.GetList()->Accept( this );
 	}
