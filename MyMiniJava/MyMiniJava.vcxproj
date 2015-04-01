@@ -40,6 +40,7 @@
     <ClInclude Include="grammar.h" />
     <ClInclude Include="IntermidRepresent.h" />
     <ClInclude Include="IRTransformer.h" />
+    <ClInclude Include="IRTreeConverter.h" />
     <ClInclude Include="IRTreeVisitor.h" />
     <ClInclude Include="ISubtreeWrapper .h" />
     <ClInclude Include="MethodInfo.h" />
