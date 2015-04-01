@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "Temp.h"
 #include "ConstantsAndComClasses.h"
+#include "IRPrint.h"
 
 //Для вывовда дерева нужно будет ещё Print добавить
 namespace IRTree 
@@ -16,13 +17,13 @@ class IStmt;
 class IExprList {
 public:
 	virtual ~IExprList() {}
-//	virtual void Accept( IVisitor* ) const = 0;
+	virtual void Accept( IRTreePrinter* p ) const = 0;
 };
 
 class IStmtList {
 public:
 	virtual ~IStmtList() {}
-//	virtual void Accept( IVisitor* ) const = 0;
+	virtual void Accept( IRTreePrinter* p ) const = 0;
 };
 
 
@@ -32,7 +33,7 @@ public:
 		curExpr( expr ), nextExprs( expList )
 		{};
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IExpr* GetCurrent() const { return curExpr; };
 	const IExprList* GetNextExprs() const { return nextExprs; };
 
@@ -47,7 +48,7 @@ public:
 		curStmt( stmt ), nextStmts( stmtList )
 		{};
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IStmt* GetCurrent() const { return curStmt; };
 	const IStmtList* GetNextStmts() const { return nextStmts; };
 private:
@@ -58,7 +59,7 @@ private:
 class IStmt {
 public:
 	virtual ~IStmt() {}
-//	virtual void Accept( IVisitor* ) const = 0;
+	virtual void Accept( IRTreePrinter* p ) const = 0;
 	virtual const CExprList* Kids() const = 0;
 	virtual const IStmt* Build( const CExprList* ) const = 0;
 };
@@ -66,7 +67,7 @@ public:
 class IExpr {
 public:
 	virtual ~IExpr() {}
-//	virtual void Accept( IVisitor* ) const = 0;
+	virtual void Accept( IRTreePrinter* p ) const = 0;
 	virtual const CExprList* Kids() const = 0;
 	virtual const IExpr* Build( const CExprList* ) const = 0;
 };
@@ -74,7 +75,7 @@ public:
 class CConst: public IExpr {
 public:
 	CConst( const int _value ): value(_value) {};
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const {};
 
 	virtual const CExprList* Kids() const
 	{
@@ -98,7 +99,7 @@ public:
 	{
 		return this;
 	}
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const Temp::CLabel* label;	
 };
 
@@ -114,7 +115,7 @@ public:
 		return this;
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const Temp::CTemp* temp;
 };
 
@@ -134,7 +135,7 @@ public:
 		return new CBinop( oper, kids->GetCurrent(), static_cast<const IRTree::CExprList*>( kids->GetNextExprs() )->GetCurrent() );
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const BinOp oper;
 	const IExpr *left, *right;
 };
@@ -151,7 +152,7 @@ public:
 		return new CMem( kids->GetCurrent() );
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IExpr* expr;
 };
 
@@ -167,7 +168,7 @@ public:
 		return new CCall( kids->GetCurrent(), kids->GetNextExprs() );
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IExpr* func;
 	const IExprList* args;
 };
@@ -186,7 +187,7 @@ public:
 		return 0;
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IStmt* stm;
 	const IExpr* expr;
 };
@@ -203,7 +204,7 @@ public:
 		return new CMove( kids->GetCurrent(), static_cast<const CExprList*>( kids->GetNextExprs() )->GetCurrent() );
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IExpr *dst, *src;
 };
 
@@ -218,7 +219,7 @@ public:
 	{
 		return new CExp( kids->GetCurrent() );
 	}
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IExpr* exp;
 };
 
@@ -234,7 +235,7 @@ public:
 	{
 		return new CJump( label );
 	}
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const Temp::CLabel* label;
 };
 
@@ -248,6 +249,24 @@ public:
 			right(_right),
 			ifTrue(_ifTrue),
 			ifFalse(_ifFalse) {};
+	
+	static TEJump BuildNotCondition( TEJump relop ) {
+		switch( relop ) {
+			case CJ_EQ:  return CJ_NE;
+			case CJ_NE:  return CJ_EQ;
+			case CJ_LT:  return CJ_GE;
+			case CJ_GE:  return CJ_LT;
+			case CJ_GT:  return CJ_LE;
+			case CJ_LE:  return CJ_GT;
+			case CJ_ULT: return CJ_UGE;
+			case CJ_UGE: return CJ_ULT;
+			case CJ_UGT: return CJ_ULE;
+			case CJ_ULE: return CJ_UGT;
+			default:
+				assert( false );
+		}
+	}
+
 	virtual const CExprList* Kids() const
 	{
 		return new CExprList( left, new CExprList( right, 0) );
@@ -259,7 +278,7 @@ public:
 			static_cast<const CExprList*>( kids->GetNextExprs() )->GetCurrent(), ifTrue, ifFalse );
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const TEJump relop;
 	const IExpr* left, *right;
 	const Temp::CLabel *ifTrue, *ifFalse;
@@ -281,7 +300,7 @@ public:
 		return 0;
 	}
 
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IStmt *left, *right, *last;
 };
 
@@ -296,8 +315,10 @@ public:
 	{
 		return new CLabel( label );
 	}
-//	virtual void Accept( IVisitor* ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const Temp::CLabel* label;
 };
+
+
 
 };

@@ -19,6 +19,7 @@
   <ItemGroup>
     <ClCompile Include="BlockTracing.cpp" />
     <ClCompile Include="ErrorMessage.cpp" />
+    <ClCompile Include="IRPrinter.cpp" />
     <ClCompile Include="IRTransformer.cpp" />
     <ClCompile Include="IRTreeVisitor.cpp" />
     <ClCompile Include="prettyPrintVisitor.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="ErrorMessage.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="IntermidRepresent.h" />
+    <ClInclude Include="IRPrint.h" />
     <ClInclude Include="IRTransformer.h" />
     <ClInclude Include="IRTreeConverter.h" />
     <ClInclude Include="IRTreeVisitor.h" />

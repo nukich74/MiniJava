@@ -37,9 +37,6 @@
     <Filter Include="IRTreeTransform">
       <UniqueIdentifier>{c43a81f1-7e49-4db8-9ae7-1fb43803b17c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IRTreeToAssamblerConverter">
-      <UniqueIdentifier>{de416c14-8f23-4508-8183-c8fc4303abed}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -80,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="BlockTracing.cpp">
       <Filter>IRTreeTransform</Filter>
+    </ClCompile>
+    <ClCompile Include="IRPrinter.cpp">
+      <Filter>IRTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,8 +146,8 @@
     <ClInclude Include="BlockTracing.h">
       <Filter>IRTreeTransform</Filter>
     </ClInclude>
-    <ClInclude Include="IRTreeConverter.h">
-      <Filter>IRTreeToAssamblerConverter</Filter>
+    <ClInclude Include="IRPrint.h">
+      <Filter>IRTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,4 @@
+#pragma once
 #include "IntermidRepresent.h"
 
 namespace Canon {
@@ -7,6 +8,7 @@ namespace Canon {
 		CMoveCall( const IRTree::CTemp* _dst, const IRTree::CCall* _src ) : dst( _dst ), src( _src ) {}
 		const IRTree::CExprList* Kids() const;
 		const IRTree::IStmt* Build( const IRTree::CExprList* kids ) const;
+		virtual void Accept( IRTree::IRTreePrinter* p ) const { p->Visit( *this ); }
 	private:
 		const IRTree::CTemp* dst;
 		const IRTree::CCall* src;
@@ -17,6 +19,7 @@ namespace Canon {
 		CExpCall( const IRTree::CCall* _call ) : call( _call ) {}
 		const IRTree::CExprList* Kids() const;
 		const IRTree::IStmt* Build( const IRTree::CExprList* kids ) const;
+		virtual void Accept( IRTree::IRTreePrinter* p ) const { p->Visit( *this ); }
 	private:
 		const IRTree::CCall* call;
 	};   
