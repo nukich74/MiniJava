@@ -5,15 +5,16 @@
 #include "grammar.h"
 #include <map>
 #include <vector>
-
+#include <ClassInfo.h>
 
 namespace Translate {
 
 class CIRTreeVisitor: public Tree::IVisitor {
 public:
 	//нужно передавать таблицу символов
-	CIRTreeVisitor(): currentFrame( 0 ), lastReturnedExp( 0 ), 
-		lastReturnedStm( 0 ), lastReturnedAccess( 0 ), lastReturnedExpList( 0 ) {}
+	CIRTreeVisitor( std::map< std::string, SymbolsTable::CClassInfo* >& _symbolTable ): currentFrame( 0 ), lastReturnedExp( 0 ), 
+		lastReturnedStm( 0 ), lastReturnedAccess( 0 ), lastReturnedExpList( 0 ),
+		varCounter( 0 ), symbolTable( _symbolTable ) {}
 
 	//IVisitor
 	virtual void Visit( const Tree::CProgram& p );
@@ -74,7 +75,8 @@ private:
 	const IRTree::IExprList* lastReturnedExpList;
 	const IRTree::IStmtList* lastReturnedStmtList;
 	const StackFrame::IAccess* lastReturnedAccess;
-
+	int varCounter;
+	std::map< std::string, SymbolsTable::CClassInfo* >& symbolTable;
 };
 
 }

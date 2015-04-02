@@ -95,6 +95,8 @@ void CIRTreeVisitor::Visit( const Tree::CVarDecl& p )
 {
 	//смысла нет заходить, там все-равно не обрабатываем типы, для ир дерева не нужна инфа
 	p.GetType()->Accept( this );
+	currentFrame->AddFormal( p.GetName(), new StackFrame::CInFrame( varCounter ) );
+	varCounter += 4;
 }
 
 void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
@@ -110,10 +112,17 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( counter ) );
 		counter += 4;
 	} 
+	varCounter = counter;
 	//newFrame->AddFormal( lastReturnedAccess );
 	if( p.GetVarDeclList() != 0 ) {
 		p.GetVarDeclList()->Accept( this );
 	}
+	
+	/*for( auto iter : symbolTable ) {
+		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( counter ) );
+		counter += 4;
+	}*/
+
 	if( p.GetStmList() != 0 ) {
 		p.GetStmList()->Accept( this );
 	}
