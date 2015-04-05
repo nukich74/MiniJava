@@ -1,5 +1,5 @@
 #pragma once
-
+//"$(SolutionDir)samples\treevisitor.java"  "$(SolutionDir)samples\binarysearch.java" "$(SolutionDir)samples\binarytree.java" "$(SolutionDir)samples\bubblesort.java" "$(SolutionDir)samples\linearsearch.java" "$(SolutionDir)samples\quicksort.java" "$(SolutionDir)errorSamples\cycle.java" 
 #include "prettyPrintVisitor.h"
 #include <utility>
 #include <cstdio>
@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "BlockTracing.h"
+#include "IRTreePrinter.h"
 
 #define DEBUG_TO_FILE
 
@@ -108,25 +109,28 @@ int main( int argc, char* argv[] )
 
 				yyprogram->Accept( &typeCheckVisitor );
 
-				if( !symbolTableVisitor.isSuccessfull() ) {
-					printErrors( symbolTableVisitor.GetErrors() );
-					continue;
-				}
-				if( !typeCheckVisitor.isSuccessfull() ) {
-					printErrors( typeCheckVisitor.GetErrors() );
-					continue;
-				}
+				//if( !symbolTableVisitor.isSuccessfull() ) {
+				//	printErrors( symbolTableVisitor.GetErrors() );
+				//	continue;
+				//}
+				//if( !typeCheckVisitor.isSuccessfull() ) {
+				//	printErrors( typeCheckVisitor.GetErrors() );
+				//	continue;
+				//}
 
-				SymbolTablePrint(symbolTable);
+				//SymbolTablePrint(symbolTable);
 
 				Translate::CIRTreeVisitor cIrTreeVis( symbolTable );
 				yyprogram->Accept( &cIrTreeVis );
 				
-				for( const auto& item : cIrTreeVis.functions ) {
-					const IRTree::IStmt* root = item->funcRoot;
-					Canon::CCanon cc;
-					const IRTree::IStmt* result = cc.DoStm( root );
-				}
+				//for( const auto& item : cIrTreeVis.functions ) {
+				//	//const IRTree::IStmt* root = item->funcRoot;
+				//	//Canon::CCanon cc;
+				//	//const IRTree::IStmt* result = cc.DoStm( root );
+				//	IRTree::IRTreePrinter printer;
+				//	item->funcRoot->Accept( &printer );
+				//	std::cout << printer.GetResult();
+				//}
 
 			} while( !feof( yyin ) );
 			
