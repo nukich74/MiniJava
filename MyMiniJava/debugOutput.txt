@@ -1,1 +1,1 @@
-Processing file: D:\Теория Компиляции\MyMiniJava\samples\factorial.java
+Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\factorial.java

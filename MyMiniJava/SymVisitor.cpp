@@ -99,7 +99,7 @@ void CSTVisitor::Visit( const CVarDecl& p ) //Type id
 	CVariableInfo* variable = new CVariableInfo( p.GetType()->GetName(), p.GetName(), false );
 
 	if( currentMethod == 0 ) {
-		if( currentClass->HaveVariable( p.GetName() ) ) {
+		if( currentClass->HaveVariable( p.GetName() ) || p.GetName() == currentClass->GetName() ) {
 			errorsStack.push_back( new CNameRedefinition( p.GetName(), p.GetLocation() ) );
 		} else {
 			currentClass->AddLocalVar( variable );

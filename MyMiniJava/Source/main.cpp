@@ -109,14 +109,14 @@ int main( int argc, char* argv[] )
 
 				yyprogram->Accept( &typeCheckVisitor );
 
-				//if( !symbolTableVisitor.isSuccessfull() ) {
-				//	printErrors( symbolTableVisitor.GetErrors() );
-				//	continue;
-				//}
-				//if( !typeCheckVisitor.isSuccessfull() ) {
-				//	printErrors( typeCheckVisitor.GetErrors() );
-				//	continue;
-				//}
+				if( !symbolTableVisitor.isSuccessfull() ) {
+					printErrors( symbolTableVisitor.GetErrors() );
+					continue;
+				}
+				if( !typeCheckVisitor.isSuccessfull() ) {
+					printErrors( typeCheckVisitor.GetErrors() );
+					continue;
+				}
 
 				//SymbolTablePrint(symbolTable);
 
