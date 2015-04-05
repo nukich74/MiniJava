@@ -1,10 +1,13 @@
 #include "IRPrint.h"
 #include "IntermidRepresent.h"
+#include <algorithm>
 
 namespace IRTree {
 
 	void IRGraph::AddEdge( const std::string& from, const std::string& to ) 
 	{
+		vertexSet.insert( from );
+		vertexSet.insert( to );
 		edgeList.push_back( std::make_pair( from, to ) );
 	}
 
@@ -12,9 +15,11 @@ namespace IRTree {
 	{
 		std::string result = "digraph G { ";
 		for( const auto& e : edgeList ) {
-			result += e.first + " -> " + e.second + " ";
+			result += e.first + " -> " + e.second + " \n";
 		}
-		return result + "}";
+		result += "}";
+		std::replace( result.begin(), result.end(), '.', '_' );
+		return result;
 	}
 
 	std::string IRTreePrinter::GetResult() const
@@ -130,6 +135,7 @@ namespace IRTree {
 			p.GetNextStmts()->Accept( this );
 			graph.AddEdge( curName, lastName );
 		}
+		lastName = curName;
 	}
 
 	void IRTreePrinter::Visit( const CName& p )
@@ -153,6 +159,7 @@ namespace IRTree {
 			p.dst->Accept( this );
 			graph.AddEdge( curName, lastName );
 		}
+		lastName = curName;
 	}
 
 	void IRTreePrinter::Visit( const CMem& p )
@@ -197,7 +204,7 @@ namespace IRTree {
 
 	std::string IRTreePrinter::newVertex( const std::string& name ) 
 	{
-		return name + std::to_string( this->vertexId );
+		return name + std::to_string( ++this->vertexId );
 	}
 
 };

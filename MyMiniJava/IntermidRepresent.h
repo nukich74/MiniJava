@@ -75,7 +75,7 @@ public:
 class CConst: public IExpr {
 public:
 	CConst( const int _value ): value(_value) {};
-	virtual void Accept( IRTreePrinter* p ) const {};
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); };
 
 	virtual const CExprList* Kids() const
 	{

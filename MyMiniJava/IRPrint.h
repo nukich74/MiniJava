@@ -38,6 +38,7 @@ private:
 
 class IRTreePrinter {
 public:
+	IRTreePrinter() : vertexId(0) {}
 	std::string GetResult() const;
 	void Visit( const CLabel& p );
 	void Visit( const CBinop& p );

@@ -98,8 +98,8 @@ int main( int argc, char* argv[] )
 					break;
 				}
 
-				PrettyPrintVisitor prittyPrint;
-				yyprogram->Accept( &prittyPrint );
+				//PrettyPrintVisitor prittyPrint;
+				//yyprogram->Accept( &prittyPrint );
 
 				SymbolsTable::CSTVisitor symbolTableVisitor;
 				yyprogram->Accept( &symbolTableVisitor );
@@ -120,17 +120,18 @@ int main( int argc, char* argv[] )
 
 				//SymbolTablePrint(symbolTable);
 
-				Translate::CIRTreeVisitor cIrTreeVis( symbolTable );
+				Translate::CIRTreeVisitor cIrTreeVis;
 				yyprogram->Accept( &cIrTreeVis );
 				
-				//for( const auto& item : cIrTreeVis.functions ) {
-				//	//const IRTree::IStmt* root = item->funcRoot;
-				//	//Canon::CCanon cc;
-				//	//const IRTree::IStmt* result = cc.DoStm( root );
-				//	IRTree::IRTreePrinter printer;
-				//	item->funcRoot->Accept( &printer );
-				//	std::cout << printer.GetResult();
-				//}
+				for( const auto& item : cIrTreeVis.functions ) {
+					const IRTree::IStmt* root = item->funcRoot;
+					//Canon::CCanon cc;
+					//const IRTree::IStmt* result = cc.DoStm( root );
+					IRTree::IRTreePrinter printer;
+					item->funcRoot->Accept( &printer );
+					std::string data = printer.GetResult();
+					std::cout << data << std::endl;
+				}
 
 			} while( !feof( yyin ) );
 			
