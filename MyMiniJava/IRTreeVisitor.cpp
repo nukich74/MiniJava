@@ -467,12 +467,13 @@ void CIRTreeVisitor::Visit( const Tree::CStmtList& p )
 		addToList = expConv.ToStm();
 	}
 	//lastReturnedStmtList = new IRTree::CStmtList( lastReturnedStm, lastReturnedStmtList );
+	const IStmt* tempStmr = lastReturnedStm;
 	lastReturnedExp = 0;
 	lastReturnedStm = 0;
 	if( p.GetList() != 0 ) {
 		p.GetList()->Accept( this );
 	}
-	lastReturnedStm = new IRTree::CSeq( addToList, lastReturnedStm );
+	lastReturnedStm = new IRTree::CSeq( addToList, tempStmr );
 }
 
 };

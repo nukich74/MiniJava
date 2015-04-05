@@ -1,13 +1,1 @@
-Processing file: C:\Users\Acer\Documents\Visual Studio 2012\Projects\MiniJava\MyMiniJava\samples\factorial.java
-digraph G { ExpList7 -> Const_10 
-Call6 -> ExpList7 
-Call6 -> Name_ComputeFac8 
-Move5 -> Call6 
-Move5 -> Temp9 
-Eseq4 -> Move5 
-Eseq4 -> Temp10 
-ExpList3 -> Eseq4 
-Call2 -> ExpList3 
-Call2 -> Name_System_out_println11 
-Exp1 -> Call2 
-}
+Processing file: D:\Теория Компиляции\MyMiniJava\samples\factorial.java
