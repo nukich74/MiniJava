@@ -107,16 +107,17 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}
-	int counter = 0;
+	varCounter = 0;
 	for( auto iter : typesAndVariables ) {
-		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( counter ) );
-		counter += 4;
+		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( varCounter ) );
+		varCounter += 4;
 	} 
-	varCounter = counter;
 	//newFrame->AddFormal( lastReturnedAccess );
 	if( p.GetVarDeclList() != 0 ) {
 		p.GetVarDeclList()->Accept( this );
 	}
+	currentFrame->AddFormal( "this", new StackFrame::CInFrame( varCounter ) );
+	varCounter += 4;
 	
 	/*for( auto iter : symbolTable ) {
 		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( counter ) );
