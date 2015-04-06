@@ -388,7 +388,7 @@ void CIRTreeVisitor::Visit( const Tree::CNameExpr& p )
 void CIRTreeVisitor::Visit( const Tree::CIdExpr& p )
 {
 	//получить по имени переменную из фрэйма
-	lastReturnedStm = new IRTree::CLabel( new Temp::CLabel( p.GetId() ) );
+	lastReturnedExp = new IRTree::CName( new Temp::CLabel( p.GetId() ) );
 }
 
 void CIRTreeVisitor::Visit( const Tree::CLengthExpr& p )
@@ -422,11 +422,13 @@ void CIRTreeVisitor::Visit( const Tree::CExprList& p )
 {	
 	p.GetCurrent()->Accept( this );
 
+	const IExpr* tempExpr = lastReturnedExp;
+	lastReturnedExp = 0;
 	//идем вглубь листа, пока не дойдем до нуля
 	if( p.GetList() != 0 ) {
 		p.GetList()->Accept( this );
 	}
-	lastReturnedExpList = new IRTree::CExprList( lastReturnedExp, lastReturnedExpList );
+	lastReturnedExpList = new IRTree::CExprList( tempExpr, lastReturnedExpList );
 }
 
 void CIRTreeVisitor::Visit( const Tree::CFormalList& p )

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <set>
+#include <map>
 
 namespace Canon {
 	class CMoveCall;
@@ -31,9 +32,11 @@ class IRGraph {
 public:
 	std::string ToString() const;
 	void AddEdge( const std::string& from, const std::string& to );
+	void AddEdge( const std::string& from, const std::string& to, const std::string& text );
 private:
 	std::set< std::string > vertexSet;
 	std::vector< std::pair< std::string, std::string > > edgeList;
+	std::vector< std::string > labels;
 };
 
 class IRTreePrinter {
@@ -61,7 +64,7 @@ private:
 	IRGraph graph;
 	std::string lastName;
 	int vertexId;
-
+	std::map<std::string, int > vertexStat;
 	std::string newVertex( const std::string& name ); 
 };
 

@@ -8,14 +8,24 @@ namespace IRTree {
 	{
 		vertexSet.insert( from );
 		vertexSet.insert( to );
+		labels.push_back( "" );
+		edgeList.push_back( std::make_pair( from, to ) );
+	}
+
+	void IRGraph::AddEdge( const std::string& from, const std::string& to, const std::string& text ) 
+	{
+		vertexSet.insert( from );
+		vertexSet.insert( to );
+		labels.push_back( text );
 		edgeList.push_back( std::make_pair( from, to ) );
 	}
 
 	std::string IRGraph::ToString() const 
 	{
 		std::string result = "digraph G { ";
-		for( const auto& e : edgeList ) {
-			result += e.first + " -> " + e.second + " \n";
+		for( int i = 0; i < edgeList.size(); i++ ) {
+			result += edgeList[i].first + " -> " + edgeList[i].second +
+				" [ label=\"" + labels[i] + "\" ];" + " \n";
 		}
 		result += "}";
 		std::replace( result.begin(), result.end(), '.', '_' );
@@ -29,12 +39,39 @@ namespace IRTree {
 
 	void IRTreePrinter::Visit( const CLabel& p ) 
 	{
-		lastName = newVertex( "CLabel" );
+		lastName = newVertex( "_" + p.label->ToString() );
+	}
+
+	std::string ToOperator( IRTree::BinOp arg ) {
+		switch (arg)
+		{
+		case IRTree::BO_Plus:
+			return "Plus";
+			break;
+		case IRTree::BO_Minus:
+			return "Minus";
+			break;
+		case IRTree::BO_Mult:
+			return "Mult";
+			break;
+		case IRTree::BO_Div:
+			return "Div";
+			break;
+		case IRTree::BO_And:
+			return "And";
+			break;
+		case IRTree::BO_Less:
+			return "Less";
+			break;
+		default:
+			assert( false );
+			break;
+		}
 	}
 	
 	void IRTreePrinter::Visit( const CBinop& p )
 	{
-		std::string curName = newVertex( "Binop" );
+		std::string curName = newVertex( "Binop" + ToOperator( p.oper ) );
 		if( p.left ) {
 			p.left->Accept( this );
 			graph.AddEdge( curName, lastName );
@@ -44,7 +81,7 @@ namespace IRTree {
 			graph.AddEdge( curName, lastName );
 		}
 		lastName = curName;
-		graph.AddEdge( curName, std::to_string( p.oper ) );
+//		graph.AddEdge( curName, std::to_string( p.oper ) );
 	}
 
 	void IRTreePrinter::Visit( const CCall& p )
@@ -73,6 +110,8 @@ namespace IRTree {
 			p.right->Accept( this );
 			graph.AddEdge( curName, lastName );
 		}
+		graph.AddEdge( curName, "_" + p.ifFalse->ToString(), "false" );
+		graph.AddEdge( curName, "_" + p.ifTrue->ToString(), "true" );
 		lastName = curName;
 	}	
 
@@ -140,7 +179,7 @@ namespace IRTree {
 
 	void IRTreePrinter::Visit( const CName& p )
 	{	
-		lastName = newVertex( "Name_" + p.label->ToString() );
+		lastName = newVertex( "_Name_" + p.label->ToString() );
 	}
 
 	void IRTreePrinter::Visit( const CTemp& p )
@@ -204,7 +243,16 @@ namespace IRTree {
 
 	std::string IRTreePrinter::newVertex( const std::string& name ) 
 	{
-		return name + std::to_string( ++this->vertexId );
+		if( name[0] == '_' ) {
+			return name;
+		}
+		auto iter = vertexStat.find( name );
+		if( iter == vertexStat.end() ) {
+			vertexStat[name] = 1;
+		} else {
+			vertexStat[name] += 1;		
+		}
+		return name + std::to_string( vertexStat[name] );
 	}
 
 };

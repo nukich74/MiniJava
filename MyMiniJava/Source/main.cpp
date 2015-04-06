@@ -125,8 +125,8 @@ int main( int argc, char* argv[] )
 				
 				for( const auto& item : cIrTreeVis.functions ) {
 					const IRTree::IStmt* root = item->funcRoot;
-					//Canon::CCanon cc;
-					//const IRTree::IStmt* result = cc.DoStm( root );
+					Canon::CCanon cc;
+					const IRTree::IStmt* result = cc.DoStm( root );
 					IRTree::IRTreePrinter printer;
 					item->funcRoot->Accept( &printer );
 					std::string data = printer.GetResult();
