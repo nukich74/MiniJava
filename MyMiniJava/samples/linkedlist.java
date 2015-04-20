@@ -29,8 +29,6 @@ class Element {
 	return Married ;
     }
 
-    // This method returns true if the object "other"
-    // has the same values for age, salary and 
     public boolean Equal(Element other){
 	boolean ret_val ;
 	int aux01 ;

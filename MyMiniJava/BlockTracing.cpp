@@ -5,12 +5,12 @@ namespace Canon {
 
 	using namespace IRTree;
 
-	Tracer::Tracer() 
+	CTracer::CTracer() 
 	{
 		doneLabel = new Temp::CLabel();
 	}
 
-	CStmtList* Tracer::Transform( const CStmtList* list ) {
+	CStmtList* CTracer::Transform( const CStmtList* list ) {
 		findBlocks( list );
 		//добавляем блок с меткой done.
 		blockSequence.push_back( CBlock() );
@@ -42,7 +42,7 @@ namespace Canon {
 		return result;
 	}
 
-	void Tracer::findBlocks( const IRTree::CStmtList* list ) {
+	void CTracer::findBlocks( const IRTree::CStmtList* list ) {
 		for( const IRTree::CStmtList* curVertex = list; !curVertex;  ) {
 			const CLabel* label = dynamic_cast<const CLabel*>( curVertex->GetCurrent() );
 			blockSequence.push_back( CBlock() );
@@ -88,7 +88,7 @@ namespace Canon {
 		}
 	}
 
-	void Tracer::dfs( int blockId, std::vector<int>& used ) {
+	void CTracer::dfs( int blockId, std::vector<int>& used ) {
 		resultVector.push_back( blockId );
 		used[blockId] = true;
 		int lastStmtId = blockSequence[blockId].stms.size() - 1;
@@ -124,7 +124,7 @@ namespace Canon {
 		}
 	}
 
-	void Tracer::sortBlocks() {
+	void CTracer::sortBlocks() {
 		std::vector< int > used( blockSequence.size(), 0 );
 
 		for( int i = 0; i < blockSequence.size(); i++ ) {

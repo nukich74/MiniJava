@@ -33,6 +33,7 @@ public:
 	std::string ToString() const;
 	void AddEdge( const std::string& from, const std::string& to );
 	void AddEdge( const std::string& from, const std::string& to, const std::string& text );
+	void Clear();
 private:
 	std::set< std::string > vertexSet;
 	std::vector< std::pair< std::string, std::string > > edgeList;
@@ -60,6 +61,7 @@ public:
 	void Visit( const CSeq& p );
 	void Visit( const Canon::CMoveCall& p );
 	void Visit( const Canon::CExpCall& p );
+	void Clear();
 private:
 	IRGraph graph;
 	std::string lastName;

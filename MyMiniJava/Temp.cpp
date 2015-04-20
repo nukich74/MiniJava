@@ -9,12 +9,12 @@ int CLabel::infiniteSetLabelCounter = 0;
 
 CTemp::CTemp()
 {
-	name = std::to_string(infiniteSetCounter) + "tempName";
+	name = "tempName_" + std::to_string(infiniteSetCounter);
 	infiniteSetCounter++;
 }
 
 CLabel::CLabel()
 {
-	name = "labelName" + std::to_string(infiniteSetLabelCounter);
+	name = "labelName_" + std::to_string(infiniteSetLabelCounter);
 	infiniteSetLabelCounter++;
 }

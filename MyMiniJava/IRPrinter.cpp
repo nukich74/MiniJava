@@ -4,6 +4,19 @@
 
 namespace IRTree {
 
+	void IRGraph::Clear() {
+		labels.clear();
+		vertexSet.clear();
+		edgeList.clear();
+	}
+
+	void IRTreePrinter::Clear() {
+		vertexStat.clear();
+		vertexId = 0;
+		graph.Clear();
+		lastName = "";
+	}
+
 	void IRGraph::AddEdge( const std::string& from, const std::string& to ) 
 	{
 		vertexSet.insert( from );
@@ -184,7 +197,7 @@ namespace IRTree {
 
 	void IRTreePrinter::Visit( const CTemp& p )
 	{	
-		lastName = newVertex( "Temp" );
+		lastName = newVertex( "_" + p.temp->ToString() );
 	}
 
 	void IRTreePrinter::Visit( const CMove& p )

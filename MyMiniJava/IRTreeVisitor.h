@@ -57,6 +57,7 @@ public:
 	virtual void Visit( const Tree::CMethodDeclList& p );
 	virtual void Visit( const Tree::CStmtList& p );
 
+	void Clear();
 	// Каждой функции соответствует фрейм, его мы используем для поиска аргументов, типов и тд
 	std::list< StackFrame::CFrame* > functions;
 private:

@@ -13,9 +13,9 @@ namespace Canon {
 		CBlock() : isNoConditions( false ), isInverted( false ), rootLabel("emptyRootLabel") {}
 	};
 
-	class Tracer {
+	class CTracer {
 	public:
-		Tracer();
+		CTracer();
 		IRTree::CStmtList* Transform( const IRTree::CStmtList* list );
 	private:
 		Temp::CLabel* doneLabel;

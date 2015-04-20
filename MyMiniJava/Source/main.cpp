@@ -18,7 +18,6 @@
 
 #define DEBUG_TO_FILE
 
-
 using namespace SymbolsTable;
 
 typedef std::map< std::string,  CClassInfo* > SymbolTable;
@@ -122,15 +121,25 @@ int main( int argc, char* argv[] )
 
 				Translate::CIRTreeVisitor cIrTreeVis;
 				yyprogram->Accept( &cIrTreeVis );
-				
+
+				int functionId = 0;
 				for( const auto& item : cIrTreeVis.functions ) {
-					const IRTree::IStmt* root = item->funcRoot;
 					Canon::CCanon cc;
-					const IRTree::IStmt* result = cc.DoStm( root );
+					Canon::CTracer tr;
 					IRTree::IRTreePrinter printer;
+					const IRTree::IStmt* root = item->funcRoot;
+					const IRTree::CStmtList* linearList = cc.Linearize( cc.DoStm( root ) );
+					const IRTree::CStmtList* result = tr.Transform( linearList );
+
 					item->funcRoot->Accept( &printer );
-					std::string data = printer.GetResult();
-					std::cout << data << std::endl;
+					std::cout << ++functionId << ") Before:" << std::endl << printer.GetResult() << std::endl;
+					printer.Clear();
+
+					linearList->Accept( &printer );
+					std::cout << "After eseq/seq/call transform:" << std::endl << printer.GetResult() << std::endl;
+
+					result->Accept( &printer );
+					std::cout << "After block processing:" << std::endl << printer.GetResult();
 				}
 
 			} while( !feof( yyin ) );
