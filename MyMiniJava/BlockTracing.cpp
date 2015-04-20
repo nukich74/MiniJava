@@ -13,9 +13,9 @@ namespace Canon {
 	CStmtList* CTracer::Transform( const CStmtList* list ) {
 		findBlocks( list );
 		//добавляем блок с меткой done.
-		blockSequence.push_back( CBlock() );
-		int last = blockSequence.size() - 1;
-		blockSequence[last].stms.push_back( new CLabel( doneLabel ) );
+		//blockSequence.push_back( CBlock() );
+		//int last = blockSequence.size() - 1;
+		//blockSequence[last].stms.push_back( new CLabel( doneLabel ) );
 		//сортируем
 		sortBlocks();
 		CStmtList* result = 0;
@@ -43,7 +43,7 @@ namespace Canon {
 	}
 
 	void CTracer::findBlocks( const IRTree::CStmtList* list ) {
-		for( const IRTree::CStmtList* curVertex = list; !curVertex;  ) {
+		for( const IRTree::CStmtList* curVertex = list; curVertex;  ) {
 			const CLabel* label = dynamic_cast<const CLabel*>( curVertex->GetCurrent() );
 			blockSequence.push_back( CBlock() );
 			int last = blockSequence.size() - 1;
@@ -62,22 +62,22 @@ namespace Canon {
 
 			//обрабатываем все остальные stmts
 			while( true ) {
-				if( dynamic_cast<const CJump*>( curVertex->GetCurrent() ) ||  
-					dynamic_cast<const CCJump*>( curVertex->GetCurrent() ) ) { 
+				if( curVertex && ( dynamic_cast<const CJump*>( curVertex->GetCurrent() ) ||  
+					dynamic_cast<const CCJump*>( curVertex->GetCurrent() ) ) ) { 
 					//если jump или cjump, то просто добавляем их и получается, что блок кончился переходим к сл stmt в списке
 					blockSequence[last].stms.push_back( curVertex->GetCurrent() );
 					curVertex = static_cast<const CStmtList*>( curVertex->GetNextStmts() );
 					break;					
-				} else if( dynamic_cast<const CLabel*>( curVertex->GetCurrent() ) ) {
+				} else if( curVertex && dynamic_cast<const CLabel*>( curVertex->GetCurrent() ) ) {
 					//если это какая-то метка, то добавляем в текуйщий блок jump на нее и снова выходим
 					//но не меняем curVertex, т.к. новую метку нужно обработать
 					blockSequence[last].stms.push_back( new CJump( dynamic_cast<const CLabel*>( curVertex->GetCurrent() )->label ) ); 
 					break;
-				} else if( !curVertex->GetCurrent() ) {
+				} else if( !curVertex || !curVertex->GetCurrent()/*?избыточное условие?*/ ) {
 					//если это null, то значит список кончился, но последний блок не заканчивается jump или cjump и 
 					//добавляем jump на метку done
 					blockSequence[last].stms.push_back( new CJump( doneLabel ) );
-					curVertex = static_cast<const CStmtList*>( curVertex->GetNextStmts() );
+					//curVertex = static_cast<const CStmtList*>( curVertex->GetNextStmts() );
 					break;
 				} else {
 					//в остальных случаях добавляем stmt в последний блок
@@ -128,7 +128,8 @@ namespace Canon {
 		std::vector< int > used( blockSequence.size(), 0 );
 
 		for( int i = 0; i < blockSequence.size(); i++ ) {
-			labelMap.insert( std::make_pair( dynamic_cast<const Temp::CLabel*>( blockSequence[i].stms[0] ), i ) );
+			auto value = dynamic_cast<const IRTree::CLabel*>( blockSequence[i].stms[0] )->label;
+			labelMap.insert( std::make_pair( value, i ) );
 		}
 
 		for( int i = 0; i < blockSequence.size(); i++ ) {
