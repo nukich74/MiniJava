@@ -128,10 +128,10 @@ int main( int argc, char* argv[] )
 					Canon::CTracer tr;
 					IRTree::IRTreePrinter printer;
 					const IRTree::IStmt* root = item->funcRoot;
-					const IRTree::CStmtList* linearList = cc.Linearize( cc.DoStm( root ) );
+					const IRTree::CStmtList* linearList = cc.Linearize( root );
 //					const IRTree::CStmtList* result = tr.Transform( linearList );
 
-					item->funcRoot->Accept( &printer );
+					linearList->Accept( &printer );
 					std::cout << ++functionId << ") Before:" << std::endl << printer.GetResult() << std::endl;
 					printer.Clear();
 

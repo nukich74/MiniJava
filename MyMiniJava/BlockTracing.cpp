@@ -48,7 +48,7 @@ namespace Canon {
 			blockSequence.push_back( CBlock() );
 			int last = blockSequence.size() - 1;
 
-			//берем метку, если она есть создаем по нее блок, если нет, то создаем рандомную
+			//берем метку, если она есть создаем под нее блок, если нет, то создаем рандомную
 			if( label ) {
 				blockSequence[last].rootLabel = label->label->ToString();
 				blockSequence[last].stms.push_back( curVertex->GetCurrent() );
