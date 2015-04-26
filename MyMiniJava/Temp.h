@@ -38,28 +38,29 @@ private:
 	std::string name;
 	static int infiniteSetLabelCounter;
 };
-/*
+
 class CTempList {
 public:
-	CTempList() {};
-	~CTempList() {};
+	CTempList( const CTemp* _temp, const CTempList* _tmpList ) :
+		temp(_temp), tmpList(_tmpList) {};
 
-	void AddElement( const CTemp& elem ) { listOfCTemps.push_back(elem); };
-	std::list<CTemp>::iterator GetFirstElement() { return listOfCTemps.begin(); };
+	const CTemp* GetCurrent() const { return temp; };
+	const CTempList* GetNext() const { return tmpList; };
 private:
-	std::list<CTemp> listOfCTemps;
+	const CTemp* temp;
+	const CTempList* tmpList;
 };
-
 
 class CLabelList {
 public:
-	CLabelList() {};
-	~CLabelList() {};
+	CLabelList( const CLabel* _lbl, const CLabelList* _lblList ) :
+		label(_lbl), labelList(_lblList) {};
 
-	void AddElement( const CLabel& elem ) { listOfCLabels.push_back(elem); };
-	std::list<CLabel>::iterator GetFirstElement() { return listOfCLabels.begin(); };
+	const CLabel* GetCurrent() const { return label; };
+	const CLabelList* GetNext() const { return labelList; };
 private:
-	std::list<CLabel> listOfCLabels;
+	const CLabel* label;
+	const CLabelList* labelList;
 };
-*/
+
 }
