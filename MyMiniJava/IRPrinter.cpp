@@ -174,6 +174,7 @@ namespace IRTree {
 	void IRTreePrinter::Visit( const CJump& p )
 	{
 		lastName = newVertex( "Jump" );
+		graph.AddEdge( lastName, "_" + p.label->ToString() );
 	}
 
 	void IRTreePrinter::Visit( const CStmtList& p )

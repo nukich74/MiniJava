@@ -19,6 +19,19 @@ namespace Canon {
 		//сортируем
 		sortBlocks();
 		CStmtList* result = 0;
+
+		//убираем jump, после которых идум их target метки.
+		for( int i = 0; i < resultVector.size() - 1; i++ ) {
+			int len = blockSequence[resultVector[i]].stms.size();
+			auto isJump = dynamic_cast<const CJump*>( blockSequence[resultVector[i]].stms[len - 1] );
+			if( isJump ) {
+				auto isTargetLabel = dynamic_cast<const CLabel*>( blockSequence[resultVector[i + 1]].stms[0] );
+				if( isTargetLabel && isTargetLabel->label->ToString() == isJump->label->ToString() ) { 
+					blockSequence[resultVector[i]].stms.pop_back();
+				}
+			}
+		}
+
 		for( int i = resultVector.size() - 1; i >= 0; i-- ) {
 			int len = blockSequence[resultVector[i]].stms.size();
 			if( blockSequence[resultVector[i]].isInverted ) {
@@ -39,6 +52,7 @@ namespace Canon {
 				result = new CStmtList( blockSequence[resultVector[i]].stms[j], result );
 			}
 		}
+
 		return result;
 	}
 
@@ -105,8 +119,8 @@ namespace Canon {
 				dfs( targetId, used );
 			}
 		} else if( cjump ) {
-			auto falseIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifTrue ) );
-			auto trueIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifFalse ) );
+			auto falseIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifFalse ) );
+			auto trueIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifTrue ) );
 			if( falseIter == labelMap.end() || trueIter == labelMap.end() ) {
 				assert( false );
 			} else {
