@@ -129,9 +129,9 @@ int main( int argc, char* argv[] )
 					IRTree::IRTreePrinter printer;
 					const IRTree::IStmt* root = item->funcRoot;
 					const IRTree::CStmtList* linearList = cc.Linearize( root );
-//					const IRTree::CStmtList* result = tr.Transform( linearList );
+					const IRTree::CStmtList* result = tr.Transform( linearList );
 
-					linearList->Accept( &printer );
+					root->Accept( &printer );
 					std::cout << ++functionId << ") Before:" << std::endl << printer.GetResult() << std::endl;
 					printer.Clear();
 
@@ -139,8 +139,8 @@ int main( int argc, char* argv[] )
 					std::cout << "After eseq/seq/call transform:" << std::endl << printer.GetResult() << std::endl;
 
 					printer.Clear();
-					//result->Accept( &printer );
-					//std::cout << "After block processing:" << std::endl << printer.GetResult();
+					result->Accept( &printer );
+					std::cout << "After block processing:" << std::endl << printer.GetResult();
 				}
 
 			} while( !feof( yyin ) );

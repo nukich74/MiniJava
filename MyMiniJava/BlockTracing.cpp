@@ -52,13 +52,13 @@ namespace Canon {
 			if( label ) {
 				blockSequence[last].rootLabel = label->label->ToString();
 				blockSequence[last].stms.push_back( curVertex->GetCurrent() );
+				//идем к следующему stmt
+				curVertex = static_cast<const CStmtList*>( curVertex->GetNextStmts() );
 			} else {
 				std::string newLabelName( "RandomLabel" + std::to_string( std::rand() ) );
 				blockSequence[last].stms.push_back( new CLabel( new Temp::CLabel( newLabelName ) ) );
 				blockSequence[last].rootLabel = newLabelName;
 			}
-			//идем к следующему stmt
-			curVertex = static_cast<const CStmtList*>( list->GetNextStmts() );
 
 			//обрабатываем все остальные stmts
 			while( true ) {
@@ -98,7 +98,7 @@ namespace Canon {
 		if( jump ) {
 			auto targetIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( jump->label ) );
 			if( targetIter == labelMap.end() ) {
-				assert( false );
+				return;
 			}
 			int targetId = targetIter->second;
 			if( !used[targetId] ) {
@@ -131,7 +131,7 @@ namespace Canon {
 			auto value = dynamic_cast<const IRTree::CLabel*>( blockSequence[i].stms[0] )->label;
 			labelMap.insert( std::make_pair( value, i ) );
 		}
-
+		//labelMap.insert( std::make_pair( doneLabel, -1 ) );
 		for( int i = 0; i < blockSequence.size(); i++ ) {
 			if( !used[i] ) {
 				dfs( i, used );
