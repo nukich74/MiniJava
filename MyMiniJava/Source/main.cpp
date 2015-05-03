@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "BlockTracing.h"
+#include <AsmTreeMaker.h>
 #include "IRTreePrinter.h"
 
 #define DEBUG_TO_FILE
@@ -139,6 +140,7 @@ int main( int argc, char* argv[] )
 					std::cout << "After eseq/seq/call transform:" << std::endl << printer.GetResult() << std::endl;
 
 					printer.Clear();
+
 					//result->Accept( &printer );
 					//std::cout << "After block processing:" << std::endl << printer.GetResult();
 				}

@@ -16,10 +16,10 @@ public:
 	//returns a new CTemporary from an infinite set of CTemps
 	CTemp();
 	CTemp( const CTemp& temp ) : name( temp.ToString() ) {};
-	explicit CTemp( const std::string _name ) : name(_name) {};
+	explicit CTemp( const std::string& _name ) : name(_name) {};
 	~CTemp() {};
 
-	const std::string& ToString() const { return name; };
+	const std::string ToString() const { return name; };
 private:
 	std::string name;
 	static int infiniteSetCounter;
@@ -30,13 +30,18 @@ class CLabel {
 public:
 	//returns a new CLabel from an infinite set of CLabels
 	CLabel();
-	explicit CLabel( const std::string _name ): name(_name) {};
+	explicit CLabel( const std::string& _name ): name(_name) {};
 	~CLabel() {};
 
-	const std::string& ToString() const { return name; };
+	const std::string ToString() const { return name; };
 private:
 	std::string name;
 	static int infiniteSetLabelCounter;
+};
+
+class CTempMap {
+public:
+	std::string tempMap( Temp::CTemp* tmp ) { return tmp->ToString(); }
 };
 
 class CTempList {

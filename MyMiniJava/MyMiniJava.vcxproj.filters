@@ -37,6 +37,9 @@
     <Filter Include="IRTreeTransform">
       <UniqueIdentifier>{c43a81f1-7e49-4db8-9ae7-1fb43803b17c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assembler">
+      <UniqueIdentifier>{9756956f-6264-4b0f-af76-be516fedd3c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -80,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="IRPrinter.cpp">
       <Filter>IRTree</Filter>
+    </ClCompile>
+    <ClCompile Include="AsmTreeMaker.cpp">
+      <Filter>Assembler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +154,15 @@
     </ClInclude>
     <ClInclude Include="IRPrint.h">
       <Filter>IRTree</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTreeConverter.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AsmTreeMaker.h">
+      <Filter>Assembler</Filter>
+    </ClInclude>
+    <ClInclude Include="AssemblerInstr.h">
+      <Filter>Assembler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

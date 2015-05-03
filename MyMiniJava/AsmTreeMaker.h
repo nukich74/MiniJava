@@ -5,45 +5,49 @@
 
 #include <list>
 #include <string.h>
+#include <IntermidRepresent.h>
 #include <Temp.h>
 #include <StackFrame.h>
+#include <AssemblerInstr.h>
+
 
 namespace Assembler {
 
-class AsmInstr { 
+class CAsmTreeMaker {
 public:
-	AsmInstr( const Temp::CTempList* _used, const Temp::CTempList* _defs, const Temp::CLabelList* _jumps ) :
-		used(_used), defines(_defs), jumps(_jumps) {};
-
-	const Temp::CTempList* UsedVars() const { return used; };
-	const Temp::CTempList* Defines() const { return defines; };
-	const Temp::CLabelList* Jumps() const { return jumps; };
-
-	// подстановка, нужно обдумать
-	void FormatInstr();
-
-private:
-	std::string asmCommand;
-	const Temp::CTempList* used;
-	const Temp::CTempList* defines;
-	const Temp::CLabelList* jumps;
-}; 
-
-class AsmTreeMaker {
-public:
-	AsmTreeMaker( const StackFrame::CFrame* _stackFrame ) : stackFrame(_stackFrame), isInitialized(false) {};
+	CAsmTreeMaker( const StackFrame::CFrame* _stackFrame ) : 
+		stackFrame( _stackFrame ), isInitialized( false ) {};
 	
-	// функция интерпретиирования промежуточного представления функции
+	// функция интерпретирования промежуточного представления функции
 	void InitializeTree() const;
 	bool IsInitialized() const { return isInitialized; };
 
-	const std::list<const AsmInstr*> GetAsmInstr() const { return func; };
+	const std::list<const IAsmInstr*> GetAsmInstr() const { return func; };
 	const StackFrame::CFrame* GetFrame() const { return stackFrame; };
 
 private:
-	mutable std::list<const AsmInstr*> func;
+	mutable std::list<const IAsmInstr*> func;
 	bool isInitialized;
 	const StackFrame::CFrame* stackFrame;
+
+	void munchStm( const IRTree::IStmt* vertex ) const;
+
+	void munchStm( const IRTree::CCJump* vertex ) const;
+	void munchStm( const IRTree::CJump* vertex ) const;
+	void munchStm( const IRTree::CLabel* vertex ) const;
+	void munchStm( const IRTree::CSeq* vertex ) const;
+	void munchStm( const IRTree::CMove* vertex ) const;
+	void munchStm( const IRTree::CExp* vertex ) const;
+
+	const Temp::CTemp* munchExp( const IRTree::IExpr* expr ) const;
+
+	const Temp::CTemp* munchExp( const IRTree::CConst* expr ) const;
+	const Temp::CTemp* munchExp( const IRTree::CTemp* expr ) const;
+	const Temp::CTemp* munchExp( const IRTree::CBinop* expr ) const;
+	const Temp::CTemp* munchExp( const IRTree::CMem* expr ) const;
+	const Temp::CTemp* munchExp( const IRTree::CCall* expr ) const;
+
+	const Temp::CTempList* munchArgs( const IRTree::CExprList* exprList ) const;
 };
 
 

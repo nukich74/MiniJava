@@ -17,6 +17,7 @@
     <Flex Include="Source\flex.l" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AsmTreeMaker.cpp" />
     <ClCompile Include="BlockTracing.cpp" />
     <ClCompile Include="ErrorMessage.cpp" />
     <ClCompile Include="IRPrinter.cpp" />
@@ -33,6 +34,8 @@
     <ClCompile Include="TypeCheckVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsmTreeMaker.h" />
+    <ClInclude Include="AssemblerInstr.h" />
     <ClInclude Include="BlockTracing.h" />
     <ClInclude Include="ClassInfo.h" />
     <ClInclude Include="CodeInfo.h" />
