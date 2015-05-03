@@ -197,7 +197,11 @@ namespace Canon {
 		if( dynamic_cast<const CSeq*>( s ) != 0 ) {
 			return Linear( dynamic_cast<const CSeq*>( s ), l );
 		} else {
-			return new CStmtList( s, l );
+			if( s != 0 ) {
+				return new CStmtList( s, l );
+			} else {
+				return l;
+			}
 		}
 	}
 	//основная функция

@@ -19,6 +19,19 @@ namespace Canon {
 		//сортируем
 		sortBlocks();
 		CStmtList* result = 0;
+
+		//убираем jump, после которых идум их target метки.
+		for( int i = 0; i < resultVector.size() - 1; i++ ) {
+			int len = blockSequence[resultVector[i]].stms.size();
+			auto isJump = dynamic_cast<const CJump*>( blockSequence[resultVector[i]].stms[len - 1] );
+			if( isJump ) {
+				auto isTargetLabel = dynamic_cast<const CLabel*>( blockSequence[resultVector[i + 1]].stms[0] );
+				if( isTargetLabel && isTargetLabel->label->ToString() == isJump->label->ToString() ) { 
+					blockSequence[resultVector[i]].stms.pop_back();
+				}
+			}
+		}
+
 		for( int i = resultVector.size() - 1; i >= 0; i-- ) {
 			int len = blockSequence[resultVector[i]].stms.size();
 			if( blockSequence[resultVector[i]].isInverted ) {
@@ -39,6 +52,7 @@ namespace Canon {
 				result = new CStmtList( blockSequence[resultVector[i]].stms[j], result );
 			}
 		}
+
 		return result;
 	}
 
@@ -48,17 +62,17 @@ namespace Canon {
 			blockSequence.push_back( CBlock() );
 			int last = blockSequence.size() - 1;
 
-			//берем метку, если она есть создаем по нее блок, если нет, то создаем рандомную
+			//берем метку, если она есть создаем под нее блок, если нет, то создаем рандомную
 			if( label ) {
 				blockSequence[last].rootLabel = label->label->ToString();
 				blockSequence[last].stms.push_back( curVertex->GetCurrent() );
+				//идем к следующему stmt
+				curVertex = static_cast<const CStmtList*>( curVertex->GetNextStmts() );
 			} else {
 				std::string newLabelName( "RandomLabel" + std::to_string( std::rand() ) );
 				blockSequence[last].stms.push_back( new CLabel( new Temp::CLabel( newLabelName ) ) );
 				blockSequence[last].rootLabel = newLabelName;
 			}
-			//идем к следующему stmt
-			curVertex = static_cast<const CStmtList*>( list->GetNextStmts() );
 
 			//обрабатываем все остальные stmts
 			while( true ) {
@@ -98,15 +112,15 @@ namespace Canon {
 		if( jump ) {
 			auto targetIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( jump->label ) );
 			if( targetIter == labelMap.end() ) {
-				assert( false );
+				return;
 			}
 			int targetId = targetIter->second;
 			if( !used[targetId] ) {
 				dfs( targetId, used );
 			}
 		} else if( cjump ) {
-			auto falseIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifTrue ) );
-			auto trueIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifFalse ) );
+			auto falseIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifFalse ) );
+			auto trueIter = labelMap.find( dynamic_cast<const Temp::CLabel*>( cjump->ifTrue ) );
 			if( falseIter == labelMap.end() || trueIter == labelMap.end() ) {
 				assert( false );
 			} else {
@@ -131,7 +145,7 @@ namespace Canon {
 			auto value = dynamic_cast<const IRTree::CLabel*>( blockSequence[i].stms[0] )->label;
 			labelMap.insert( std::make_pair( value, i ) );
 		}
-
+		//labelMap.insert( std::make_pair( doneLabel, -1 ) );
 		for( int i = 0; i < blockSequence.size(); i++ ) {
 			if( !used[i] ) {
 				dfs( i, used );

@@ -286,14 +286,16 @@ public:
 
 class CSeq: public IStmt {
 public:
-	CSeq( const IStmt* _left, const IStmt* _right, const IStmt* _last = 0 ):
-		left(_left),
-		right(_right), last( _last ) {};
+	CSeq( const IStmt* _left, const IStmt* _right ) : left(_left), right(_right) {}
+	CSeq( const IStmt* _left, const IStmt* _right, const IStmt* _last ):
+		left(_left), right( new CSeq( _right, _last ) ) {};
+
 	virtual const CExprList* Kids() const
 	{
 		assert( false );
 		return 0;
 	}
+
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
 		assert( false );
