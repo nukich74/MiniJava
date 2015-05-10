@@ -58,6 +58,8 @@ public:
 	// Список вершин имеющих ребро из данной
 	const std::vector<int>& GetOutEdges( int nodeIndex ) const;
 
+	const CGraph& GetGraph() const;
+
 private:
 	// граф
 	CGraph graph;
@@ -95,6 +97,10 @@ private:
 	std::vector<std::set<std::string>> liveIn;
 	std::vector<std::set<std::string>> liveOut;
 
+	// вектор с ассемблерными командами
+	std::vector<const IAsmInstr*> commands;
+
 	bool theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const;
+	void buildCommands( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions  );
 };
 } // namespace Assembler
