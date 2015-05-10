@@ -43,6 +43,26 @@ CWorkFlowGraph::CWorkFlowGraph( const std::map<std::string, std::list<const IAsm
 }
 
 
+int CWorkFlowGraph::Size() const
+{
+	return graph.Size();
+}
+
+
+const std::vector<int>& CWorkFlowGraph::GetInEdges( int nodeIndex ) const
+{
+	assert( nodeIndex < graph.Size() );
+	return graph.GetNode( nodeIndex ).in;
+}
+
+
+const std::vector<int>& CWorkFlowGraph::GetOutEdges( int nodeIndex ) const
+{
+	assert( nodeIndex < graph.Size() );
+	return graph.GetNode( nodeIndex ).out;
+}
+
+
 // строит граф из необходимого количества без ребер
 void CWorkFlowGraph::buildNodes( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions )
 {
@@ -80,4 +100,91 @@ void CWorkFlowGraph::addEdges()
 	// для начала необходимо разобраться, как можно выведать из инструкции ее тип
 }
 
+// =====================================================================================================================
+
+CLiveInOutCalculator::CLiveInOutCalculator( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions ) :
+	workflow( asmFunctions ), liveIn( workflow.Size() ), liveOut( workflow.Size() )
+{
+	bool setsChanged = true;
+	while( setsChanged ) {
+		int nodeIndex = 0;
+		setsChanged = false;
+		for( auto func : asmFunctions ) {
+			for( auto cmd : func.second ) {
+				std::set<std::string> newLiveIn = liveOut[nodeIndex];
+
+				// out[n] - def[n]
+				auto currList = cmd->Defines();
+				while( currList != nullptr  &&  currList->GetCurrent() != nullptr ) {
+					auto inSet = newLiveIn.find( currList->GetCurrent()->ToString() );
+					if( inSet != newLiveIn.end() ) {
+						newLiveIn.erase( inSet );
+					}
+					currList = currList->GetNext();
+				}
+				
+				// in[n] = use[n] V ( out[n] - def[n] )
+				currList = cmd->UsedVars();
+				while( currList != nullptr  &&  currList->GetCurrent() != nullptr ) {
+					newLiveIn.insert( currList->GetCurrent()->ToString() );
+					currList = currList->GetNext();
+				}
+
+				// out[n] = V in[s]		where s in succ[n]
+				std::set<std::string> newLiveOut;
+				for( auto succ : workflow.GetOutEdges( nodeIndex ) ) {
+					for( auto var : liveIn[succ] ) {
+						newLiveOut.insert( var );
+					}
+				}
+
+				if( !theSame( newLiveIn, liveIn[nodeIndex] ) || !theSame( newLiveOut, liveOut[nodeIndex] ) ) {
+					setsChanged = true;
+					liveIn[nodeIndex] = newLiveIn;
+					liveOut[nodeIndex] = newLiveOut;
+				}
+
+				++nodeIndex;
+			}
+		}
+	}
 }
+
+
+const std::set<std::string>& CLiveInOutCalculator::GetLiveIn( int nodeIndex ) const
+{
+	assert( nodeIndex < liveIn.size() );
+
+	return liveIn[nodeIndex];
+}
+
+
+const std::set<std::string>& CLiveInOutCalculator::GetLiveOut( int nodeIndex ) const
+{
+	assert( nodeIndex < liveOut.size() );
+
+	return liveOut[nodeIndex];
+}
+
+
+bool CLiveInOutCalculator::theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const
+{
+	if( x.size() != y.size() ) {
+		return false;
+	}
+
+	auto xIt = x.begin();
+	auto yIt = y.begin();
+
+	while( xIt != x.end() ) {
+		if( *xIt != *yIt ) {
+			return false;
+		}
+		++xIt;
+		++yIt;
+	}
+
+	return true;
+}
+
+} // namespace Assembler
