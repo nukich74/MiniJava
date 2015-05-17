@@ -40,6 +40,9 @@
     <Filter Include="Assembler">
       <UniqueIdentifier>{9756956f-6264-4b0f-af76-be516fedd3c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Samples">
+      <UniqueIdentifier>{a921e6bc-6ba9-47d2-be79-e285efc060e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -177,5 +180,31 @@
     <Flex Include="Source\flex.l">
       <Filter>Grammar</Filter>
     </Flex>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="samples\binarysearch.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\binarytree.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\bubblesort.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\factorial.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\linearsearch.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\linkedlist.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\quicksort.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\treevisitor.java">
+      <Filter>Samples</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include <vector>
 #include <list>
 #include "StackFrame.h"
+#include <ClassInfo.h>
 #include "grammar.h"
 #include <map>
 #include <vector>
@@ -12,9 +13,11 @@ namespace Translate {
 class CIRTreeVisitor: public Tree::IVisitor {
 public:
 	//нужно передавать таблицу символов
-	CIRTreeVisitor(): currentFrame( 0 ), lastReturnedExp( 0 ), 
-		lastReturnedStm( 0 ), lastReturnedAccess( 0 ), lastReturnedExpList( 0 ),
-		varCounter( 0 ) {}
+	CIRTreeVisitor( const std::map< std::string, SymbolsTable::CClassInfo* >* _symbolTable ) : 
+		currentFrame( 0 ), lastReturnedExp( 0 ),
+		lastReturnedStm( 0 ), lastReturnedAccess( 0 ), 
+		lastReturnedExpList( 0 ), symbolTable( _symbolTable ),
+		varCounter( 0 ), isItInClass( false ) {}
 
 	//IVisitor
 	virtual void Visit( const Tree::CProgram& p );
@@ -66,6 +69,8 @@ private:
 	StackFrame::CFrame* currentFrame;
 	
 	// Таблица символов для программы. Ее используем для конструирования фрейма при входе в функци
+	bool isItInClass;
+	const std::map< std::string, SymbolsTable::CClassInfo* >* symbolTable;
 
 	// Нужно для того чтобы в CFrame записать правильно декорированное имя
 	std::string className;

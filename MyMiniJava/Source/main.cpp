@@ -119,7 +119,7 @@ int main( int argc, char* argv[] )
 
 				//SymbolTablePrint(symbolTable);
 
-				Translate::CIRTreeVisitor cIrTreeVis;
+				Translate::CIRTreeVisitor cIrTreeVis( symbolTable );
 				yyprogram->Accept( &cIrTreeVis );
 
 				int functionId = 0;

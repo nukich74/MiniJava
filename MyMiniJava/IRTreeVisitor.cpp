@@ -47,11 +47,14 @@ void CIRTreeVisitor::Visit( const Tree::CMainClass& p )
 void CIRTreeVisitor::Visit( const Tree::CClassDecl& p )
 {
 	className = p.GetName();
+	isItInClass = true;
 	const Tree::IVarDeclList* vdl; 
 	const Tree::IMethodDeclList* mdl;
 	if( ( vdl = p.GetVarDeclList() ) != 0 ) {
+		isItInClass = true;
 		vdl->Accept( this );
 	}
+	isItInClass = false;
 	//для каждого метода фрэйм
 	if( ( mdl = p.GetMethodDeclList() ) != 0 ) {
 		mdl->Accept( this );
@@ -95,12 +98,18 @@ void CIRTreeVisitor::Visit( const Tree::CVarDecl& p )
 {
 	//смысла нет заходить, там все-равно не обрабатываем типы, для ир дерева не нужна инфа
 	p.GetType()->Accept( this );
-	currentFrame->AddFormal( p.GetName(), new StackFrame::CInFrame( varCounter ) );
-	varCounter += 4;
+	if( !isItInClass ) { 
+		currentFrame->AddLocal( p.GetName(), new StackFrame::CInFrame( varCounter ) );
+		varCounter += 1;
+	} else {
+		// это опреление переменной в классе
+
+	}
 }
 
 void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 {
+	isItInClass = false;
 	IStmt* newFuncRoot;
 	StackFrame::CFrame* newFrame = new StackFrame::CFrame( p.GetName(), 0 );
 	currentFrame = newFrame;
@@ -108,16 +117,17 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 		p.GetFormalList()->Accept( this );
 	}
 	varCounter = 0;
+	currentFrame->AddFormal( "this", new StackFrame::CInFrame( varCounter ) );
+	varCounter += 1;
 	for( auto iter : typesAndVariables ) {
 		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( varCounter ) );
-		varCounter += 4;
+		varCounter += 1;
 	} 
 	//newFrame->AddFormal( lastReturnedAccess );
 	if( p.GetVarDeclList() != 0 ) {
 		p.GetVarDeclList()->Accept( this );
 	}
-	currentFrame->AddFormal( "this", new StackFrame::CInFrame( varCounter ) );
-	varCounter += 4;
+	
 	
 	/*for( auto iter : symbolTable ) {
 		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( counter ) );
@@ -216,8 +226,26 @@ void CIRTreeVisitor::Visit( const Tree::CSOPStmt& p )
 
 void CIRTreeVisitor::Visit( const Tree::CAssignStmt& p )
 {
-	const IExpr* leftExp = currentFrame->GetAccess( p.GetName() )->GetExp( currentFrame );
-	assert( p.GetExpr() != 0 );
+	const IExpr* leftExp = 0;
+	const StackFrame::IAccess* var = currentFrame->GetAccess( p.GetName() );
+	if( var != 0 ) {
+		leftExp = currentFrame->GetAccess( p.GetName() )->GetExp( currentFrame );	
+	} else {
+		// тогда берем this
+		leftExp = currentFrame->GetAccess( "this" )->GetExp( currentFrame );
+
+		// теперь нужно найти эту переменную в symbolTable
+		const SymbolsTable::CClassInfo* clInfo = (*symbolTable).at( className );
+		const std::vector<SymbolsTable::CVariableInfo*> classVars = clInfo->GetLocals();
+		
+		for( int i = 0; i < classVars.size(); ++i ) {
+			if( classVars[i]->GetName() == p.GetName() ) {
+				// обращаемся по соответствующему адрессу
+				leftExp = new CMem( new CBinop( BO_Plus, leftExp, new CConst( i * 4 ) ) );
+			}
+		}
+	}
+
 	p.GetExpr()->Accept( this );
 	const IExpr* rightExp = lastReturnedExp;
 	lastReturnedExp = 0;
@@ -226,7 +254,25 @@ void CIRTreeVisitor::Visit( const Tree::CAssignStmt& p )
 
 void CIRTreeVisitor::Visit( const Tree::CAssignExprStmt& p )
 {
-	const IExpr* leftExp = currentFrame->GetAccess( p.GetName() )->GetExp( currentFrame );
+	const IExpr* leftExp = 0;
+	const StackFrame::IAccess* var = currentFrame->GetAccess( p.GetName() );
+	if( var != 0 ) {
+		leftExp = currentFrame->GetAccess( p.GetName() )->GetExp( currentFrame );	
+	} else {
+		// тогда берем this
+		leftExp = currentFrame->GetAccess( "this" )->GetExp( currentFrame );
+
+		// теперь нужно найти эту переменную в symbolTable
+		const SymbolsTable::CClassInfo* clInfo = (*symbolTable).at( className );
+		const std::vector<SymbolsTable::CVariableInfo*> classVars = clInfo->GetLocals();
+		
+		for( int i = 0; i < classVars.size(); ++i ) {
+			if( classVars[i]->GetName() == p.GetName() ) {
+				// обращаемся по соответствующему адрессу
+				leftExp = new CMem( new CBinop( BO_Plus, leftExp, new CConst( i * 4 ) ) );
+			}
+		}
+	}
 	assert( p.GetExprId() != 0 );
 	p.GetExprId()->Accept( this );
 	const IExpr* index = lastReturnedExp;
@@ -267,7 +313,7 @@ void CIRTreeVisitor::Visit( const Tree::COpExpr& p )
 		default:
 			assert( false );
 	}
-	lastReturnedExp = new IRTree::CMem( new IRTree::CBinop( binOp, first, second ) ) ;
+	lastReturnedExp = new IRTree::CBinop( binOp, first, second );
 }
 
 void CIRTreeVisitor::Visit( const Tree::CExExpr& p )
