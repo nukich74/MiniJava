@@ -36,36 +36,24 @@ const CNode& CGraph::GetNode( int index ) const
 
 // =====================================================================================================================
 
-CWorkFlowGraph::CWorkFlowGraph( const std::list<const IAsmInstr*>& asmFunction ) : graph( asmFunction.size() )
+CWorkFlowGraph::CWorkFlowGraph( const std::list<const IAsmInstr*>& asmFunction ) : CGraph( asmFunction.size() )
 {
 	buildLabelMap( asmFunction );
 	addEdges( asmFunction );
 }
 
 
-int CWorkFlowGraph::Size() const
-{
-	return graph.Size();
-}
-
-
 const std::vector<int>& CWorkFlowGraph::GetInEdges( int nodeIndex ) const
 {
-	assert( nodeIndex < graph.Size() );
-	return graph.GetNode( nodeIndex ).in;
+	assert( nodeIndex < nodes.size() );
+	return nodes[nodeIndex].in;
 }
 
 
 const std::vector<int>& CWorkFlowGraph::GetOutEdges( int nodeIndex ) const
 {
-	assert( nodeIndex < graph.Size() );
-	return graph.GetNode( nodeIndex ).out;
-}
-
-
-const CGraph& CWorkFlowGraph::GetGraph() const
-{
-	return graph;
+	assert( nodeIndex < nodes.size() );
+	return nodes[nodeIndex].out;
 }
 
 
@@ -74,7 +62,7 @@ void CWorkFlowGraph::buildLabelMap( const std::list<const IAsmInstr*>& asmFuncti
 {
 	int nodeIndex = 0;
 	for( auto cmd : asmFunction ) {
-		// Проверка, ялвяется ли интрукция метко
+		// Проверка, ялвяется ли интрукция меткой
 		const CLabel* label = dynamic_cast<const CLabel*>( cmd );
 		if( label != nullptr ) {
 			// если инструкция является меткой то добавим ее в соответствие
@@ -94,9 +82,9 @@ void CWorkFlowGraph::addEdges( const std::list<const IAsmInstr*>& asmFunction )
 	for( auto cmd : asmFunction ) {
 		const COper* oper = dynamic_cast<const COper*>( cmd );
 		if( oper != nullptr  &&  oper->Jumps() != nullptr  &&  oper->Jumps()->GetCurrent() != nullptr ) {
-			graph.AddEdge( nodeIndex, labels[oper->Jumps()->GetCurrent()->ToString()] );
-		} else if( nodeIndex + 1 < graph.Size() ) {
-			graph.AddEdge( nodeIndex, nodeIndex + 1 );
+			AddEdge( nodeIndex, labels[oper->Jumps()->GetCurrent()->ToString()] );
+		} else if( nodeIndex + 1 < Size() ) {
+			AddEdge( nodeIndex, nodeIndex + 1 );
 		}
 		nodeIndex++;
 	}
@@ -120,11 +108,6 @@ public:
 
 		std::reverse( res.begin(), res.end() );
 		return res;
-	}
-
-	static std::vector<int> topSort( const CWorkFlowGraph& workflow, int start )
-	{
-		return topSort( workflow.GetGraph(), start );
 	}
 
 private:
@@ -162,6 +145,7 @@ CLiveInOutCalculator::CLiveInOutCalculator( const std::list<const IAsmInstr*>& a
 	int mainFuncIndex = 0; // TODO: нормально найти начальную вершину
 	std::vector<int> revTopsort = CTopSort::topSort( workflow, mainFuncIndex );
 	buildCommands( asmFunction );
+	buildDefines( asmFunction );
 
 	std::reverse( revTopsort.begin(), revTopsort.end() );
 	while( setsChanged ) {
@@ -222,6 +206,20 @@ const std::set<std::string>& CLiveInOutCalculator::GetLiveOut( int nodeIndex ) c
 }
 
 
+const std::set<std::string>& CLiveInOutCalculator::GetDefines( int nodeIndex ) const
+{
+	assert( nodeIndex < int( defines.size() ) );
+
+	return defines[nodeIndex];
+}
+
+
+const CWorkFlowGraph& CLiveInOutCalculator::GetGraph() const
+{
+	return workflow;
+}
+
+
 bool CLiveInOutCalculator::theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const
 {
 	if( x.size() != y.size() ) {
@@ -247,6 +245,71 @@ void CLiveInOutCalculator::buildCommands( const std::list<const IAsmInstr*>& asm
 {
 	commands.clear();
 	std::copy( asmFunction.begin(), asmFunction.end(), std::back_inserter( commands ) );
+}
+
+
+void CLiveInOutCalculator::buildDefines( const std::list<const IAsmInstr*>& asmFunction )
+{
+	defines.resize( asmFunction.size() );
+	int cmdIndex = 0;
+	for( auto cmd : asmFunction ) {
+		auto def = cmd->Defines();
+		while( def != nullptr  &&  def->GetCurrent() != nullptr ) {
+			defines[cmdIndex].insert( def->GetCurrent()->ToString() );
+			def = def->GetNext();
+		}
+		++cmdIndex;
+	}
+}
+
+// =====================================================================================================================
+
+CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction ) : CGraph( 0 ),
+	liveInOut( asmFunction )
+{
+	int cmdIndex = 0;
+	for( auto cmd : asmFunction ) {
+		if( dynamic_cast<const CMove*>( cmd ) == nullptr ) {
+			// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
+			// где a принадлежит определяемым в данной инструкции переменным
+			// b - из множества liveOut
+			for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+				for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
+					addNode( a );
+					addNode( b );
+					int u = nodeMap[a];
+					int v = nodeMap[b];
+					AddEdge( u, v );
+					AddEdge( v, u );
+				}
+			}
+		} else {
+			// для каждой move инструкции добавить ребра между всеми такими переменными a и b
+			// где a - куда делается MOVE (c->a)
+			// b из множества liveOut
+			// TODO: разобраться, в каком порядке перечисляются аргументы команды MOVE в нашем случае
+			std::string a = dynamic_cast< const CMove* >( cmd )->UsedVars()->GetCurrent()->ToString();
+			for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
+				addNode( a );
+				addNode( b );
+				int u = nodeMap[a];
+				int v = nodeMap[b];
+				AddEdge( u, v );
+				AddEdge( v, u );
+			}
+		}
+	}
+}
+
+
+// добавляет вершину в граф, если таковой еще нет
+void CInterferenceGraph::addNode( const std::string& name )
+{
+	if( nodeMap.find( name ) != nodeMap.end() ) {
+		return;
+	}
+	nodeMap.insert( std::make_pair( name, nodes.size() ) );
+	nodes.emplace_back();
 }
 
 } // namespace Assembler
