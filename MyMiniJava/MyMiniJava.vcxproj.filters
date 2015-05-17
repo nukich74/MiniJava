@@ -90,6 +90,9 @@
     <ClCompile Include="AsmTreeMaker.cpp">
       <Filter>Assembler</Filter>
     </ClCompile>
+    <ClCompile Include="LivenessAnalysis.cpp">
+      <Filter>Assembler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iVisitor.h">
@@ -165,6 +168,9 @@
       <Filter>Assembler</Filter>
     </ClInclude>
     <ClInclude Include="AssemblerInstr.h">
+      <Filter>Assembler</Filter>
+    </ClInclude>
+    <ClInclude Include="LivenessAnalysis.h">
       <Filter>Assembler</Filter>
     </ClInclude>
   </ItemGroup>

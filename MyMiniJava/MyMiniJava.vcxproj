@@ -23,6 +23,7 @@
     <ClCompile Include="IRPrinter.cpp" />
     <ClCompile Include="IRTransformer.cpp" />
     <ClCompile Include="IRTreeVisitor.cpp" />
+    <ClCompile Include="LivenessAnalysis.cpp" />
     <ClCompile Include="prettyPrintVisitor.cpp" />
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="IRTreeConverter.h" />
     <ClInclude Include="IRTreeVisitor.h" />
     <ClInclude Include="ISubtreeWrapper .h" />
+    <ClInclude Include="LivenessAnalysis.h" />
     <ClInclude Include="MethodInfo.h" />
     <ClInclude Include="prettyPrintVisitor.h" />
     <ClInclude Include="iVisitor.h" />
