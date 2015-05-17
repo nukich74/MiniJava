@@ -47,7 +47,7 @@ class CWorkFlowGraph {
 public:
 	// Конструктор
 	// принимает на вход map где ключ - имя функции а значение - список ассемблерных команд
-	explicit CWorkFlowGraph( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions );
+	explicit CWorkFlowGraph( const std::list<const IAsmInstr*>& asmFunctions );
 
 	// Количество вершин в графе
 	int Size() const;
@@ -67,12 +67,8 @@ private:
 	// соответствие между метками и вершинами графа
 	std::map<std::string, int> labels;
 
-	// соответствие между функциями и вершинами графа
-	std::map<std::string, int> functions;
-
-	void buildNodes( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions );
-	void buildMaps( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions );
-	void addEdges();
+	void buildLabelMap( const std::list<const IAsmInstr*>& asmFunctions );
+	void addEdges( const std::list<const IAsmInstr*>& asmFunctions );
 };
 
 
@@ -81,7 +77,7 @@ class CLiveInOutCalculator {
 public:
 	// Конструктор
 	// принимает на вход map где ключ - имя функции а значение - список ассемблерных команд
-	explicit CLiveInOutCalculator( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions );
+	explicit CLiveInOutCalculator( const std::list<const IAsmInstr*>& asmFunctions );
 
 	// получить список live-in переменных
 	const std::set<std::string>& GetLiveIn( int nodeIndex ) const;
@@ -101,6 +97,6 @@ private:
 	std::vector<const IAsmInstr*> commands;
 
 	bool theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const;
-	void buildCommands( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions  );
+	void buildCommands( const std::list<const IAsmInstr*>& asmFunctions  );
 };
 } // namespace Assembler

@@ -36,10 +36,10 @@ const CNode& CGraph::GetNode( int index ) const
 
 // =====================================================================================================================
 
-CWorkFlowGraph::CWorkFlowGraph( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions ) : graph( 0 )
+CWorkFlowGraph::CWorkFlowGraph( const std::list<const IAsmInstr*>& asmFunction ) : graph( asmFunction.size() )
 {
-	buildNodes( asmFunctions );
-	buildMaps( asmFunctions );
+	buildLabelMap( asmFunction );
+	addEdges( asmFunction );
 }
 
 
@@ -69,46 +69,43 @@ const CGraph& CWorkFlowGraph::GetGraph() const
 }
 
 
-// строит граф из необходимого количества без ребер
-void CWorkFlowGraph::buildNodes( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions )
-{
-	int graphSize = 0;
-	for( auto func : asmFunctions ) {
-		graphSize += func.second.size();
-	}
-	graph = CGraph( graphSize );
-}
-
-
-// строит соответствия, необходимые для построения графа
-void CWorkFlowGraph::buildMaps( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions )
+// составляет соответствие между метками и вершинами графа
+void CWorkFlowGraph::buildLabelMap( const std::list<const IAsmInstr*>& asmFunction )
 {
 	int nodeIndex = 0;
-	for( auto func : asmFunctions ) {
-		functions.insert( std::make_pair( func.first, nodeIndex ) );
-		for( auto cmd : func.second ) {
-			// TODO: добавить какую-либо нормальную проверку того, что инструкция является меткой
-			std::string command = cmd->FormatInstr( Temp::CTempMap() );
-			if( command.length() > 1 && command.back() == ':' ) {
-				// если инструкция является меткой то добавим ее в соответствие
-				labels.insert( std::make_pair( command.substr( 0, command.length() - 1 ), nodeIndex ) );
-			}
-			++nodeIndex;
+	for( auto cmd : asmFunction ) {
+		// Проверка, ялвяется ли интрукция метко
+		const CLabel* label = dynamic_cast<const CLabel*>( cmd );
+		if( label != nullptr ) {
+			// если инструкция является меткой то добавим ее в соответствие
+			assert( label->Jumps() != nullptr );
+			assert( label->Jumps()->GetCurrent() != nullptr );
+			labels.insert( std::make_pair( label->Jumps()->GetCurrent()->ToString(), nodeIndex ) );
 		}
+		++nodeIndex;
 	}
 }
 
 
-// строит ребра в графе
-void CWorkFlowGraph::addEdges()
+// добавляет ребра в граф
+void CWorkFlowGraph::addEdges( const std::list<const IAsmInstr*>& asmFunction )
 {
-	// TODO:
-	// для начала необходимо разобраться, как можно выведать из инструкции ее тип
+	int nodeIndex = 0;
+	for( auto cmd : asmFunction ) {
+		const COper* oper = dynamic_cast<const COper*>( cmd );
+		if( oper != nullptr  &&  oper->Jumps() != nullptr  &&  oper->Jumps()->GetCurrent() != nullptr ) {
+			graph.AddEdge( nodeIndex, labels[oper->Jumps()->GetCurrent()->ToString()] );
+		} else if( nodeIndex + 1 < graph.Size() ) {
+			graph.AddEdge( nodeIndex, nodeIndex + 1 );
+		}
+		nodeIndex++;
+	}
 }
 
 // =====================================================================================================================
 
-
+namespace {
+// не вижу смысла объявлять это в хедере т.к. это сугубо вспомогательная конструкция
 class CTopSort {
 public:
 	// Топологическая сортировка графа, начиная с вершины start
@@ -125,7 +122,7 @@ public:
 		return res;
 	}
 
-	static std::vector<int> topSort(const CWorkFlowGraph& workflow, int start) 
+	static std::vector<int> topSort( const CWorkFlowGraph& workflow, int start )
 	{
 		return topSort( workflow.GetGraph(), start );
 	}
@@ -154,16 +151,17 @@ private:
 
 std::vector<int> CTopSort::res = std::vector<int>();
 std::vector<bool> CTopSort::marked = std::vector<bool>();
+} // anonymous namespace
 
 // =====================================================================================================================
 
-CLiveInOutCalculator::CLiveInOutCalculator( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions ) :
-	workflow( asmFunctions ), liveIn( workflow.Size() ), liveOut( workflow.Size() )
+CLiveInOutCalculator::CLiveInOutCalculator( const std::list<const IAsmInstr*>& asmFunction ) :
+	workflow( asmFunction ), liveIn( workflow.Size() ), liveOut( workflow.Size() )
 {
 	bool setsChanged = true;
 	int mainFuncIndex = 0; // TODO: нормально найти начальную вершину
 	std::vector<int> revTopsort = CTopSort::topSort( workflow, mainFuncIndex );
-	buildCommands( asmFunctions );
+	buildCommands( asmFunction );
 
 	std::reverse( revTopsort.begin(), revTopsort.end() );
 	while( setsChanged ) {
@@ -245,15 +243,10 @@ bool CLiveInOutCalculator::theSame( const std::set<std::string>& x, const std::s
 }
 
 
-void CLiveInOutCalculator::buildCommands( const std::map<std::string, std::list<const IAsmInstr*>>& asmFunctions )
+void CLiveInOutCalculator::buildCommands( const std::list<const IAsmInstr*>& asmFunction ) 
 {
 	commands.clear();
-	commands.reserve( workflow.Size() );
-	for( auto func : asmFunctions ) {
-		for( auto cmd : func.second ) {
-			commands.push_back( cmd );
-		}
-	}
+	std::copy( asmFunction.begin(), asmFunction.end(), std::back_inserter( commands ) );
 }
 
 } // namespace Assembler
