@@ -138,15 +138,19 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 		p.GetStmList()->Accept( this );
 	}
 	//last = returned TEmp
+	assert( lastReturnedExp == 0 );
+	const IStmt* root = lastReturnedStm;
+	lastReturnedStm = 0;
+	p.GetExp()->Accept( this );
 	if( lastReturnedExp != 0 ) {
 		if( lastReturnedStm != 0 ) {
 			lastReturnedStm = new IRTree::CSeq( lastReturnedStm, new IRTree::CMove( new IRTree::CTemp( currentFrame->GetReturnValuePointer() ), lastReturnedExp ) );
 		} else {
 			lastReturnedStm = new IRTree::CMove( new IRTree::CTemp( currentFrame->GetReturnValuePointer() ), lastReturnedExp );
 		}
-			
 	}
 
+	lastReturnedStm = new IRTree::CSeq( root, lastReturnedStm );
 	currentFrame->funcRoot = lastReturnedStm;
 	functions.push_back( newFrame );
 	currentFrame = 0;
@@ -345,10 +349,17 @@ void CIRTreeVisitor::Visit( const Tree::CMethodCallExpr& p )
 	} else {
 		args = new IRTree::CExprList( 0, 0 );
 	}
+	if( lastReturnedExp != 0 ) {
+		args = new IRTree::CExprList( lastReturnedExp, args );
+	} else {
+		// TODO добавить проверку является ли вызываемая функция методом этого класса
+		// в случае чего передать this. 
+	}
 	Temp::CTemp* returned = new Temp::CTemp();
 	const IRTree::CTemp* returnedTemp = new IRTree::CTemp( returned );
 	//выполняем функцию, возращаем return
-	lastReturnedExp = new IRTree::CEseq( new IRTree::CMove( returnedTemp, new IRTree::CCall( functionName, lastReturnedExpList ) ), returnedTemp );
+	lastReturnedExp = new IRTree::CEseq( new IRTree::CMove( returnedTemp, 
+		new IRTree::CCall( functionName, lastReturnedExpList ) ), returnedTemp );
 	lastReturnedExpList = 0;
 }
 
