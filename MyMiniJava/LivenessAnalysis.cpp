@@ -280,23 +280,21 @@ CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFu
 					int u = nodeMap[a];
 					int v = nodeMap[b];
 					AddEdge( u, v );
-					AddEdge( v, u );
 				}
 			}
 		} else {
 			// для каждой move инструкции добавить ребра между всеми такими переменными a и b
 			// где a - куда делается MOVE (c->a)
 			// b из множества liveOut
-			// TODO: разобраться, в каком порядке перечисляются аргументы команды MOVE в нашем случае
-			std::string a = dynamic_cast< const CMove* >( cmd )->UsedVars()->GetCurrent()->ToString();
+			std::string a = dynamic_cast< const CMove* >( cmd )->Destination()->GetCurrent()->ToString();
 			for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
 				addNode( a );
 				addNode( b );
-				int u = nodeMap[a];
-				int v = nodeMap[b];
-				AddEdge( u, v );
-				AddEdge( v, u );
+				AddEdge( nodeMap[a], nodeMap[b] );
 			}
+			std::string b = dynamic_cast< const CMove* >( cmd )->Source()->GetCurrent()->ToString();
+			addNode( b );
+			AddEdge( nodeMap[a], nodeMap[b] );
 		}
 	}
 }
