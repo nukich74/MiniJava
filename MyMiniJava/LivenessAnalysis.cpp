@@ -43,20 +43,6 @@ CWorkFlowGraph::CWorkFlowGraph( const std::list<const IAsmInstr*>& asmFunction )
 }
 
 
-const std::vector<int>& CWorkFlowGraph::GetInEdges( int nodeIndex ) const
-{
-	assert( nodeIndex < nodes.size() );
-	return nodes[nodeIndex].in;
-}
-
-
-const std::vector<int>& CWorkFlowGraph::GetOutEdges( int nodeIndex ) const
-{
-	assert( nodeIndex < nodes.size() );
-	return nodes[nodeIndex].out;
-}
-
-
 // составляет соответствие между метками и вершинами графа
 void CWorkFlowGraph::buildLabelMap( const std::list<const IAsmInstr*>& asmFunction )
 {
@@ -172,7 +158,7 @@ CLiveInOutCalculator::CLiveInOutCalculator( const std::list<const IAsmInstr*>& a
 
 			// out[n] = V in[s]		where s in succ[n]
 			std::set<std::string> newLiveOut;
-			for( auto succ : workflow.GetOutEdges( nodeIndex ) ) {
+			for( auto succ : workflow.GetNode( nodeIndex ).out ) {
 				for( auto var : liveIn[succ] ) {
 					newLiveOut.insert( var );
 				}
@@ -211,12 +197,6 @@ const std::set<std::string>& CLiveInOutCalculator::GetDefines( int nodeIndex ) c
 	assert( nodeIndex < int( defines.size() ) );
 
 	return defines[nodeIndex];
-}
-
-
-const CWorkFlowGraph& CLiveInOutCalculator::GetGraph() const
-{
-	return workflow;
 }
 
 
@@ -260,54 +240,6 @@ void CLiveInOutCalculator::buildDefines( const std::list<const IAsmInstr*>& asmF
 		}
 		++cmdIndex;
 	}
-}
-
-// =====================================================================================================================
-
-CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction ) : CGraph( 0 ),
-	liveInOut( asmFunction )
-{
-	int cmdIndex = 0;
-	for( auto cmd : asmFunction ) {
-		if( dynamic_cast<const CMove*>( cmd ) == nullptr ) {
-			// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
-			// где a принадлежит определяемым в данной инструкции переменным
-			// b - из множества liveOut
-			for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
-				for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
-					addNode( a );
-					addNode( b );
-					int u = nodeMap[a];
-					int v = nodeMap[b];
-					AddEdge( u, v );
-				}
-			}
-		} else {
-			// для каждой move инструкции добавить ребра между всеми такими переменными a и b
-			// где a - куда делается MOVE (c->a)
-			// b из множества liveOut
-			std::string a = dynamic_cast< const CMove* >( cmd )->Destination()->GetCurrent()->ToString();
-			for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
-				addNode( a );
-				addNode( b );
-				AddEdge( nodeMap[a], nodeMap[b] );
-			}
-			std::string b = dynamic_cast< const CMove* >( cmd )->Source()->GetCurrent()->ToString();
-			addNode( b );
-			AddEdge( nodeMap[a], nodeMap[b] );
-		}
-	}
-}
-
-
-// добавляет вершину в граф, если таковой еще нет
-void CInterferenceGraph::addNode( const std::string& name )
-{
-	if( nodeMap.find( name ) != nodeMap.end() ) {
-		return;
-	}
-	nodeMap.insert( std::make_pair( name, nodes.size() ) );
-	nodes.emplace_back();
 }
 
 } // namespace Assembler

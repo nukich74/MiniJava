@@ -49,12 +49,6 @@ public:
 	// принимает на вход map где ключ - имя функции а значение - список ассемблерных команд
 	explicit CWorkFlowGraph( const std::list<const IAsmInstr*>& asmFunction );
 
-	// Список вершин имеющих ребро в данную
-	const std::vector<int>& GetInEdges( int nodeIndex ) const;
-
-	// Список вершин имеющих ребро из данной
-	const std::vector<int>& GetOutEdges( int nodeIndex ) const;
-
 private:
 	// соответствие между метками и вершинами графа
 	std::map<std::string, int> labels;
@@ -80,8 +74,6 @@ public:
 	// получить список объявляемых переменных для некоторой вершины/инструкции
 	const std::set<std::string>& GetDefines( int nodeIndex ) const;
 
-	const CWorkFlowGraph& GetGraph() const;
-
 private:
 	// граф потока управления
 	CWorkFlowGraph workflow;
@@ -96,57 +88,8 @@ private:
 	// вектор с ассемблерными командами
 	std::vector<const IAsmInstr*> commands;
 
-	// 
-
 	bool theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const;
 	void buildCommands( const std::list<const IAsmInstr*>& asmFunction );
 	void buildDefines( const std::list<const IAsmInstr*>& asmFunction );
-};
-
-
-// Граф взаимосвязанности переменных.
-class CInterferenceGraph : public CGraph 
-{
-public:
-	explicit CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction );
-
-	// получить связанные переменные (компоненты связности)
-	std::list<std::list<std::string>> GetInterferingVariables() const;
-
-private:
-	// список имен переменных
-	std::vector<std::string> variables;
-
-	// соответствие между именами переменных и вершинами графа
-	std::map<std::string, int> nodeMap;
-
-	// граф с подсчитанными live-in live-out
-	CLiveInOutCalculator liveInOut;
-
-	void addNode( const std::string& name );
-};
-
-
-// Распределение регистров
-class CRegisterDistributor
-{
-public:
-	CRegisterDistributor( const std::list<const IAsmInstr*>& asmFunction, const std::vector<std::string>& registerNames );
-	
-	// получить имя регистра, связанного с данной переменной
-	const std::string& GetVariableRegister( const std::string& variable ) const;
-
-private: 
-	// список имен регистров
-	std::vector<std::string> registerNames;
-
-	// граф взаимосвязанности переменных
-	CInterferenceGraph interfereceGraph;
-
-	// соответствие между переменными и индексом в списке имен регистров
-	std::map<std::string, int> registerMap;
-
-
-	void buildInterferenceGraph();
 };
 } // namespace Assembler

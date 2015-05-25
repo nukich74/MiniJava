@@ -25,6 +25,7 @@
     <ClCompile Include="IRTreeVisitor.cpp" />
     <ClCompile Include="LivenessAnalysis.cpp" />
     <ClCompile Include="prettyPrintVisitor.cpp" />
+    <ClCompile Include="RegisterDistribution.cpp" />
     <ClCompile Include="Source\bison.tab.cpp" />
     <ClCompile Include="Source\flex.flex.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="MethodInfo.h" />
     <ClInclude Include="prettyPrintVisitor.h" />
     <ClInclude Include="iVisitor.h" />
+    <ClInclude Include="RegisterDistribution.h" />
     <ClInclude Include="Source\bison.tab.h" />
     <ClInclude Include="StackFrame.h" />
     <ClInclude Include="SubtreeRealisation.h" />
