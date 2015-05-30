@@ -3,7 +3,23 @@
 
 namespace StackFrame {
 
-
+CFrame::CFrame( const std::string _name, IRTree::IStmt* _funcRoot ) : name( _name ),
+	wordSize( 4 ), funcRoot( _funcRoot ),
+	framePointer( new Temp::CTemp( _name + "_FP" ) ),
+	stackPointer( new Temp::CTemp( _name + "_SP" ) ),
+	returnValue( new Temp::CTemp( _name + "_RV" ) ),
+	eax( new Temp::CTemp( "EAX" ) ),
+	edx( new Temp::CTemp( "EDX" ) )
+{
+	registers.emplace_back( "EAX" );
+	registers.emplace_back( "EBX" );
+	registers.emplace_back( "ECX" );
+	registers.emplace_back( "EDX" );
+	registers.emplace_back( "ESI" );
+	registers.emplace_back( "EDI" );
+	registers.emplace_back( "ESP" );
+	registers.emplace_back( "EBP" );
+}
 
 const IAccess* CFrame::GetFormal( const std::string& name ) const 
 {

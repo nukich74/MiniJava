@@ -51,12 +51,7 @@ private:
 //Не делаем интрефейс, так как реализация строго на 1 машине
 class CFrame {
 public:
-	CFrame( const std::string _name, IRTree::IStmt* _funcRoot ) : name( _name ),
-		wordSize(4), funcRoot(_funcRoot),
-		framePointer( new Temp::CTemp( _name + "_FP" ) ),
-		stackPointer( new Temp::CTemp( _name + "_SP" ) ),
-		returnValue( new Temp::CTemp( _name + "_RV" ) )
-		{};
+	CFrame( const std::string _name, IRTree::IStmt* _funcRoot );
 
 	int WordSize() const { return wordSize; };
 	
@@ -70,6 +65,9 @@ public:
 	void AddLocal( const std::string& temp, const IAccess* accs ) { locals[temp] = accs; };
 
 	const IAccess* GetAccess( const std::string& name ) const;
+	const std::vector<const std::string>& GetRegisters() const { return registers; }
+	const Temp::CTemp* GetEax() const { return eax; }
+	const Temp::CTemp* GetEdx() const { return edx; }
 
 	const IRTree::IStmt* funcRoot;
 	int wordSize;
@@ -78,9 +76,12 @@ public:
 private:
 	std::map<const std::string, const IAccess* > formals;
 	std::map<const std::string, const IAccess* > locals;
+	std::vector<const std::string> registers;
 	const Temp::CTemp* returnValue;
 	const Temp::CTemp* stackPointer;
 	const Temp::CTemp* framePointer;
+	const Temp::CTemp* eax;
+	const Temp::CTemp* edx;
 };
 
 }

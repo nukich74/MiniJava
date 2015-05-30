@@ -22,8 +22,8 @@ public:
 		const Temp::CTempList* _src, const Temp::CLabelList* _lblList = 0 ) :
 		asmCmd( _asmCmd ), dst( _dst ), src( _src ), lblList( _lblList ) {};
 		
-	const Temp::CTempList* UsedVars() const { return dst; }
-	const Temp::CTempList* Defines() const { return src; }
+	const Temp::CTempList* UsedVars() const { return src; }
+	const Temp::CTempList* Defines() const { return dst; }
 	const Temp::CLabelList* Jumps() const { return lblList; }
 	const Temp::CTempList* Destination() const { return 0; }
 	const Temp::CTempList* Source() const { return 0; }
