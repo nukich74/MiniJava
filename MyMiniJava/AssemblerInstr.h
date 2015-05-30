@@ -1,6 +1,8 @@
 // Borin Pavel
 // Assembler Instruction classes
 
+#pragma once
+
 #include <string>
 #include <Temp.h>
 

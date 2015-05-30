@@ -15,6 +15,8 @@
 #include <ctime>
 #include "BlockTracing.h"
 #include "IRTreePrinter.h"
+#include "RegisterDistribution.h"
+#include "AsmTreeMaker.h"
 
 #define DEBUG_TO_FILE
 
@@ -141,6 +143,12 @@ int main( int argc, char* argv[] )
 					printer.Clear();
 					result->Accept( &printer );
 					std::cout << "After block processing:" << std::endl << printer.GetResult();
+
+					Assembler::CAsmTreeMaker treeMaker( item );
+					std::cout << "\nAsmInstr\n";
+					std::cout << item->name << '\n';
+					std::cout << treeMaker.GetAsmInstr().size() << std::endl;
+					// Assembler::CInterferenceGraph graph( treeMaker.GetAsmInstr(), item->GetRegisters() );
 				}
 
 			} while( !feof( yyin ) );

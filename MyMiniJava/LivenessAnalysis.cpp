@@ -100,7 +100,7 @@ private:
 	// вектор в котором будет хранится результат
 	static std::vector<int> res;
 	// вектор с пометками, была ли посещена обходом данная вершина
-	static std::vector<bool> marked;
+	static std::vector<char> marked;
 
 	// обход в глубину с запоминанием порядка выхода (для топологической соритровки)
 	static void dfs( const CGraph& graph, int nodeIndex )
@@ -119,7 +119,7 @@ private:
 };
 
 std::vector<int> CTopSort::res = std::vector<int>();
-std::vector<bool> CTopSort::marked = std::vector<bool>();
+std::vector<char> CTopSort::marked = std::vector<char>();
 } // anonymous namespace
 
 // =====================================================================================================================

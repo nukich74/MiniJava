@@ -27,7 +27,7 @@ enum TEdgeType {
 // Граф взаимосвязанности переменных.
 class CInterferenceGraph {
 public:
-	explicit CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction, const std::vector<std::string>& registers );
+	explicit CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction, const std::vector<const std::string>& registers );
 
 private:
 	// таблица инцидентности
@@ -43,7 +43,7 @@ private:
 	CLiveInOutCalculator liveInOut;
 
 	// список доступных регистров
-	std::vector<std::string> registers;
+	std::vector<const std::string> registers;
 
 	// стек убранных вершин
 	std::stack<int> pulledNodes;

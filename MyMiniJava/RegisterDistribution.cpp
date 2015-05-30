@@ -9,7 +9,7 @@
 namespace Assembler {
 
 CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction,
-	const std::vector<std::string>& registers ) : liveInOut( asmFunction ), registers( registers )
+	const std::vector<const std::string>& registers ) : liveInOut( asmFunction ), registers( registers )
 {
 	int cmdIndex = 0;
 	for( auto cmd : asmFunction ) {
