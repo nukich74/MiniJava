@@ -206,11 +206,11 @@ namespace IRTree {
 		std::string curName = newVertex( "Move" );
 		if( p.src ) {
 			p.src->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "src" );
 		}
 		if( p.dst ) {
 			p.dst->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "dst" );
 		}
 		lastName = curName;
 	}
@@ -230,15 +230,15 @@ namespace IRTree {
 		std::string curName = newVertex( "Seq" );
 		if( p.left ) {
 			p.left->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "1" );
 		}
 		if( p.right ) {
 			p.right->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "2" );
 		}
 		if( p.last ) {
 			p.last->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "3" );
 		}
 		lastName = curName;
 	}
