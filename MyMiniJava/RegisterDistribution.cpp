@@ -24,8 +24,8 @@ CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFu
 				pulledNodes.pop();
 			}
 			uncoloredNodes.clear();
+			liveInOut = CLiveInOutCalculator( asmFunction );
 		}
-		liveInOut = CLiveInOutCalculator( asmFunction );
 		for( auto cmd : asmFunction ) {
 			if( dynamic_cast< const CMove* >( cmd ) == nullptr ) {
 				// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
