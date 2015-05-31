@@ -19,7 +19,7 @@ public:
 		stackFrame( _stackFrame ), isInitialized( false ) {};
 	
 	// функция интерпретирования промежуточного представления функции
-	void InitializeTree() const;
+	void InitializeTree( const IRTree::CStmtList* cmdList ) const;
 	bool IsInitialized() const { return isInitialized; };
 
 	const std::list<const IAsmInstr*> GetAsmInstr() const { return func; };

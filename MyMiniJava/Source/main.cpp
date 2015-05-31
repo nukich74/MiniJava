@@ -125,7 +125,7 @@ int main( int argc, char* argv[] )
 				yyprogram->Accept( &cIrTreeVis );
 
 				int functionId = 0;
-				for( const auto& item : cIrTreeVis.functions ) {
+				for( auto& item : cIrTreeVis.functions ) {
 					Canon::CCanon cc;
 					Canon::CTracer tr;
 					IRTree::IRTreePrinter printer;
@@ -144,7 +144,9 @@ int main( int argc, char* argv[] )
 					result->Accept( &printer );
 					std::cout << "After block processing:" << std::endl << printer.GetResult();
 
+					
 					Assembler::CAsmTreeMaker treeMaker( item );
+					treeMaker.InitializeTree( result );
 					std::cout << "\nAsmInstr\n";
 					std::cout << item->name << '\n';
 					std::cout << treeMaker.GetAsmInstr().size() << std::endl;

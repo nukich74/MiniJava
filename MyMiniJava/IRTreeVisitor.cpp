@@ -165,10 +165,33 @@ void CIRTreeVisitor::Visit( const Tree::CGroupStmt& p )
 void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 {
 #pragma message( "DO IF( DSA || DQWD )" )
-	if( p.GetExp() != 0 ) {
+	/*if( p.GetExp() != 0 ) {
 		p.GetExp()->Accept( this );
+	}*/
+	//const IExpr* ifExpRes = lastReturnedExp;
+
+	const IRTree::IExpr* left = 0;
+	const IRTree::IExpr* right = 0;
+	TEJump op = CJ_NE;
+
+	if( dynamic_cast<const Tree::COpExpr*>( p.GetExp() ) ) {
+		const Tree::COpExpr* opExpr = dynamic_cast<const Tree::COpExpr*>( p.GetExp() );
+		if( opExpr->GetOp() == Tree::BinOp::BO_Less ) {
+			opExpr->GetExprFirst()->Accept( this );
+			left = lastReturnedExp;
+			opExpr->GetExprSecond()->Accept( this );
+			right = lastReturnedExp;
+			op = CJ_LT;
+		}
+	} else {
+		// когда нет условий, просто сверить с нулем
+		p.GetExp()->Accept( this );
+		left = lastReturnedExp;
+		right = new IRTree::CConst( 0 );
+		op = CJ_NE;
 	}
-	const IExpr* ifExpRes = lastReturnedExp;
+
+
 	Temp::CLabel* trueTempLabel = new Temp::CLabel();
 	Temp::CLabel* falseTempLabel = new Temp::CLabel();
 	Temp::CLabel* endTempLabel = new Temp::CLabel();
@@ -186,8 +209,10 @@ void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 		lastReturnedExp = nullptr;
 		lastReturnedStm = nullptr;
 	}
-	CExpConverter conv( ifExpRes );
-	lastReturnedStm = new IRTree::CSeq( conv.ToConditional( trueTempLabel, falseTempLabel ), trueStm, falseStm );
+	//CExpConverter conv( ifExpRes );
+	//lastReturnedStm = new IRTree::CSeq( conv.ToConditional( trueTempLabel, falseTempLabel ), trueStm, falseStm );
+	const IStmt* cond = new IRTree::CCJump( op, left, right, trueTempLabel, falseTempLabel );
+	lastReturnedStm = new IRTree::CSeq( cond, trueStm, falseStm );
 	lastReturnedStm = new IRTree::CSeq( lastReturnedStm, endLabel );
 }
 
@@ -437,7 +462,8 @@ void CIRTreeVisitor::Visit( const Tree::CNameExpr& p )
 void CIRTreeVisitor::Visit( const Tree::CIdExpr& p )
 {
 	//получить по имени переменную из фрэйма
-	lastReturnedExp = new IRTree::CName( new Temp::CLabel( p.GetId() ) );
+	//lastReturnedExp = new IRTree::CName( new Temp::CLabel( p.GetId() ) );
+	lastReturnedExp = currentFrame->GetAccess( p.GetId() )->GetExp( currentFrame );
 }
 
 void CIRTreeVisitor::Visit( const Tree::CLengthExpr& p )

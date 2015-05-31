@@ -7,9 +7,13 @@
 
 namespace Assembler {
 
-void CAsmTreeMaker::InitializeTree() const
+void CAsmTreeMaker::InitializeTree( const IRTree::CStmtList* cmdList  ) const
 {
-	munchStm( stackFrame->funcRoot );
+	const IRTree::CStmtList* next = cmdList;
+	while( next != 0 ) {
+		munchStm( next->GetCurrent() );
+		next = dynamic_cast<const IRTree::CStmtList*>( next->GetNextStmts() );
+	}
 };
 
 void CAsmTreeMaker::munchStm( const IRTree::IStmt* vertex ) const
@@ -87,24 +91,23 @@ void CAsmTreeMaker::munchStm( const IRTree::CMove* vertex ) const
 					return;
 				}
 			}
-
-			std::string cmd = "mov ['d0], 's0\n";
-			const IAsmInstr* asmInst = new CMove( 
-				cmd, new Temp::CTempList( munchExp( memDst->expr ), nullptr ), 
-				new Temp::CTempList( munchExp( vertex->src ), nullptr ), 0 );
-			func.push_back( asmInst );
-			return;
-		} else if( dynamic_cast<const CTemp*>( vertex->dst ) ) {
-			// Temp <- Temp; Temp <- Mem
-			const CTemp* tmp = dynamic_cast<const CTemp*>( vertex->dst );
+		} 
+		std::string cmd = "mov ['d0], 's0\n";
+		const IAsmInstr* asmInst = new CMove( 
+			cmd, new Temp::CTempList( munchExp( memDst->expr ), nullptr ), 
+			new Temp::CTempList( munchExp( vertex->src ), nullptr ), 0 );
+		func.push_back( asmInst );
+		return;
+	} else if( dynamic_cast<const CTemp*>( vertex->dst ) ) {
+		// Temp <- Temp; Temp <- Mem
+		const CTemp* tmp = dynamic_cast<const CTemp*>( vertex->dst );
 			
-			std::string cmd = "mov 'd0, 's0\n";
-			const IAsmInstr* asmInst = new CMove( 
-				cmd, new Temp::CTempList( tmp->temp, nullptr ), 
-				new Temp::CTempList( munchExp( vertex->src ), nullptr ), 0 );
-			func.push_back( asmInst );
-			return;
-		}
+		std::string cmd = "mov 'd0, 's0\n";
+		const IAsmInstr* asmInst = new CMove( 
+			cmd, new Temp::CTempList( tmp->temp, nullptr ), 
+			new Temp::CTempList( munchExp( vertex->src ), nullptr ), 0 );
+		func.push_back( asmInst );
+		return;
 	}
 };
 
@@ -128,7 +131,7 @@ void CAsmTreeMaker::munchStm( const IRTree::CExp* expr ) const
 
 void CAsmTreeMaker::munchStm( const IRTree::CCJump* cjump ) const 
 {
-	assert( cjump->ifFalse == 0 );
+	//assert( cjump->ifFalse == 0 );
 	const Temp::CTemp* regLeft = munchExp( cjump->left );
 	const Temp::CTemp* regRight = munchExp( cjump->right );
 	Temp::CTempList* tmpList = new Temp::CTempList( regLeft, new Temp::CTempList( regRight, 0 ) );
