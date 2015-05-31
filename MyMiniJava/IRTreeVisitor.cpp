@@ -1,4 +1,4 @@
-#pragma once
+// Borin Pavel
 
 #include "IRTreeVisitor.h"
 #include "syntaxTree.h"
@@ -103,6 +103,8 @@ void CIRTreeVisitor::Visit( const Tree::CVarDecl& p )
 		varCounter += 1;
 	} else {
 		// это опреление переменной в классе
+		// должны были обработать
+		assert( false );
 
 	}
 }
@@ -123,16 +125,10 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( varCounter ) );
 		varCounter += 1;
 	} 
-	//newFrame->AddFormal( lastReturnedAccess );
+	
 	if( p.GetVarDeclList() != 0 ) {
 		p.GetVarDeclList()->Accept( this );
 	}
-	
-	
-	/*for( auto iter : symbolTable ) {
-		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( counter ) );
-		counter += 4;
-	}*/
 
 	if( p.GetStmList() != 0 ) {
 		p.GetStmList()->Accept( this );
@@ -168,6 +164,7 @@ void CIRTreeVisitor::Visit( const Tree::CGroupStmt& p )
 	
 void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 {
+#pragma message( "DO IF( DSA || DQWD )" )
 	if( p.GetExp() != 0 ) {
 		p.GetExp()->Accept( this );
 	}
@@ -343,17 +340,11 @@ void CIRTreeVisitor::Visit( const Tree::CMethodCallExpr& p )
 	Temp::CLabel* functionLabel = new Temp::CLabel( methodName );
 	IRTree::CName* functionName = new IRTree::CName( functionLabel );
 	const IExprList* args;
+
+	assert( exprToBeCalled != 0 );
 	if( p.GetExprList() != 0 ) {
 		p.GetExprList()->Accept( this );
-		args = lastReturnedExpList;
-	} else {
-		args = new IRTree::CExprList( 0, 0 );
-	}
-	if( lastReturnedExp != 0 ) {
-		args = new IRTree::CExprList( lastReturnedExp, args );
-	} else {
-		// TODO добавить проверку является ли вызываемая функция методом этого класса
-		// в случае чего передать this. 
+		args = new IRTree::CExprList( exprToBeCalled, lastReturnedExpList );
 	}
 	Temp::CTemp* returned = new Temp::CTemp();
 	const IRTree::CTemp* returnedTemp = new IRTree::CTemp( returned );
@@ -382,8 +373,8 @@ void CIRTreeVisitor::Visit( const Tree::CFalseExpr& p )
 
 void CIRTreeVisitor::Visit( const Tree::CThisExpr& p )
 {
-	//???????????????????????????????????????//
-	lastReturnedExp = new IRTree::CTemp( currentFrame->GetStackPointer() );
+	// просто берем указатель на класс
+	lastReturnedExp = currentFrame->GetAccess( "this" )->GetExp( currentFrame );
 }
 
 void CIRTreeVisitor::Visit( const Tree::CNewIntExpr& p )
