@@ -224,19 +224,35 @@ public:
 };
 
 
-class CJump: public IStmt {
+class CLabel: public IStmt {
 public:
-	CJump( const Temp::CLabel* _label ): label(_label) {};
+	CLabel( const Temp::CLabel* _label ): label(_label) {};
 	virtual const CExprList* Kids() const
 	{
 		return 0;
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
-		return new CJump( label );
+		return new CLabel( label );
 	}
 	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const Temp::CLabel* label;
+};
+
+class CJump: public IStmt {
+public:
+	CJump( const IRTree::CLabel* _label ) : label(_label) {};
+	CJump( const Temp::CLabel* _label ) : label( new IRTree::CLabel(_label) ) {}
+	virtual const CExprList* Kids() const
+	{
+		return 0;
+	}
+	virtual const IStmt* Build( const CExprList* kids ) const
+	{
+		return label;
+	}
+	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
+	const IRTree::CLabel* label;
 };
 
 
@@ -306,20 +322,6 @@ public:
 	const IStmt *left, *right, *last;
 };
 
-class CLabel: public IStmt {
-public:
-	CLabel( const Temp::CLabel* _label ): label(_label) {};
-	virtual const CExprList* Kids() const
-	{
-		return 0;
-	}
-	virtual const IStmt* Build( const CExprList* kids ) const
-	{
-		return new CLabel( label );
-	}
-	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
-	const Temp::CLabel* label;
-};
 
 
 

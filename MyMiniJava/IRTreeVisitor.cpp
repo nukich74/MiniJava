@@ -176,13 +176,13 @@ void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 	IRTree::CLabel* falseLabel = new IRTree::CLabel( falseTempLabel );
 	IRTree::CLabel* endLabel = new IRTree::CLabel( endTempLabel );
 	p.GetStmFirst()->Accept( this );
-	IStmt* trueStm = new IRTree::CSeq( trueLabel, lastReturnedStm, endLabel );
+	IStmt* trueStm = new IRTree::CSeq( trueLabel, lastReturnedStm, new IRTree::CJump( endLabel ) );
 	lastReturnedExp = 0;
 	lastReturnedStm = 0;
 	IStmt* falseStm = 0;
 	if( p.GetStmSecond() != 0 ) {
 		p.GetStmSecond()->Accept( this );
-		falseStm = new IRTree::CSeq( falseLabel, lastReturnedStm, endLabel );
+		falseStm = new IRTree::CSeq( falseLabel, lastReturnedStm, new IRTree::CJump( endLabel ) );
 		lastReturnedExp = nullptr;
 		lastReturnedStm = nullptr;
 	}
@@ -195,9 +195,9 @@ void CIRTreeVisitor::Visit( const Tree::CWhileStmt& p )
 	Temp::CLabel* beforeConditionLabelTemp = new Temp::CLabel();
 	Temp::CLabel* inLoopLabelTemp = new Temp::CLabel();
 	Temp::CLabel* endLabelTemp = new Temp::CLabel();
-	IRTree::CLabel* beforeConditionLabel = new IRTree::CLabel( new Temp::CLabel() );
-	IRTree::CLabel* inLoopLabel = new IRTree::CLabel( new Temp::CLabel() );
-	IRTree::CLabel* endLabel = new IRTree::CLabel( new Temp::CLabel() );
+	IRTree::CLabel* beforeConditionLabel = new IRTree::CLabel( beforeConditionLabelTemp );
+	IRTree::CLabel* inLoopLabel = new IRTree::CLabel( inLoopLabelTemp );
+	IRTree::CLabel* endLabel = new IRTree::CLabel( endLabelTemp );
 	p.GetExpr()->Accept( this );
 	Translate::CExpConverter converter( lastReturnedExp );
 	const IStmt* whileStmt = converter.ToConditional( inLoopLabelTemp, endLabelTemp );
