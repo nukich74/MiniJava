@@ -26,7 +26,7 @@ namespace Canon {
 			auto isJump = dynamic_cast<const CJump*>( blockSequence[resultVector[i]].stms[len - 1] );
 			if( isJump ) {
 				auto isTargetLabel = dynamic_cast<const CLabel*>( blockSequence[resultVector[i + 1]].stms[0] );
-				if( isTargetLabel && isTargetLabel->label->ToString() == isJump->label->ToString() ) { 
+				if( isTargetLabel && isTargetLabel->label->ToString() == isJump->label->label->ToString() ) { 
 					blockSequence[resultVector[i]].stms.pop_back();
 				}
 			}

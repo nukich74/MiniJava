@@ -188,6 +188,7 @@ void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 	}
 	CExpConverter conv( ifExpRes );
 	lastReturnedStm = new IRTree::CSeq( conv.ToConditional( trueTempLabel, falseTempLabel ), trueStm, falseStm );
+	lastReturnedStm = new IRTree::CSeq( lastReturnedStm, endLabel );
 }
 
 void CIRTreeVisitor::Visit( const Tree::CWhileStmt& p )

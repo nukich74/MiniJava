@@ -117,7 +117,7 @@ void CAsmTreeMaker::munchStm( const IRTree::CLabel* label ) const
 
 void CAsmTreeMaker::munchStm( const IRTree::CJump* jump ) const
 {
-	const IAsmInstr* asmInstr = new COper( "jmp 'j0\n", 0, 0, new Temp::CLabelList( jump->label, 0 ) );
+	const IAsmInstr* asmInstr = new COper( "jmp 'j0\n", 0, 0, new Temp::CLabelList( jump->label->label, 0 ) );
 	func.push_back( asmInstr );
 };
 
