@@ -53,7 +53,9 @@ namespace Canon {
 			}
 		}
 
-		return result;
+		CStmtList* noEdgeLabels = const_cast<CStmtList*>( result->PopFront() );
+		noEdgeLabels->PopBack();
+		return noEdgeLabels;
 	}
 
 	void CTracer::findBlocks( const IRTree::CStmtList* list ) {

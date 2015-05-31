@@ -51,9 +51,26 @@ public:
 	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IStmt* GetCurrent() const { return curStmt; };
 	const IStmtList* GetNextStmts() const { return nextStmts; };
+	const CStmtList* PopFront()	{ return dynamic_cast<const CStmtList*>( nextStmts ); }
+
+	void PopBack() //bad idea to do this
+	{
+		CStmtList* lastLastVertex = 0;
+		CStmtList* lastVertex = this;
+		CStmtList* curVertex = const_cast<CStmtList*>( dynamic_cast<const CStmtList*>( nextStmts ) );
+		while( curVertex ) {
+			lastLastVertex = lastVertex;
+			lastVertex = curVertex;
+			curVertex = const_cast<CStmtList*>( dynamic_cast<const CStmtList*>( curVertex->GetNextStmts() ) );
+		}
+		lastLastVertex->SetAsLast();
+	}
+
 private:
 	const IStmt* curStmt;
 	const IStmtList* nextStmts;
+	void SetAsLast() { nextStmts = 0; }
+	void SetToNull() { curStmt = 0; nextStmts = 0; }
 };
 
 class IStmt {
