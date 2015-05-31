@@ -7,7 +7,7 @@ namespace Canon {
 
 	CTracer::CTracer() 
 	{
-		doneLabel = new Temp::CLabel();
+		doneLabel = new Temp::CLabel( "DoneLabel" );
 	}
 
 	CStmtList* CTracer::Transform( const CStmtList* list ) {

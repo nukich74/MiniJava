@@ -249,7 +249,7 @@ public:
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
-		return label;
+		return new CJump( label );
 	}
 	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
 	const IRTree::CLabel* label;
