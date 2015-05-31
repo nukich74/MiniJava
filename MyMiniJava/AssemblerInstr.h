@@ -29,6 +29,7 @@ public:
 	const Temp::CLabelList* Jumps() const { return lblList; }
 	const Temp::CTempList* Destination() const { return 0; }
 	const Temp::CTempList* Source() const { return 0; }
+	std::string GetOperator() const { return asmCmd.substr( 0, asmCmd.find( ' ' ) ); }
 	std::string FormatInstr( Temp::CTempMap tmpMap ) const { return ""; };
 		
 protected:

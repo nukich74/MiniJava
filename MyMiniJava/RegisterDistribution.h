@@ -6,6 +6,7 @@
 #include "LivenessAnalysis.h"
 
 #include <stack>
+#include <set>
 
 
 namespace Assembler {
@@ -29,7 +30,12 @@ class CInterferenceGraph {
 public:
 	explicit CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction, const std::vector<const std::string>& registers );
 
+	const std::list<const IAsmInstr*>& GetCode() const;
+
 private:
+	// код функции
+	std::list<const IAsmInstr*> asmFunction;
+
 	// таблица инцидентности
 	std::vector<std::vector<TEdgeType>> edges;
 
@@ -49,13 +55,14 @@ private:
 	std::stack<int> pulledNodes;
 
 	// непокрашенные вершины
-	std::vector<int> uncoloredNodes;
+	std::set<int> uncoloredNodes;
 
 	void addNode( const std::string& name );
 	void addMoveEdge( const std::string& from, const std::string& to );
 	void addEdge( const std::string& from, const std::string& to );
 
-	void paint();
+	bool paint();
+	void regenerateCode();
 
 	void addRegisterColors();
 	bool hasNonColoredNonStackedNodes() const;

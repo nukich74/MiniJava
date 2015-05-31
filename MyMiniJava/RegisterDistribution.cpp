@@ -9,36 +9,51 @@
 namespace Assembler {
 
 CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction,
-	const std::vector<const std::string>& registers ) : liveInOut( asmFunction ), registers( registers )
+	const std::vector<const std::string>& registers ) : asmFunction( asmFunction ), liveInOut( asmFunction ), 
+	registers( registers )
 {
-	int cmdIndex = 0;
-	for( auto cmd : asmFunction ) {
-		if( dynamic_cast<const CMove*>( cmd ) == nullptr ) {
-			// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
-			// где a принадлежит определяемым в данной инструкции переменным
-			// b - из множества liveOut
-			for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+	do {
+		int cmdIndex = 0;
+		if( !uncoloredNodes.empty() ) {
+			regenerateCode();
+			uncoloredNodes.clear();
+			edges.clear();
+			nodes.clear();
+			nodeMap.clear();
+			while( !pulledNodes.empty() ) {
+				pulledNodes.pop();
+			}
+			uncoloredNodes.clear();
+		}
+		liveInOut = CLiveInOutCalculator( asmFunction );
+		for( auto cmd : asmFunction ) {
+			if( dynamic_cast< const CMove* >( cmd ) == nullptr ) {
+				// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
+				// где a принадлежит определяемым в данной инструкции переменным
+				// b - из множества liveOut
+				for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+					for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
+						addNode( a );
+						addNode( b );
+						addEdge( a, b );
+					}
+				}
+			} else {
+				// для каждой move инструкции добавить ребра между всеми такими переменными a и b
+				// где a - куда делается MOVE (c->a)
+				// b из множества liveOut
+				std::string a = dynamic_cast< const CMove* >( cmd )->Destination()->GetCurrent()->ToString();
 				for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
 					addNode( a );
 					addNode( b );
 					addEdge( a, b );
 				}
-			}
-		} else {
-			// для каждой move инструкции добавить ребра между всеми такими переменными a и b
-			// где a - куда делается MOVE (c->a)
-			// b из множества liveOut
-			std::string a = dynamic_cast< const CMove* >( cmd )->Destination()->GetCurrent()->ToString();
-			for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
-				addNode( a );
+				std::string b = dynamic_cast< const CMove* >( cmd )->Source()->GetCurrent()->ToString();
 				addNode( b );
-				addEdge( a, b );
+				addMoveEdge( a, b );
 			}
-			std::string b = dynamic_cast< const CMove* >( cmd )->Source()->GetCurrent()->ToString();
-			addNode( b );
-			addMoveEdge( a, b );
 		}
-	}
+	} while( !paint() );
 }
 
 
@@ -81,20 +96,21 @@ void CInterferenceGraph::addEdge( const std::string& from, const std::string& to
 
 
 // раскрасить граф
-void CInterferenceGraph::paint()
+bool CInterferenceGraph::paint()
 {
 	addRegisterColors();
 	while( hasNonColoredNonStackedNodes() ) {
 		int node = getColorableNode();
 		if( node == -1 ) {
 			node = getMaxInterferingNode();
-			uncoloredNodes.push_back( node );
+			uncoloredNodes.insert( node );
 		}
 		pulledNodes.push( node );
 		nodes[node].InStack = true;
 	}
-	// пока что считаем, что у нас по-любому хватит регистров
-	assert( uncoloredNodes.empty() );
+	if( !uncoloredNodes.empty() ) {
+		return false;
+	}
 	while( !pulledNodes.empty() ) {
 		int currNode = pulledNodes.top();
 		pulledNodes.pop();
@@ -111,6 +127,7 @@ void CInterferenceGraph::paint()
 			}
 		}
 	}
+	return true;
 }
 
 
@@ -184,6 +201,57 @@ int CInterferenceGraph::getNeighbourNum( int nodeIndex ) const
 		}
 	}
 	return neighbours;
+}
+
+
+// перегенерировать код, чтобы появилась раскраска
+void CInterferenceGraph::regenerateCode()
+{
+	std::list<const IAsmInstr*> newCode;
+	for( auto it : asmFunction ) {
+		if( it->Source() != nullptr  &&  it->Source()->GetCurrent() != nullptr  &&
+			nodeMap.find( it->Source()->GetCurrent()->ToString() ) != nodeMap.end() ) 
+		{
+			int varIndex = nodeMap.find( it->Source()->GetCurrent()->ToString() )->second;
+			if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
+				bool isMove = false;
+				if( dynamic_cast< const Assembler::CMove* >( it ) != nullptr ) {
+					isMove = true;
+				}
+				Temp::CTemp* buff = new Temp::CTemp();
+				newCode.push_back( new Assembler::CMove( "mov 'd0 's0", new Temp::CTempList( buff, 0 ), it->Source() ) );
+				if( isMove ) {
+					newCode.push_back( new Assembler::CMove( "mov 'd0 's0", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
+				} else {
+					const Assembler::COper* cmd = dynamic_cast< const Assembler::COper* >( it );
+					newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
+				}
+			} else {
+				newCode.push_back( it );
+			}
+		} else {
+			newCode.push_back( it );
+		}
+	}
+	asmFunction = newCode;
+	newCode.clear();
+	for( auto it : asmFunction ) {
+		if( it->Destination() != nullptr  &&  it->Destination()->GetCurrent() != nullptr  &&
+			nodeMap.find( it->Destination()->GetCurrent()->ToString() ) != nodeMap.end() ) {
+			int varIndex = nodeMap.find( it->Destination()->GetCurrent()->ToString() )->second;
+			if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
+				const Assembler::CMove* cmd = dynamic_cast< const Assembler::CMove* >( it );
+				assert( cmd != nullptr );
+				Temp::CTemp* buff = new Temp::CTemp();
+				newCode.push_back( new Assembler::CMove( "mov 'd0 's0", new Temp::CTempList( buff, 0 ), it->Source() ) );
+				newCode.push_back( new Assembler::CMove( "mov 'd0 's0", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
+			} else {
+				newCode.push_back( it );
+			}
+		} else {
+			newCode.push_back( it );
+		}
+	}
 }
 
 //======================================================================================================================
