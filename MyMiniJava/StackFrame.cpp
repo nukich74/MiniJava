@@ -17,8 +17,8 @@ CFrame::CFrame( const std::string _name, IRTree::IStmt* _funcRoot ) : name( _nam
 	registers.emplace_back( "EDX" );
 	registers.emplace_back( "ESI" );
 	registers.emplace_back( "EDI" );
-	registers.emplace_back( "ESP" );
-	registers.emplace_back( "EBP" );
+	// registers.emplace_back( "ESP" );
+	// registers.emplace_back( "EBP" );
 }
 
 const IAccess* CFrame::GetFormal( const std::string& name ) const 

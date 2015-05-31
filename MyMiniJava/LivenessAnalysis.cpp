@@ -132,6 +132,7 @@ CLiveInOutCalculator::CLiveInOutCalculator( const std::list<const IAsmInstr*>& a
 	std::vector<int> revTopsort = CTopSort::topSort( workflow, mainFuncIndex );
 	buildCommands( asmFunction );
 	buildDefines( asmFunction );
+	buildUses( asmFunction );
 
 	std::reverse( revTopsort.begin(), revTopsort.end() );
 	while( setsChanged ) {
@@ -200,6 +201,15 @@ const std::set<std::string>& CLiveInOutCalculator::GetDefines( int nodeIndex ) c
 }
 
 
+const std::set<std::string>& CLiveInOutCalculator::GetUses( int nodeIndex ) const
+{
+	assert( nodeIndex < int( uses.size() ) );
+
+	return uses[nodeIndex];
+}
+
+
+
 bool CLiveInOutCalculator::theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const
 {
 	if( x.size() != y.size() ) {
@@ -236,6 +246,21 @@ void CLiveInOutCalculator::buildDefines( const std::list<const IAsmInstr*>& asmF
 		auto def = cmd->Defines();
 		while( def != nullptr  &&  def->GetCurrent() != nullptr ) {
 			defines[cmdIndex].insert( def->GetCurrent()->ToString() );
+			def = def->GetNext();
+		}
+		++cmdIndex;
+	}
+}
+
+
+void CLiveInOutCalculator::buildUses( const std::list<const IAsmInstr*>& asmFunction )
+{
+	uses.resize( asmFunction.size() );
+	int cmdIndex = 0;
+	for( auto cmd : asmFunction ) {
+		auto def = cmd->UsedVars();
+		while( def != nullptr  &&  def->GetCurrent() != nullptr ) {
+			uses[cmdIndex].insert( def->GetCurrent()->ToString() );
 			def = def->GetNext();
 		}
 		++cmdIndex;

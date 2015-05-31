@@ -4,7 +4,7 @@
 #include "RegisterDistribution.h"
 
 #include <assert.h>
-
+#include <iostream>
 
 namespace Assembler {
 
@@ -13,8 +13,10 @@ CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFu
 	registers( registers )
 {
 	do {
+		std::cerr << asmFunction.size() << std::endl;
 		int cmdIndex = 0;
 		if( !uncoloredNodes.empty() ) {
+			std::cout << "REGENERATING!!!" << std::endl;
 			regenerateCode();
 			uncoloredNodes.clear();
 			edges.clear();
@@ -27,6 +29,9 @@ CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFu
 			liveInOut = CLiveInOutCalculator( asmFunction );
 		}
 		for( auto cmd : asmFunction ) {
+			if( cmdIndex == 5 ) {
+				cmdIndex = 5;
+			}
 			if( dynamic_cast< const CMove* >( cmd ) == nullptr ) {
 				// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
 				// где a принадлежит определяемым в данной инструкции переменным
@@ -48,10 +53,20 @@ CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFu
 					addNode( b );
 					addEdge( a, b );
 				}
-				std::string b = dynamic_cast< const CMove* >( cmd )->Source()->GetCurrent()->ToString();
-				addNode( b );
-				addMoveEdge( a, b );
+				if( dynamic_cast< const CMove* >( cmd )->Source() != nullptr ) {
+					std::string b = dynamic_cast< const CMove* >( cmd )->Source()->GetCurrent()->ToString();
+					addNode( a );
+					addNode( b );
+					addMoveEdge( a, b );
+				}
 			}
+			for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+				addNode( a );
+			}
+			for( auto a : liveInOut.GetUses( cmdIndex ) ) {
+				addNode( a );
+			}
+			++cmdIndex;
 		}
 	} while( !paint() );
 }
@@ -65,8 +80,8 @@ void CInterferenceGraph::addNode( const std::string& name )
 	}
 	nodeMap.insert( std::make_pair( name, nodes.size() ) );
 	nodes.emplace_back();
-	for( auto nodeEdges : edges ) {
-		nodeEdges.push_back( ET_NoEdge );
+	for( int i = 0; i < edges.size(); ++i ) {
+		edges[i].push_back( ET_NoEdge );
 	}
 	edges.emplace_back( nodes.size(), ET_NoEdge );
 }
@@ -77,6 +92,9 @@ void CInterferenceGraph::addMoveEdge( const std::string& from, const std::string
 {
 	int u = nodeMap[from];
 	int v = nodeMap[to];
+	if( u == v ) {
+		return;
+	}
 	// MOVE-ребро добавляется только тогда, когда не было никакого ребра между этими вершинами
 	if( edges[u][v] == ET_NoEdge ) {
 		edges[u][v] = ET_MoveEdge;
@@ -90,6 +108,9 @@ void CInterferenceGraph::addEdge( const std::string& from, const std::string& to
 {
 	int u = nodeMap[from];
 	int v = nodeMap[to];
+	if( u == v ) {
+		return;
+	}
 	edges[u][v] = ET_Edge;
 	edges[v][u] = ET_Edge;
 }
@@ -165,7 +186,7 @@ int CInterferenceGraph::getColorableNode() const
 	int colorsNum = registers.size();
 
 	for( int i = 0; i < edges.size(); ++i ) {
-		if( getNeighbourNum( i ) < colorsNum ) {
+		if( nodes[i].Color == -1  &&  getNeighbourNum( i ) < colorsNum  &&  !nodes[i].InStack ) {
 			return i;
 		}
 	}
@@ -181,7 +202,7 @@ int CInterferenceGraph::getMaxInterferingNode() const
 	int nodeIndex = -1;
 	for( int i = 0; i < nodes.size(); ++i ) {
 		int currNeighbour = getNeighbourNum( i );
-		if( currNeighbour > maxNeighbour ) {
+		if( currNeighbour > maxNeighbour  &&  !nodes[i].InStack ) {
 			maxNeighbour = currNeighbour;
 			nodeIndex = i;
 		}
@@ -219,12 +240,12 @@ void CInterferenceGraph::regenerateCode()
 					isMove = true;
 				}
 				Temp::CTemp* buff = new Temp::CTemp();
-				newCode.push_back( new Assembler::CMove( "mov 'd0 's0", new Temp::CTempList( buff, 0 ), it->Source() ) );
+				newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", new Temp::CTempList( buff, 0 ), it->Source() ) );
 				if( isMove ) {
-					newCode.push_back( new Assembler::CMove( "mov 'd0 's0", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
 				} else {
 					const Assembler::COper* cmd = dynamic_cast< const Assembler::COper* >( it );
-					newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
+					newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0\n", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
 				}
 			} else {
 				newCode.push_back( it );
@@ -243,8 +264,8 @@ void CInterferenceGraph::regenerateCode()
 				const Assembler::CMove* cmd = dynamic_cast< const Assembler::CMove* >( it );
 				assert( cmd != nullptr );
 				Temp::CTemp* buff = new Temp::CTemp();
-				newCode.push_back( new Assembler::CMove( "mov 'd0 's0", new Temp::CTempList( buff, 0 ), it->Source() ) );
-				newCode.push_back( new Assembler::CMove( "mov 'd0 's0", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
+				newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", new Temp::CTempList( buff, 0 ), it->Source() ) );
+				newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->Destination(), new Temp::CTempList( buff, 0 ) ) );
 			} else {
 				newCode.push_back( it );
 			}
@@ -252,6 +273,22 @@ void CInterferenceGraph::regenerateCode()
 			newCode.push_back( it );
 		}
 	}
+}
+
+
+const std::list<const IAsmInstr*>& CInterferenceGraph::GetCode() const
+{
+	return asmFunction;
+}
+
+
+std::map<std::string, std::string> CInterferenceGraph::GetColors() const
+{
+	std::map<std::string, std::string> res;
+	for( auto it : nodeMap ) {
+		res.insert( std::make_pair( it.first, registers[nodes[it.second].Color] ) );
+	}
+	return res;
 }
 
 //======================================================================================================================

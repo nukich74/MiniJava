@@ -150,7 +150,20 @@ int main( int argc, char* argv[] )
 					std::cout << "\nAsmInstr\n";
 					std::cout << item->name << '\n';
 					std::cout << treeMaker.GetAsmInstr().size() << std::endl;
-					// Assembler::CInterferenceGraph graph( treeMaker.GetAsmInstr(), item->GetRegisters() );
+					Assembler::CInterferenceGraph graph( treeMaker.GetAsmInstr(), item->GetRegisters() );
+
+					auto code = graph.GetCode();
+					auto colors = graph.GetColors();
+
+					std::cout << "Colors:\n";
+					for( auto it : colors ) {
+						std::cout << it.first << ' ' << it.second << std::endl;
+					}
+
+					std::cout << "Commands:\n";
+					for( auto cmd : code ) {
+						std::cout << cmd->FormatInstr( colors );
+					}
 				}
 
 			} while( !feof( yyin ) );

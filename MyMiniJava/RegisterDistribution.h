@@ -32,6 +32,8 @@ public:
 
 	const std::list<const IAsmInstr*>& GetCode() const;
 
+	std::map<std::string, std::string> GetColors() const;
+
 private:
 	// код функции
 	std::list<const IAsmInstr*> asmFunction;

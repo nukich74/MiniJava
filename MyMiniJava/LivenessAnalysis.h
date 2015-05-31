@@ -74,6 +74,8 @@ public:
 	// получить список объявляемых переменных для некоторой вершины/инструкции
 	const std::set<std::string>& GetDefines( int nodeIndex ) const;
 
+	const std::set<std::string>& GetUses( int nodeIndex ) const;
+
 private:
 	// граф потока управления
 	CWorkFlowGraph workflow;
@@ -81,9 +83,10 @@ private:
 	// множества live-in и live-out переменных для каждой из вершин графа
 	std::vector<std::set<std::string>> liveIn;
 	std::vector<std::set<std::string>> liveOut;
-
-	// множества defines
+	
+	// множества defines и uses
 	std::vector<std::set<std::string>> defines;
+	std::vector<std::set<std::string>> uses;
 
 	// вектор с ассемблерными командами
 	std::vector<const IAsmInstr*> commands;
@@ -91,5 +94,6 @@ private:
 	bool theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const;
 	void buildCommands( const std::list<const IAsmInstr*>& asmFunction );
 	void buildDefines( const std::list<const IAsmInstr*>& asmFunction );
+	void buildUses( const std::list<const IAsmInstr*>& asmFunction );
 };
 } // namespace Assembler

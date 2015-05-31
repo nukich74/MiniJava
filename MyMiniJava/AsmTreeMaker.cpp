@@ -242,53 +242,53 @@ const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CBinop* expr ) const
 		int rightValue = dynamic_cast<const IRTree::CConst*>( expr->right )->value;
 		Temp::CTemp* tmp = new Temp::CTemp();
 		Temp::CTempList* tmplist = new Temp::CTempList( tmp, 0 );
-		func.push_back( new COper( "mov 'd0, " + std::to_string( leftValue ) + "\n", usedRegisters, 0 ) );
+		func.push_back( new CMove( "mov 'd0, " + std::to_string( leftValue ) + "\n", usedRegisters, 0 ) );
 		if( expr->oper == IRTree::BO_Div ) {
-			func.push_back( new COper( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
+			func.push_back( new CMove( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
 		}
 		func.push_back( new COper( command + " " + std::to_string( rightValue ) + "\n", usedRegisters, 0 ) );
-		func.push_back( new COper( "mov 'd0, 's0", tmplist, usedRegisters ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", tmplist, usedRegisters ) );
 		return tmp;
 	} else if( dynamic_cast<const IRTree::CConst*>( expr->left ) != 0 ) {
 		// const + some
 		int leftValue = dynamic_cast<const IRTree::CConst*>( expr->left )->value;
 		Temp::CTemp* tmp1 = new Temp::CTemp();
 		Temp::CTempList* tmpList1 = new Temp::CTempList( tmp1, 0 );
-		func.push_back( new COper( "mov 'd0, 's0\n", tmpList1, 
+		func.push_back( new CMove( "mov 'd0, 's0\n", tmpList1,
 			new Temp::CTempList( munchExp( expr->right ), 0 ) ) );
 		Temp::CTemp* tmp2 = new Temp::CTemp();
-		func.push_back( new COper( "mov 'd0, "  + std::to_string( leftValue ) + "\n", usedRegisters, 0 ) );
+		func.push_back( new CMove( "mov 'd0, " + std::to_string( leftValue ) + "\n", usedRegisters, 0 ) );
 		if( expr->oper == IRTree::BO_Div ) {
-			func.push_back( new COper( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
+			func.push_back( new CMove( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
 		}
 		func.push_back( new COper( command + " 's0\n", usedRegisters, tmpList1 ) );
-		func.push_back( new COper( "mov 'd0 's0", new Temp::CTempList( tmp2, 0 ), usedRegisters ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", new Temp::CTempList( tmp2, 0 ), usedRegisters ) );
 		return tmp2;
 	} else if( dynamic_cast<const IRTree::CConst*>( expr->right ) != 0 ) {
 		// some + const
 		int rightValue = dynamic_cast<const IRTree::CConst*>( expr->right )->value;
 		Temp::CTemp* tmp1 = new Temp::CTemp();
 		Temp::CTempList* tmpList1 = new Temp::CTempList( tmp1, 0 );
-		func.push_back( new COper( "mov 'd0, 's0\n", usedRegisters, new Temp::CTempList( munchExp( expr->left ), 0 ) ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", usedRegisters, new Temp::CTempList( munchExp( expr->left ), 0 ) ) );
 		if( expr->oper == IRTree::BO_Div ) {
-			func.push_back( new COper( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
+			func.push_back( new CMove( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
 		}
 		func.push_back( new COper( command + " " + std::to_string( rightValue ) + "\n", usedRegisters, 0 ) );
-		func.push_back( new COper( "mov 'd0, 's0", tmpList1, usedRegisters ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", tmpList1, usedRegisters ) );
 		return tmp1;
 	} else {
 		// some + some
 		Temp::CTemp* tmp1 = new Temp::CTemp();
 		Temp::CTempList* tmpList1 = new Temp::CTempList( tmp1, 0 );
-		func.push_back( new COper( "mov 'd0, 's0\n", usedRegisters, new Temp::CTempList( munchExp( expr->left ), 0 ) ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", usedRegisters, new Temp::CTempList( munchExp( expr->left ), 0 ) ) );
 		Temp::CTemp* tmp2 = new Temp::CTemp();
 		Temp::CTempList* tmpList2 = new Temp::CTempList( tmp2, 0 );
-		func.push_back( new COper( "mov 'd0, 's0\n", tmpList2, new Temp::CTempList( munchExp( expr->right ), 0 ) ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", tmpList2, new Temp::CTempList( munchExp( expr->right ), 0 ) ) );
 		if( expr->oper == IRTree::BO_Div ) {
-			func.push_back( new COper( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
+			func.push_back( new CMove( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
 		}
 		func.push_back( new COper( command + " 's0\n",	usedRegisters, tmpList2 ) );
-		func.push_back( new COper( "mov 'd0, 's0", tmpList1, usedRegisters ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", tmpList1, usedRegisters ) );
 		return tmp1;
 	}
 };
@@ -299,9 +299,9 @@ const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CMem* expr ) const
 	const CTemp* tmp = munchExp( expr->expr );
 	// запомнили фрэймпоинтер
 	CTemp* fpTmp = new CTemp();
-	func.push_back( new COper( "mov 'd0, 's0\n", new CTempList( fpTmp, 0 ), new CTempList( stackFrame->GetFramePointer(), 0 ) ) );
+	func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( fpTmp, 0 ), new CTempList( stackFrame->GetFramePointer(), 0 ) ) );
 	CTemp* resTmp = new CTemp();
-	func.push_back( new COper( "mov 'd0, ['s0 + 's1]\n", new CTempList( resTmp, 0 ), 
+	func.push_back( new CMove( "mov 'd0, ['s0 + 's1]\n", new CTempList( resTmp, 0 ),
 		new CTempList( fpTmp, new CTempList( tmp, 0 ) ) ) );
 
 	return resTmp;
@@ -334,7 +334,7 @@ const Temp::CTempList* CAsmTreeMaker::munchArgs( const IRTree::CExprList* exprLi
 	Temp::CTempList* argsTempList = 0;
 	while( exprList != 0 ) {
 		Temp::CTemp* tmp = new Temp::CTemp();
-		func.push_back( new COper( "mov 'd0 's0\n", new Temp::CTempList( tmp, 0 ),
+		func.push_back( new CMove( "mov 'd0, 's0\n", new Temp::CTempList( tmp, 0 ),
 			new Temp::CTempList( munchExp( exprList->GetCurrent() ), 0 ) ) );
 		
 		exprList = dynamic_cast<const IRTree::CExprList*>( exprList->GetNextExprs() );
