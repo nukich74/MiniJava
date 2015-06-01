@@ -131,17 +131,17 @@ int main( int argc, char* argv[] )
 					Canon::CTracer tr;
 					IRTree::IRTreePrinter printer;
 					const IRTree::IStmt* root = item->funcRoot;
-					const IRTree::CStmtList* linearList = cc.Linearize( root );
-					const IRTree::CStmtList* result = tr.Transform( linearList );
 
 					root->Accept( &printer );
-					std::cout << ++functionId << ") Before:" << std::endl << printer.GetResult() << std::endl;
+					std::cout << item->name << " Before:" << std::endl << printer.GetResult() << std::endl;
 					printer.Clear();
 
+					const IRTree::CStmtList* linearList = cc.Linearize( root );
 					linearList->Accept( &printer );
 					std::cout << "After eseq/seq/call transform:" << std::endl << printer.GetResult() << std::endl;
 
 					printer.Clear();
+					const IRTree::CStmtList* result = tr.Transform( linearList );
 					result->Accept( &printer );
 					std::cout << "After block processing:" << std::endl << printer.GetResult();
 
@@ -162,6 +162,8 @@ int main( int argc, char* argv[] )
 					}
 					
 					PrologEpilogBuilder::IntermidInstructionBuilder builder;
+					auto epilog = builder.AddEpilog( item );
+					auto prolog = builder.AddProlog( item );
 					std::cout << "Commands:\n";
 					for( auto cmd : code ) {
 						std::cout << cmd->FormatInstr( colors );
