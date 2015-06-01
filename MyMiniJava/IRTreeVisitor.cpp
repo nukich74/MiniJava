@@ -537,20 +537,21 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDeclList& p )
 void CIRTreeVisitor::Visit( const Tree::CStmtList& p )
 {
 	//ну тут просто все приводим к Stmt и по очереди Accept
-	const IStmt* addToList = 0;
+	const IStmt* tempStmt = 0;
 	p.GetStmt()->Accept( this );
 	if( lastReturnedStm == 0 ) {
 		Translate::CExpConverter expConv( lastReturnedExp );
-		addToList = expConv.ToStm();
+		tempStmt = expConv.ToStm();
+	} else {
+		tempStmt = lastReturnedStm;
 	}
 	//lastReturnedStmtList = new IRTree::CStmtList( lastReturnedStm, lastReturnedStmtList );
-	const IStmt* tempStmr = lastReturnedStm;
 	lastReturnedExp = 0;
 	lastReturnedStm = 0;
 	if( p.GetList() != 0 ) {
 		p.GetList()->Accept( this );
 	}
-	lastReturnedStm = new IRTree::CSeq( addToList, tempStmr );
+	lastReturnedStm = new IRTree::CSeq( tempStmt, lastReturnedStm );
 }
 
 };
