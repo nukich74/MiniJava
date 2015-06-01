@@ -503,7 +503,27 @@ void CIRTreeVisitor::Visit( const Tree::CIdExpr& p )
 {
 	//получить по имени переменную из фрэйма
 	//lastReturnedExp = new IRTree::CName( new Temp::CLabel( p.GetId() ) );
-	lastReturnedExp = currentFrame->GetAccess( p.GetId() )->GetExp( currentFrame );
+	//lastReturnedExp = currentFrame->GetAccess( p.GetId() )->GetExp( currentFrame );
+
+	const IExpr* leftExp = 0;
+	const StackFrame::IAccess* var = currentFrame->GetAccess( p.GetId() );
+	if( var != 0 ) {
+		lastReturnedExp = currentFrame->GetAccess( p.GetId() )->GetExp( currentFrame );	
+	} else {
+		// тогда берем this
+		lastReturnedExp = currentFrame->GetAccess( "this" )->GetExp( currentFrame );
+
+		// теперь нужно найти эту переменную в symbolTable
+		const SymbolsTable::CClassInfo* clInfo = (*symbolTable).at( className );
+		const std::vector<SymbolsTable::CVariableInfo*> classVars = clInfo->GetLocals();
+		
+		for( int i = 0; i < classVars.size(); ++i ) {
+			if( classVars[i]->GetName() == p.GetId() ) {
+				// обращаемся по соответствующему адрессу
+				lastReturnedExp = new CMem( new CBinop( BO_Plus, lastReturnedExp, new CConst( i * 4 ) ) );
+			}
+		}
+	}
 }
 
 void CIRTreeVisitor::Visit( const Tree::CLengthExpr& p )
