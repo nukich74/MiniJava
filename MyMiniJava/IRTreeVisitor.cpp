@@ -466,8 +466,13 @@ void CIRTreeVisitor::Visit( const Tree::CNewIdExpr& p )
 {
 	Temp::CLabel* mallocLabel = new Temp::CLabel( "malloc" );
 	// По хорошему здесь надо посчитать сколько всего полей у класса и выделить столько машинных слов
+	// теперь нужно найти эту переменную в symbolTable
+	const SymbolsTable::CClassInfo* clInfo = (*symbolTable).at( className );
+	const std::vector<SymbolsTable::CVariableInfo*> classVars = clInfo->GetLocals();
+	int length = classVars.size();
+
 	const IRTree::CName* mallocName = new IRTree::CName( mallocLabel );
-	const IRTree::CCall* mallocCall = new IRTree::CCall( mallocName, (new IRTree::CExprList( new IRTree::CConst( 200 ), 0 ) ) );
+	const IRTree::CCall* mallocCall = new IRTree::CCall( mallocName, ( new IRTree::CExprList( new IRTree::CConst( length * currentFrame->WordSize() ), 0 ) ) );
 	Temp::CTemp* resultTemp = new Temp::CTemp();
 	const IRTree::CTemp* tempTemp = new IRTree::CTemp( resultTemp );
 	// Проставляем память нулями
