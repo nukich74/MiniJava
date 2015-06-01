@@ -99,7 +99,7 @@ void CIRTreeVisitor::Visit( const Tree::CVarDecl& p )
 	//смысла нет заходить, там все-равно не обрабатываем типы, для ир дерева не нужна инфа
 	p.GetType()->Accept( this );
 	if( !isItInClass ) { 
-		currentFrame->AddLocal( p.GetName(), new StackFrame::CInFrame( varCounter ) );
+		currentFrame->AddFormal( p.GetName(), new StackFrame::CInFrame( varCounter ) );
 		varCounter += 1;
 	} else {
 		// это опреление переменной в классе
@@ -115,15 +115,18 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 	IStmt* newFuncRoot;
 	StackFrame::CFrame* newFrame = new StackFrame::CFrame( p.GetName(), 0 );
 	currentFrame = newFrame;
+	varCounter = 2;
+	currentFrame->AddFormal( "this", new StackFrame::CInFrame( varCounter ) );
+	varCounter += 1;
+
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}
 	varCounter = 0;
-	currentFrame->AddFormal( "this", new StackFrame::CInFrame( varCounter ) );
-	varCounter += 1;
+	
 	for( auto iter : typesAndVariables ) {
-		currentFrame->AddFormal( iter.first, new StackFrame::CInFrame( varCounter ) );
-		varCounter += 1;
+		currentFrame->AddLocal( iter.first, new StackFrame::CInFrame( varCounter ) );
+		varCounter -= 1;
 	} 
 	
 	if( p.GetVarDeclList() != 0 ) {
@@ -182,6 +185,21 @@ void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 			opExpr->GetExprSecond()->Accept( this );
 			right = lastReturnedExp;
 			op = CJ_LT;
+		}
+		if( opExpr->GetOp() == Tree::BinOp::BO_And ) {
+			/*while( true ) {
+				
+			}
+			Temp::CLabel* firstTrueLabel = new Temp::CLabel();
+			IRTree::CConst* falseConst = new IRTree::CConst(0);
+			//Если первый false, то дальше нет смысла прыгать
+			IRTree::CCJump* firstTrueJump = new IRTree::CCJump( IRTree::CJ_NE, left, falseConst, firstTrueLabel, f );
+			IRTree::CLabel* firstTrueIRLabel = new IRTree::CLabel( firstTrueLabel );
+			//2ой проверяется и true и false
+			IRTree::CCJump* secondTrueJump = new IRTree::CCJump( IRTree::CJ_NE, right, falseConst, t, f );
+			IRTree::CSeq* firstFalseSeq = new IRTree::CSeq( firstTrueIRLabel, secondTrueJump );
+			IRTree::CSeq* finalSeq = new IRTree::CSeq( firstTrueJump, firstFalseSeq );
+			return finalSeq;*/
 		}
 	} else {
 		// когда нет условий, просто сверить с нулем
