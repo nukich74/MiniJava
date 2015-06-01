@@ -43,6 +43,9 @@
     <Filter Include="Samples">
       <UniqueIdentifier>{a921e6bc-6ba9-47d2-be79-e285efc060e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PrologueEpilogue">
+      <UniqueIdentifier>{7313de73-c973-47b2-8aa4-37f49616013d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -95,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="RegisterDistribution.cpp">
       <Filter>Assembler</Filter>
+    </ClCompile>
+    <ClCompile Include="Builders.cpp">
+      <Filter>PrologueEpilogue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +185,9 @@
     <ClInclude Include="RegisterDistribution.h">
       <Filter>Assembler</Filter>
     </ClInclude>
+    <ClInclude Include="Builders.h">
+      <Filter>PrologueEpilogue</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Bison Include="Source\bison.y">
@@ -216,6 +225,9 @@
       <Filter>Samples</Filter>
     </None>
     <None Include="samples\treevisitor.java">
+      <Filter>Samples</Filter>
+    </None>
+    <None Include="samples\simple.java">
       <Filter>Samples</Filter>
     </None>
   </ItemGroup>

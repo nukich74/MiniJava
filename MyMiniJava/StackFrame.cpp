@@ -5,8 +5,8 @@ namespace StackFrame {
 
 CFrame::CFrame( const std::string _name, IRTree::IStmt* _funcRoot ) : name( _name ),
 	wordSize( 4 ), funcRoot( _funcRoot ),
-	framePointer( new Temp::CTemp( _name + "_FP" ) ),
-	stackPointer( new Temp::CTemp( _name + "_SP" ) ),
+	framePointer( new Temp::CTemp( "EBP" ) ),
+	stackPointer( new Temp::CTemp( "ESP" ) ),
 	returnValue( new Temp::CTemp( _name + "_RV" ) ),
 	eax( new Temp::CTemp( "EAX" ) ),
 	edx( new Temp::CTemp( "EDX" ) )
