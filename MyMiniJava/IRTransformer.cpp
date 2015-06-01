@@ -155,7 +155,7 @@ namespace Canon {
 	//Tree.ExpList – выражения без Tree.Stm’ов
 	const CStmExpList* CCanon::Reorder( const CExprList* exprs )
 	{
-		if( exprs == 0 ) {
+		if( exprs == 0 || exprs->GetCurrent() == 0 ) {
 			return nopNull;
 		} else {
 			const IExpr* a = exprs->GetCurrent();

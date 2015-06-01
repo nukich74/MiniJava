@@ -234,6 +234,9 @@ public:
 	}
 	virtual const IStmt* Build( const CExprList* kids ) const
 	{
+		if( kids == 0 ) {
+			return 0;
+		}
 		return new CExp( kids->GetCurrent() );
 	}
 	virtual void Accept( IRTreePrinter* p ) const { p->Visit( *this ); }
