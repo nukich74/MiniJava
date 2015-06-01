@@ -122,7 +122,7 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}
-	varCounter = 0;
+	varCounter = 1;
 	
 	for( auto iter : typesAndVariables ) {
 		currentFrame->AddLocal( iter.first, new StackFrame::CInFrame( varCounter ) );
@@ -187,19 +187,41 @@ void CIRTreeVisitor::Visit( const Tree::CIfStmt& p )
 			op = CJ_LT;
 		}
 		if( opExpr->GetOp() == Tree::BinOp::BO_And ) {
-			/*while( true ) {
-				
-			}
+			Temp::CLabel* trueTempLabel = new Temp::CLabel();
+			Temp::CLabel* falseTempLabel = new Temp::CLabel();
+			Temp::CLabel* endTempLabel = new Temp::CLabel();
+			IRTree::CLabel* trueLabel = new IRTree::CLabel( trueTempLabel );
+			IRTree::CLabel* falseLabel = new IRTree::CLabel( falseTempLabel );
+			IRTree::CLabel* endLabel = new IRTree::CLabel( endTempLabel );
+
+			IRTree::CSeq* finalSeq = 0;
+
+
+			opExpr->GetExprFirst()->Accept( this );
+			left = lastReturnedExp;
+
 			Temp::CLabel* firstTrueLabel = new Temp::CLabel();
 			IRTree::CConst* falseConst = new IRTree::CConst(0);
 			//≈сли первый false, то дальше нет смысла прыгать
-			IRTree::CCJump* firstTrueJump = new IRTree::CCJump( IRTree::CJ_NE, left, falseConst, firstTrueLabel, f );
-			IRTree::CLabel* firstTrueIRLabel = new IRTree::CLabel( firstTrueLabel );
-			//2ой провер€етс€ и true и false
-			IRTree::CCJump* secondTrueJump = new IRTree::CCJump( IRTree::CJ_NE, right, falseConst, t, f );
-			IRTree::CSeq* firstFalseSeq = new IRTree::CSeq( firstTrueIRLabel, secondTrueJump );
-			IRTree::CSeq* finalSeq = new IRTree::CSeq( firstTrueJump, firstFalseSeq );
-			return finalSeq;*/
+			IRTree::CCJump* firstTrueJump = new IRTree::CCJump( IRTree::CJ_NE, left, falseConst, firstTrueLabel, falseTempLabel );
+			const IRTree::CLabel* firstTrueIRLabel = new IRTree::CLabel( firstTrueLabel );
+			
+			const IRTree::IStmt* nextPart = 0;
+			while( dynamic_cast<const Tree::COpExpr*>( opExpr->GetExprSecond() ) ) {
+
+				IRTree::CCJump* secondTrueJump = new IRTree::CCJump( IRTree::CJ_NE, right, falseConst, trueTempLabel, falseTempLabel );
+				IRTree::CSeq* firstFalseSeq = new IRTree::CSeq( firstTrueIRLabel, secondTrueJump );
+
+				nextPart = new IRTree::CSeq( firstFalseSeq, nextPart );
+
+				opExpr = dynamic_cast<const Tree::COpExpr*>( opExpr->GetExprSecond() );
+				
+			}
+			
+			finalSeq = new IRTree::CSeq( firstTrueJump, nextPart );
+			
+			lastReturnedStm = finalSeq;
+			return;
 		}
 	} else {
 		// когда нет условий, просто сверить с нулем
