@@ -8,8 +8,8 @@
 
 namespace Assembler {
 
-CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFunction,
-	const std::vector<const std::string>& registers ) : asmFunction( asmFunction ), liveInOut( asmFunction ), 
+CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& _asmFunction,
+	const std::vector<const std::string>& registers ) : asmFunction( _asmFunction ), liveInOut( asmFunction ), 
 	registers( registers )
 {
 	do {
@@ -25,13 +25,9 @@ CInterferenceGraph::CInterferenceGraph( const std::list<const IAsmInstr*>& asmFu
 			while( !pulledNodes.empty() ) {
 				pulledNodes.pop();
 			}
-			uncoloredNodes.clear();
 			liveInOut = CLiveInOutCalculator( asmFunction );
 		}
 		for( auto cmd : asmFunction ) {
-			if( cmdIndex == 5 ) {
-				cmdIndex = 5;
-			}
 			if( dynamic_cast< const CMove* >( cmd ) == nullptr ) {
 				// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
 				// где a принадлежит определяемым в данной инструкции переменным
@@ -217,7 +213,7 @@ int CInterferenceGraph::getMaxInterferingNode() const
 	int nodeIndex = -1;
 	for( int i = 0; i < nodes.size(); ++i ) {
 		int currNeighbour = getNeighbourNum( i );
-		if( currNeighbour > maxNeighbour  &&  !nodes[i].InStack ) {
+		if( currNeighbour > maxNeighbour  &&  !nodes[i].InStack  &&  nodes[i].Color == -1 ) {
 			maxNeighbour = currNeighbour;
 			nodeIndex = i;
 		}
@@ -269,7 +265,7 @@ void CInterferenceGraph::regenerateCode()
 			newCode.push_back( it );
 		}
 	}
-	asmFunction = newCode;
+	asmFunction.swap( newCode );
 	newCode.clear();
 	for( auto it : asmFunction ) {
 		if( it->Destination() != nullptr  &&  it->Destination()->GetCurrent() != nullptr  &&
@@ -288,6 +284,7 @@ void CInterferenceGraph::regenerateCode()
 			newCode.push_back( it );
 		}
 	}
+	asmFunction.swap( newCode );
 }
 
 

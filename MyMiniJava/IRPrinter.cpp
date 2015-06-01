@@ -102,19 +102,19 @@ namespace IRTree {
 		std::string curName = newVertex( "Call" );
 		if( p.args ) {
 			p.args->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "1" );
 		}
 
 		if( p.func ) {
 			p.func->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "2" );
 		}
 		lastName = curName;
 	}
 	
 	void IRTreePrinter::Visit( const CCJump& p )
 	{
-		std::string curName = newVertex( "CJump" );
+		std::string curName = newVertex( "CJump " );
 		if( p.left ) {
 			p.left->Accept( this );
 			graph.AddEdge( curName, lastName );
@@ -138,11 +138,11 @@ namespace IRTree {
 		std::string curName = newVertex( "Eseq" );
 		if( p.stm ) {
 			p.stm->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "1" );
 		}
 		if( p.expr ) {
 			p.expr->Accept( this );
-			graph.AddEdge( curName, lastName );
+			graph.AddEdge( curName, lastName, "2" );
 		}
 		lastName = curName;
 	}

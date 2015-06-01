@@ -139,34 +139,34 @@ void CAsmTreeMaker::munchStm( const IRTree::CCJump* cjump ) const
 	Temp::CLabelList* trueList = new Temp::CLabelList( cjump->ifTrue, 0 );
 	switch( cjump->relop ) {
 	case IRTree::CJ_EQ:
-		func.push_back( new COper( "je 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "je 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_GE:
-		func.push_back( new COper( "jge 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jge 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_GT:
-		func.push_back( new COper( "jg 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jg 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_LE:
-		func.push_back( new COper( "jle 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jle 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_LT:
-		func.push_back( new COper( "jl 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jl 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_NE:
-		func.push_back( new COper( "jne 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jne 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_UGE:
-		func.push_back( new COper( "jl 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jl 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_UGT:
-		func.push_back( new COper( "jle 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jle 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_ULE:
-		func.push_back( new COper( "jg 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jg 'l0\n", 0, 0, trueList ) );
 		break;
 	case IRTree::CJ_ULT:
-		func.push_back( new COper( "jge 'l0", 0, 0, trueList ) );
+		func.push_back( new COper( "jge 'l0\n", 0, 0, trueList ) );
 		break;
 	default:
 		assert( false );
@@ -327,11 +327,11 @@ const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CMem* expr ) const
 	using namespace Temp;
 	const CTemp* tmp = munchExp( expr->expr );
 	// запомнили фрэймпоинтер
-	//CTemp* fpTmp = new CTemp();
+	CTemp* fpTmp = new CTemp();
 	//func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( fpTmp, 0 ), new CTempList( stackFrame->GetFramePointer(), 0 ) ) );
 	CTemp* resTmp = new CTemp();
-	func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( resTmp, 0 ),
-		new CTempList( tmp, 0/*fpTmp, new CTempList( tmp, 0 )*/ ) ) );
+	func.push_back( new CMove( "mov 'd0, ['s1]\n", new CTempList( resTmp, 0 ),
+		new CTempList( fpTmp, new CTempList( tmp, 0 ) ) ) );
 
 	return resTmp;
 };

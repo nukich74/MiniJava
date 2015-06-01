@@ -29,12 +29,12 @@ namespace PrologEpilogBuilder {
 	std::vector<std::string> IntermidInstructionBuilder::AddEpilog( const StackFrame::CFrame* frame )
 	{
 		std::vector<std::string> epilogIList;
-		std::vector<std::string> regs;
+		std::vector<const std::string> regs( frame->GetRegisters() );
 		std::reverse( regs.begin(), regs.end() );
 		epilogIList.push_back( "; epilog begin" );
 		int espShift = frame->WordSize() * frame->GetLocalCount();
 		for( const auto& item : regs ) {
-			epilogIList.push_back("pop " + item);
+			epilogIList.push_back( "pop " + item );
 		}
 		epilogIList.push_back( "add ESP, " + std::to_string( espShift ) );
 		epilogIList.push_back( "pop EBP" );

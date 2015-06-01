@@ -69,7 +69,8 @@ void CWorkFlowGraph::addEdges( const std::list<const IAsmInstr*>& asmFunction )
 		const COper* oper = dynamic_cast<const COper*>( cmd );
 		if( oper != nullptr  &&  oper->Jumps() != nullptr  &&  oper->Jumps()->GetCurrent() != nullptr ) {
 			AddEdge( nodeIndex, labels[oper->Jumps()->GetCurrent()->ToString()] );
-		} else if( nodeIndex + 1 < Size() ) {
+		}
+		if( nodeIndex + 1 < Size() ) {
 			AddEdge( nodeIndex, nodeIndex + 1 );
 		}
 		nodeIndex++;

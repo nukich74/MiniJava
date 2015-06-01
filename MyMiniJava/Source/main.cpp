@@ -165,8 +165,14 @@ int main( int argc, char* argv[] )
 					auto epilog = builder.AddEpilog( item );
 					auto prolog = builder.AddProlog( item );
 					std::cout << "Commands:\n";
+					for( const auto& item : prolog ) {
+						std::cout << item << '\n';
+					}
 					for( auto cmd : code ) {
 						std::cout << cmd->FormatInstr( colors );
+					}
+					for( const auto& item : epilog ) {
+						std::cout << item << '\n';
 					}
 				}
 

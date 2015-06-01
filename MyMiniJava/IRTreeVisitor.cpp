@@ -115,14 +115,14 @@ void CIRTreeVisitor::Visit( const Tree::CMethodDecl& p )
 	IStmt* newFuncRoot;
 	StackFrame::CFrame* newFrame = new StackFrame::CFrame( p.GetName(), 0 );
 	currentFrame = newFrame;
-	varCounter = 2;
+	varCounter = 3;
 	currentFrame->AddFormal( "this", new StackFrame::CInFrame( varCounter ) );
 	varCounter += 1;
 
 	if( p.GetFormalList() != 0 ) {
 		p.GetFormalList()->Accept( this );
 	}
-	varCounter = 1;
+	varCounter = 0;
 	
 	for( auto iter : typesAndVariables ) {
 		currentFrame->AddLocal( iter.first, new StackFrame::CInFrame( varCounter ) );
@@ -405,7 +405,7 @@ void CIRTreeVisitor::Visit( const Tree::CMethodCallExpr& p )
 	std::string methodName = p.GetName();
 	Temp::CLabel* functionLabel = new Temp::CLabel( methodName );
 	IRTree::CName* functionName = new IRTree::CName( functionLabel );
-	const IExprList* args;
+	const IExprList* args = 0;
 
 	assert( exprToBeCalled != 0 );
 	if( p.GetExprList() != 0 ) {
@@ -416,7 +416,7 @@ void CIRTreeVisitor::Visit( const Tree::CMethodCallExpr& p )
 	const IRTree::CTemp* returnedTemp = new IRTree::CTemp( returned );
 	//выполняем функцию, возращаем return
 	lastReturnedExp = new IRTree::CEseq( new IRTree::CMove( returnedTemp, 
-		new IRTree::CCall( functionName, lastReturnedExpList ) ), returnedTemp );
+		new IRTree::CCall( functionName, args ) ), returnedTemp );
 	lastReturnedExpList = 0;
 }
 
@@ -477,8 +477,9 @@ void CIRTreeVisitor::Visit( const Tree::CNewIdExpr& p )
 	const IRTree::CTemp* tempTemp = new IRTree::CTemp( resultTemp );
 	// Проставляем память нулями
 	const IRTree::CCall* memSetCall = nullptr;
-	const IRTree::CSeq* mallocMoveMemset = new IRTree::CSeq( new IRTree::CMove( tempTemp, mallocCall ), new IRTree::CExp( memSetCall ) );
-	lastReturnedExp = new IRTree::CEseq( mallocMoveMemset, tempTemp );
+	//const IRTree::CSeq* mallocMoveMemset = new IRTree::CSeq( new IRTree::CMove( tempTemp, mallocCall ), new IRTree::CExp( memSetCall ) );
+	//lastReturnedExp = new IRTree::CEseq( mallocMoveMemset, tempTemp );
+	lastReturnedExp = new IRTree::CEseq( new IRTree::CMove( tempTemp, mallocCall ), tempTemp );
 }
 
 void CIRTreeVisitor::Visit( const Tree::CNotExpr& p )
