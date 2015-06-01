@@ -309,10 +309,10 @@ const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CBinop* expr ) const
 		// some + some
 		Temp::CTemp* tmp1 = new Temp::CTemp();
 		Temp::CTempList* tmpList1 = new Temp::CTempList( tmp1, 0 );
-		func.push_back( new CMove( "mov 'd0, 's0\n", usedRegisters, new Temp::CTempList( munchExp( expr->left ), 0 ) ) );
 		Temp::CTemp* tmp2 = new Temp::CTemp();
 		Temp::CTempList* tmpList2 = new Temp::CTempList( tmp2, 0 );
 		func.push_back( new CMove( "mov 'd0, 's0\n", tmpList2, new Temp::CTempList( munchExp( expr->right ), 0 ) ) );
+		func.push_back( new CMove( "mov 'd0, 's0\n", usedRegisters, new Temp::CTempList( munchExp( expr->left ), 0 ) ) );
 		if( expr->oper == IRTree::BO_Div ) {
 			func.push_back( new CMove( "mov 'd0, 0\n", new Temp::CTempList( stackFrame->GetEdx(), 0 ), 0 ) );
 		}
