@@ -32,7 +32,7 @@ public:
 
 	const std::list<const IAsmInstr*>& GetCode() const;
 
-	std::map<std::string, std::string> GetColors() const;
+	std::map<std::string, std::string> GetColors();
 
 private:
 	// код функции

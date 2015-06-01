@@ -137,7 +137,7 @@ bool CInterferenceGraph::paint()
 		pulledNodes.pop();
 		std::vector<char> usedColors( registers.size(), 0 );
 		for( int i = 0; i < nodes.size(); ++i ) {
-			if( edges[currNode][i] != ET_NoEdge  &&  nodes[i].Color != -1 ) {
+			if( edges[currNode][i] != ET_NoEdge  &&  nodes[i].Color != -1  &&  nodes[i].Color < usedColors.size() ) {
 				usedColors[nodes[i].Color] = 1;
 			}
 		}
@@ -161,6 +161,21 @@ void CInterferenceGraph::addRegisterColors()
 			// если в графе есть вершина, соответствующая этому регистру, 
 			// то она должна быть покрашена до запуска основного алгоритма покраски
 			nodes[regNode->second].Color = i;
+		}
+	}
+
+	for( auto it : nodeMap ) {
+		if( it.first.substr( it.first.length() - 3 ) == "_SP" ) {
+			// красим насильно в ESP
+			nodes[it.second].Color = 6;
+		}
+		if( it.first.substr( it.first.length() - 3 ) == "_FP" ) {
+			// красим насильно в EBP
+			nodes[it.second].Color = 7;
+		}
+		if( it.first.substr( it.first.length() - 3 ) == "_RV" ) {
+			// красим насильно в EDI
+			nodes[it.second].Color = 5;
 		}
 	}
 }
@@ -282,12 +297,16 @@ const std::list<const IAsmInstr*>& CInterferenceGraph::GetCode() const
 }
 
 
-std::map<std::string, std::string> CInterferenceGraph::GetColors() const
+std::map<std::string, std::string> CInterferenceGraph::GetColors()
 {
 	std::map<std::string, std::string> res;
+	registers.push_back( "ESP" );
+	registers.push_back( "EBP" );
 	for( auto it : nodeMap ) {
 		res.insert( std::make_pair( it.first, registers[nodes[it.second].Color] ) );
 	}
+	registers.pop_back();
+	registers.pop_back();
 	return res;
 }
 
