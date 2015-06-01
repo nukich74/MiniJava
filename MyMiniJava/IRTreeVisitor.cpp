@@ -104,7 +104,7 @@ void CIRTreeVisitor::Visit( const Tree::CVarDecl& p )
 	} else {
 		// это опреление переменной в классе
 		// должны были обработать
-		assert( false );
+		//assert( false );
 
 	}
 }

@@ -19,6 +19,7 @@
   <ItemGroup>
     <ClCompile Include="AsmTreeMaker.cpp" />
     <ClCompile Include="BlockTracing.cpp" />
+    <ClCompile Include="Builders.cpp" />
     <ClCompile Include="ErrorMessage.cpp" />
     <ClCompile Include="IRPrinter.cpp" />
     <ClCompile Include="IRTransformer.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="AsmTreeMaker.h" />
     <ClInclude Include="AssemblerInstr.h" />
     <ClInclude Include="BlockTracing.h" />
+    <ClInclude Include="Builders.h" />
     <ClInclude Include="ClassInfo.h" />
     <ClInclude Include="CodeInfo.h" />
     <ClInclude Include="ConstantsAndComClasses.h" />
@@ -96,6 +98,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="samples\simple.java" />
     <None Include="samples\treevisitor.java">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

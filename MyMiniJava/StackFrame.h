@@ -63,6 +63,7 @@ public:
 	const IAccess* GetLocal( const std::string& name ) const;
 	void AddFormal( const std::string& temp, const IAccess* accs ) { formals[temp] = accs; };
 	void AddLocal( const std::string& temp, const IAccess* accs ) { locals[temp] = accs; };
+	int GetLocalCount() const { return locals.size(); }
 
 	const IAccess* GetAccess( const std::string& name ) const;
 	const std::vector<const std::string>& GetRegisters() const { return registers; }
