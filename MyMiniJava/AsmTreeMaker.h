@@ -47,6 +47,8 @@ private:
 	const Temp::CTemp* munchExp( const IRTree::CMem* expr ) const;
 	const Temp::CTemp* munchExp( const IRTree::CCall* expr ) const;
 
+	const Temp::CTemp* munchExpBinopLess( const IRTree::CBinop* expr ) const;
+
 	const Temp::CTempList* munchArgs( const IRTree::CExprList* exprList ) const;
 };
 

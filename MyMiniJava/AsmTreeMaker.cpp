@@ -212,6 +212,32 @@ const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CTemp* expr ) const
 	return expr->temp;
 };
 
+const Temp::CTemp* CAsmTreeMaker::munchExpBinopLess( const IRTree::CBinop* expr ) const
+{
+	using namespace Temp;
+	const Temp::CTemp* tmp = new CTemp();
+
+
+	func.push_back( new COper( "mov 'd0, 0\n", new CTempList( tmp, 0 ), 0, 0 ) );
+	
+	const CTemp* left = new CTemp();
+	const CTemp* right = new CTemp();
+	func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( left, 0 ), new CTempList( munchExp( expr->left ), 0 ) ) );
+	func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( right, 0 ), new CTempList( munchExp( expr->right ), 0 ) ) );
+
+	const CTempList* source = new CTempList( left, new CTempList( right, 0 ) );
+
+	func.push_back( new COper( "cmp 's0, s1\n", 0, source ) );
+
+	Temp::CLabel* label =  new Temp::CLabel();
+
+	func.push_back( new COper( "jnl 'l0\n", 0, 0, new CLabelList( label, 0 ) ) );
+	func.push_back( new COper( "mov 'd0, 1\n", new CTempList( tmp, 0 ), 0 ) );
+	func.push_back( new CLabel( new CLabelList( label, 0 ) ) );
+
+	return tmp;
+}
+
 const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CBinop* expr ) const
 {
 	std::string command;
@@ -233,6 +259,9 @@ const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CBinop* expr ) const
 			command = "div";
 			usedRegisters = new Temp::CTempList( stackFrame->GetEax(), new Temp::CTempList( stackFrame->GetEdx(), 0 ) );
 			break;
+		case IRTree::BO_Less:
+			return munchExpBinopLess( expr ); 
+
 		default:
 			assert( false );
 	}
