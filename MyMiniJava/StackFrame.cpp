@@ -60,16 +60,18 @@ const IAccess* CFrame::GetAccess( const std::string& name ) const
 const IRTree::IExpr* CInFrame::GetExp( const CFrame* frame ) const
 {
 	IRTree::BinOp oper = IRTree::BinOp::BO_Minus;
+	int absAdr = address;
 	//адресс по смещению
 	if( address < 0 ) {
 		oper = IRTree::BinOp::BO_Minus;
+		absAdr = -address;
 	} else {
 		oper = IRTree::BinOp::BO_Plus;
 	}
 	return new IRTree::CMem( new IRTree::CBinop(
 		oper, new IRTree::CTemp( frame->GetFramePointer() ),
 		new IRTree::CMem( new IRTree::CBinop( IRTree::BinOp::BO_Mult, 
-		new IRTree::CConst( address ), new IRTree::CConst( frame->WordSize() ) ) ) ) );
+		new IRTree::CConst( absAdr ), new IRTree::CConst( frame->WordSize() ) ) ) ) );
 }
 
 //StackFrame
