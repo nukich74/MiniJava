@@ -39,7 +39,7 @@ public:
 		while( curr != 0 ) {
 			std::string toReplace = "'d" + std::to_string( index );
 			while( res.find( toReplace ) != std::string::npos ) {
-				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second /*+ "(" + curr->GetCurrent()->ToString() + ")" */);
+				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second + "(" + curr->GetCurrent()->ToString() + ")" );
 			}
 			curr = curr->GetNext();
 			++index;
@@ -49,7 +49,7 @@ public:
 		while( curr != 0 ) {
 			std::string toReplace = "'s" + std::to_string( index );
 			while( res.find( toReplace ) != std::string::npos ) {
-				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second /*+ "(" + curr->GetCurrent()->ToString() + ")"*/ );
+				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second + "(" + curr->GetCurrent()->ToString() + ")" );
 			}
 			curr = curr->GetNext();
 			++index;

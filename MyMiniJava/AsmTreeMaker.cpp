@@ -60,7 +60,7 @@ void CAsmTreeMaker::munchStm( const IRTree::CMove* vertex ) const
 		// NO MEM <- MEM in x86
 		const CMem* memDst = dynamic_cast<const CMem*>( vertex->dst );
 
-		if( dynamic_cast<const CBinop*>( memDst ) ) {
+		if( dynamic_cast<const CBinop*>( memDst->expr ) ) {
 			const CBinop* binOp = dynamic_cast<const CBinop*>( memDst->expr );
 			
 			// MEM[+(expr,const)] <- Temp
