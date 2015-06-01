@@ -327,11 +327,11 @@ const Temp::CTemp* CAsmTreeMaker::munchExp( const IRTree::CMem* expr ) const
 	using namespace Temp;
 	const CTemp* tmp = munchExp( expr->expr );
 	// запомнили фрэймпоинтер
-	CTemp* fpTmp = new CTemp();
-	func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( fpTmp, 0 ), new CTempList( stackFrame->GetFramePointer(), 0 ) ) );
+	//CTemp* fpTmp = new CTemp();
+	//func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( fpTmp, 0 ), new CTempList( stackFrame->GetFramePointer(), 0 ) ) );
 	CTemp* resTmp = new CTemp();
-	func.push_back( new CMove( "mov 'd0, ['s0 + 's1]\n", new CTempList( resTmp, 0 ),
-		new CTempList( fpTmp, new CTempList( tmp, 0 ) ) ) );
+	func.push_back( new CMove( "mov 'd0, 's0\n", new CTempList( resTmp, 0 ),
+		new CTempList( tmp, 0/*fpTmp, new CTempList( tmp, 0 )*/ ) ) );
 
 	return resTmp;
 };
