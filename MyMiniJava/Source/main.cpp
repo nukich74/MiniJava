@@ -17,6 +17,7 @@
 #include "IRTreePrinter.h"
 #include "RegisterDistribution.h"
 #include "AsmTreeMaker.h"
+#include "Builders.h"
 
 #define DEBUG_TO_FILE
 
@@ -159,7 +160,8 @@ int main( int argc, char* argv[] )
 					for( auto it : colors ) {
 						std::cout << it.first << ' ' << it.second << std::endl;
 					}
-
+					
+					PrologEpilogBuilder::IntermidInstructionBuilder builder;
 					std::cout << "Commands:\n";
 					for( auto cmd : code ) {
 						std::cout << cmd->FormatInstr( colors );
