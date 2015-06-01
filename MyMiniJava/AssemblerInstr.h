@@ -34,12 +34,14 @@ public:
 	std::string FormatInstr( const std::map<std::string, std::string>& tmpMap ) const override
 	{
 		std::string res = asmCmd;
+		std::string comment = asmCmd;
 		auto curr = dst;
 		int index = 0;
 		while( curr != 0 ) {
 			std::string toReplace = "'d" + std::to_string( index );
 			while( res.find( toReplace ) != std::string::npos ) {
-				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second + "(" + curr->GetCurrent()->ToString() + ")" );
+				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second );
+				comment.replace( comment.find( toReplace ), toReplace.length(), curr->GetCurrent()->ToString() );
 			}
 			curr = curr->GetNext();
 			++index;
@@ -49,7 +51,8 @@ public:
 		while( curr != 0 ) {
 			std::string toReplace = "'s" + std::to_string( index );
 			while( res.find( toReplace ) != std::string::npos ) {
-				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second + "(" + curr->GetCurrent()->ToString() + ")" );
+				res.replace( res.find( toReplace ), toReplace.length(), tmpMap.find( curr->GetCurrent()->ToString() )->second );
+				comment.replace( comment.find( toReplace ), toReplace.length(), curr->GetCurrent()->ToString() );
 			}
 			curr = curr->GetNext();
 			++index;
@@ -60,10 +63,13 @@ public:
 			std::string toReplace = "'l" + std::to_string( index );
 			while( res.find( toReplace ) != std::string::npos ) {
 				res.replace( res.find( toReplace ), toReplace.length(), lbl->GetCurrent()->ToString() );
+				comment.replace( comment.find( toReplace ), toReplace.length(), lbl->GetCurrent()->ToString() );
 			}
 			lbl = lbl->GetNext();
 			++index;
 		}
+		res[res.length() - 1] = ' ';
+		res = res + "; \t" + comment;
 		return res;
 	}
 		
