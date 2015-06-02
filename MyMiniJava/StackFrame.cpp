@@ -70,8 +70,8 @@ const IRTree::IExpr* CInFrame::GetExp( const CFrame* frame ) const
 	}
 	return new IRTree::CMem( new IRTree::CBinop(
 		oper, new IRTree::CTemp( frame->GetFramePointer() ),
-		new IRTree::CMem( new IRTree::CBinop( IRTree::BinOp::BO_Mult, 
-		new IRTree::CConst( absAdr ), new IRTree::CConst( frame->WordSize() ) ) ) ) );
+		new IRTree::CBinop( IRTree::BinOp::BO_Mult, 
+		new IRTree::CConst( absAdr ), new IRTree::CConst( frame->WordSize() ) ) ) );
 }
 
 //StackFrame
